@@ -1,4 +1,4 @@
 export function normalizeText(txt){
     if(typeof txt !== "string") return null
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    return txt.charAt(0).toUpperCase() + txt.slice(1);
 }

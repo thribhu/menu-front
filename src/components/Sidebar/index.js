@@ -1,27 +1,29 @@
 import React from 'react';
-import './Sidebar.module.sass';
+import styles from './Sidebar.module.css';
 import classname from 'classnames';
 import default_img from './default.jpg';
-import normalize from 'utils/normalize'
-export default function Sidebar(props){
+import { normalizeText } from 'utils/normalize'
+export default function Sidebar(props) {
     const {
         child,
         title,
         img
     } = props;
     return (
-        <div className={classname("main")}>
-            <div className={classname("sidebar")}>
-                <div class={classname("titlebox")}>
-                    <img src={img ? img : default_img} className={classname("avatar")}/>
-                </div>
-                <div className={classname("title")}>
-                    <h1>{title ? normalize(title) : normalize('echola pizza')}</h1>
+        <div className={classname(styles.main)}>
+            <div className={classname(styles.sidebar)}>
+                <div class={classname(styles.titleBox)}>
+                    <div className={classname(styles.avatar)}>
+                        <img src={img ? img : default_img} className={classname(styles.avatarImg)} />
+                    </div>
+                    <div className={classname(styles.title)}>
+                        <h1>{title ? normalizeText(title) : normalizeText('echola pizza')}</h1>
+                    </div>
                 </div>
             </div>
-            <div className={classname("sidebar-content")}>
+            <div className={classname(styles.sidebar_content)}>
                 {child}
-            </div> 
+            </div>
         </div>
-    ) 
+    )
 }

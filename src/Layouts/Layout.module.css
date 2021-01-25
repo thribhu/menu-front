@@ -1,0 +1,8 @@
+.layout {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 300px 1fr;
+      grid-template-columns: 300px 1fr;
+  overflow: hidden;
+}
+/*# sourceMappingURL=Layout.module.css.map */
