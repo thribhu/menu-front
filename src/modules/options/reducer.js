@@ -1,5 +1,4 @@
 import {fromJS, List} from 'immutable';
-import { function } from 'joi';
 import * as Actions from './constants';
 
 const initState = fromJS({
