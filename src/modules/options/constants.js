@@ -18,3 +18,5 @@ export const LIST_OPTIONS = "options/LIST_OPTIONS";
 export const LIST_OPTIONS_SUCCESS = "options/LIST_OPTIONS_SUCCESS";
 export const LIST_OPTIONS_ERROR = "options/LIST_OPTIONS_ERROR";
 
+export const STATE_LOADING = "options/STATE_LOADING";
+
