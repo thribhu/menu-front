@@ -1,14 +1,19 @@
 
 .container
     margin: 50px 0
+.labelContainer
+    display: flex
+    justify-content: flex-end
+    align-items: center
 .formLabel
     margin: 0 15px
     font-size: 1.2rem
     font-family: inherit
-    color: #275b6d
+    // color: #842261
+    width: 100%
 .formInput
     border: none
-    border-bottom: 1.8px solid #591a5f
+    border-bottom: 2.8px solid #6692b9
     width: 400px
     font-size: 1.2rem
     font-family: inherit
@@ -16,11 +21,10 @@
     &:focus
         outline: none
 .formControl
-    display: flex
-    align-items: baseline
-    margin: 5px
-    max-width: 600px
-    justify-content: space-evenly
+    display: grid
+    grid-template-columns: 150px 1fr
+    grid-column-gap: 10px
+    margin: 15px
 .horizontalContent
     display: flex
 .button_container
@@ -67,14 +71,17 @@
     background-position: bottom right
     background-repeat: no-repeat
     font-size: 1rem
+    border-radius: 10px
 
 .checkboxContainer
     display: flex
     flex-direction: column
+    align-content: flex-start
     max-height: 100px
     flex-wrap: wrap
 .checkBoxLabel
     max-width: 200px
+    width: 100%
 .titleWithNoBox
     width: 140px
     display: flex

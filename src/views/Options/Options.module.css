@@ -2,16 +2,28 @@
   margin: 50px 0;
 }
 
+.labelContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .formLabel {
   margin: 0 15px;
   font-size: 1.2rem;
   font-family: inherit;
-  color: #275b6d;
+  width: 100%;
 }
 
 .formInput {
   border: none;
-  border-bottom: 1.8px solid #591a5f;
+  border-bottom: 2.8px solid #6692b9;
   width: 400px;
   font-size: 1.2rem;
   font-family: inherit;
@@ -23,17 +35,12 @@
 }
 
 .formControl {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: baseline;
-      -ms-flex-align: baseline;
-          align-items: baseline;
-  margin: 5px;
-  max-width: 600px;
-  -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 150px 1fr;
+      grid-template-columns: 150px 1fr;
+  grid-column-gap: 10px;
+  margin: 15px;
 }
 
 .horizontalContent {
@@ -120,6 +127,7 @@
   background-position: bottom right;
   background-repeat: no-repeat;
   font-size: 1rem;
+  border-radius: 10px;
 }
 
 .checkboxContainer {
@@ -130,6 +138,8 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -ms-flex-line-pack: start;
+      align-content: flex-start;
   max-height: 100px;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
@@ -137,6 +147,7 @@
 
 .checkBoxLabel {
   max-width: 200px;
+  width: 100%;
 }
 
 .titleWithNoBox {

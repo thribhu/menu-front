@@ -43,8 +43,8 @@ export default function AddOption(props) {
                 <Form>
                     <div>
                         <div className={classname(styles.formControl)}>
-                            <div>
-                                <label htmlFor="name" className={classname(styles.formLabel)}>Option</label>
+                            <div className={classname(styles.labelContainer)}>
+                                <label htmlFor="name" className={classname(styles.formLabel, styles.labelContainer)}>Option</label>
                             </div>
                             <div>
                                 <Field
@@ -62,8 +62,8 @@ export default function AddOption(props) {
                             />
                         </div>
                         <div className={classname(styles.formControl)}>
-                            <div>
-                                <label htmlFor="price" className={classname(styles.formLabel)}>Price</label>
+                            <div className={classname(styles.labelContainer)}>
+                                <label htmlFor="price" className={classname(styles.formLabel, styles.labelContainer)}>Price</label>
                             </div>
                             <div>
                                 <Field
@@ -72,6 +72,7 @@ export default function AddOption(props) {
                                     type="number"
                                     className={classname(styles.formInput)}
                                     min={0}
+                                    step={0.01}
                                 />
                             </div>
                             <ErrorMessage
@@ -81,8 +82,8 @@ export default function AddOption(props) {
                             />
                         </div>
                         <div className={classname(styles.formControl)}>
-                            <div>
-                                <label htmlFor="type" className={classname(styles.formLabel)}>Type</label>
+                            <div className={classname(styles.labelContainer)}>
+                                <label htmlFor="type" className={classname(styles.formLabel, styles.labelContainer)}>Type</label>
                             </div>
                             <div>
                                 <Field
@@ -99,8 +100,8 @@ export default function AddOption(props) {
                             />
                         </div>
                         <div className={classname(styles.imageField, styles.formControl)}>
-                            <div>
-                            <label htmlFor="modifier_image" className={classname(styles.formLabel)}>
+                            <div className={classname(styles.labelContainer)}>
+                            <label htmlFor="modifier_image" className={classname(styles.formLabel, styles.labelContainer)}>
                                 Image
                             </label>
                             </div>
