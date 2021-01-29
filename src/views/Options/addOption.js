@@ -2,9 +2,11 @@ import React from 'react';
 import classname from 'classnames';
 import styles from './Options.module.sass'
 import _ from 'lodash';
-import {Formik, FieldArray, Form} from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-const initValues = {
+import modifiers from '../Modifiers/modifiers.json'
+import {normalizeText as normalize} from 'utils/normalize'
+const initialValues = {
     name: '',
     description: '',
     image_url: '',
@@ -19,69 +21,134 @@ const validationSchema = yup.object({
     price: yup.number().required('A valid option must have price'),
     type: yup.string().optional(),
 })
-export default function AddOption(props){
+export default function AddOption(props) {
     const handleSubmit = e => {
         e.preventDefault();
-    } 
+    }
     return (
-        <div className={classname(styles.main)}>
-            <div>
-                <Formik
-                initialValues={initValues}
-                validationSchema={validationSchema}
-                onSubmit={(values) => console.log(values)}
-                >
-                    {({
-                        handleBlur,
-                        handleSubmit,
-                        handleChange,
-                        values,
-                        errors,
-                        touched,
-                        dirty,
-                        isValid
-                    }) => (
-                        <form onSubmit={handleSubmit}>
-                            <div>
-                                <div>
-                                    <label>
-                                        Name
-                                    </label>
-                                </div>
-                                <div>
-                                    <input 
-                                        value={values.name}
-                                        type="text"
-                                        onChange={handleChange('name')}
-                                        id="name"
-                                        name="name"
-                                        autoFocus={true}
-                                        autoCapitalize="none"
-                                    />
-                                </div>
-                                <div>
-                                    {touched.name 
-                                        &&
-                                     dirty.valueOf('name') 
-                                        && 
-                                    errors.name
-                                        &&
-                                    errors.name
-                                    }
-                                </div>
-                            </div>
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={!isValid}
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </Formik>
+        <div className={classname(styles.container)}>
+            <div className={classname(styles.formTitle)}>
+                <h4>
+                Add Option
+                </h4>
             </div>
+        <Formik
+            initialValues={initialValues}
+            onSubmit={async (values) => {
+                await new Promise((r) => setTimeout(r, 500));
+                alert(JSON.stringify(values, null, 2));
+            }}
+        >
+            {({ values }) => (
+                <Form>
+                    <div>
+                        <div className={classname(styles.formControl)}>
+                            <div>
+                                <label htmlFor="name" className={classname(styles.formLabel)}>Option</label>
+                            </div>
+                            <div>
+                                <Field
+                                    name="name"
+                                    placeholder="pepperoni"
+                                    type="text"
+                                    className={classname(styles.formInput)}
+                                    autoFocus={true}
+                                />
+                            </div>
+                            <ErrorMessage
+                                name={"name"}
+                                component="div"
+                                className="field-error"
+                            />
+                        </div>
+                        <div className={classname(styles.formControl)}>
+                            <div>
+                                <label htmlFor="price" className={classname(styles.formLabel)}>Price</label>
+                            </div>
+                            <div>
+                                <Field
+                                    name="price"
+                                    placeholder="0"
+                                    type="number"
+                                    className={classname(styles.formInput)}
+                                    min={0}
+                                />
+                            </div>
+                            <ErrorMessage
+                                name={"price"}
+                                component="div"
+                                className="field-error"
+                            />
+                        </div>
+                        <div className={classname(styles.formControl)}>
+                            <div>
+                                <label htmlFor="type" className={classname(styles.formLabel)}>Type</label>
+                            </div>
+                            <div>
+                                <Field
+                                    name="type"
+                                    placeholder="meat"
+                                    type="text"
+                                    className={classname(styles.formInput)}
+                                />
+                            </div>
+                            <ErrorMessage
+                                name={"type"}
+                                component="div"
+                                className="field-error"
+                            />
+                        </div>
+                        <div className={classname(styles.imageField, styles.formControl)}>
+                            <div>
+                            <label htmlFor="modifier_image" className={classname(styles.formLabel)}>
+                                Image
+                            </label>
+                            </div>
+                            <div>
+                            <input type="file" name="modifier_image" max={1} className={classname(styles.formInput)}/>
+                            </div>
+                        </div>
+                        <div className={classname(styles.titleWithNoBox)}>
+                            <h4>Description</h4>
+                        </div>
+                        <div className={classname(styles.formControl)}>
+                            <div>
+                                <Field
+                                    as="textarea"
+                                    name="description"
+                                    placeholder="All natural pepperoni topping"
+                                    type="text"
+                                    className={classname(styles.descriptionContainer)}
+                                />
+                            </div>
+                            <ErrorMessage
+                                name={"name"}
+                                component="div"
+                                className="field-error"
+                            />
+                        </div>
+                        
+                        <div>
+                            <h6 className={classname(styles.titleWithNoBox)}>
+                                Select Modifiers
+                            </h6>
+                            <div role="group" className={classname(styles.checkboxContainer)}>
+                                {modifiers.map((m, i) => (
+                                    <label className={classname(styles.checkBoxLabel)}>
+                                         <Field type="checkbox" name="modifiers" value={m.name + i } key={i}/>
+                                         {normalize(m.name)}
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                        <div className={classname(styles.saveButtonContainer)}>
+                            <button type="submit" className={classname(styles.ctaButton)}>Save Option</button>
+                        </div>
+                    </div>
+                </Form>
+            )
+            }
+        </Formik >
         </div>
     )
 }

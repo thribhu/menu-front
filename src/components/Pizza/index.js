@@ -27,9 +27,9 @@ export default function Pizza(props){
       };
     return (
         <div className={classname(styles.pizza)}>
-          <div className={classname(styles.topBar)}>
+          {/* <div className={classname(styles.topBar)}>
 
-          </div>
+          </div> */}
            <Switch>
                {getRoutes(routes())}
                {/* <Route path="/options" component={Options}/>

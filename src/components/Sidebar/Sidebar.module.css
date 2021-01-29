@@ -9,7 +9,7 @@
   max-width: 300px;
   position: static;
   border-right: 1px solid #adadad;
-  height: 100vh;
+  min-height: 100vh;
   -webkit-box-shadow: 0 10px 10px 0.8px #000000;
           box-shadow: 0 10px 10px 0.8px #000000;
 }
