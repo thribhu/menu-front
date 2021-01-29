@@ -3,6 +3,10 @@
   display: -ms-flexbox;
   display: flex;
   margin: 0 30px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 
 .topBar {
@@ -19,5 +23,7 @@
           box-shadow: 0 10px 10px -10px #000000;
   position: -webkit-sticky;
   position: sticky;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 /*# sourceMappingURL=Pizza.module.css.map */
