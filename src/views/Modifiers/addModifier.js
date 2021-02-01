@@ -66,7 +66,6 @@ export default function AddModifier() {
                                                             <div>
                                                                 <Field
                                                                     name={`options.${index}.name`}
-                                                                    placeholder="Wheat"
                                                                     type="text"
                                                                     className={classname(styles.formInput)}
                                                                 />
@@ -85,7 +84,6 @@ export default function AddModifier() {
                                                                 <Field
                                                                     name={`options.${index}.price`}
                                                                     type="number"
-                                                                    placeholder={0}
                                                                     step="0.01"
                                                                     className={classname(styles.formInput)}
                                                                 />
@@ -115,7 +113,7 @@ export default function AddModifier() {
                                                                         <button
                                                                             type="button"
                                                                             className="secondary"
-                                                                            onClick={() => push({ name: '', price: '' })}
+                                                                            onClick={() => insert(0, { name: '', price: '' })}
                                                                             className={classname(styles.common_button)}
                                                                         >
                                                                             <img src="/assets/plus.svg" height="20px" width="20px" />

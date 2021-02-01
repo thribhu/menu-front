@@ -16,13 +16,14 @@
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
-  max-height: 80px;
+  max-height: 70px;
   height: 80px;
   border-bottom: 1px solid #adadad;
   -webkit-box-shadow: 0 10px 10px -10px #000000;
           box-shadow: 0 10px 10px -10px #000000;
-  position: -webkit-sticky;
-  position: sticky;
+  position: fixed;
+  top: 1px;
+  width: 100%;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
