@@ -9,7 +9,7 @@ const initialValues = {
     options: [
         {
             name: '',
-            price: 0,
+            price: '',
         },
     ],
 };
@@ -23,6 +23,9 @@ export default function AddModifier() {
                 initialValues={initialValues}
                 onSubmit={async (values) => {
                     await new Promise((r) => setTimeout(r, 500));
+                    if((values.options[0].name || values.options[0].price) === ''){
+                        values.options.splice(0,1)
+                    }
                     alert(JSON.stringify(values, null, 2));
                 }}
             >
