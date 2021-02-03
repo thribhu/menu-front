@@ -98,7 +98,6 @@ export default function AddItem(props) {
                             <div>
                                 <input
                                     name="type"
-                                    placeholder="meat"
                                     type="text"
                                     className={classname(styles.formInput)}
                                 />
@@ -127,7 +126,6 @@ export default function AddItem(props) {
                                 <input
                                     type="textarea"
                                     name="description"
-                                    placeholder="All natural pepperoni topping"
                                     type="text"
                                     className={classname(styles.descriptionContainer)}
                                 />

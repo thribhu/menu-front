@@ -39,7 +39,6 @@ export default function AddModifier() {
                                 <div>
                                     <Field
                                         name="name"
-                                        placeholder="crust"
                                         type="text"
                                         className={classname(styles.formInput)}
                                     />

@@ -48,7 +48,6 @@ export default function AddGroup(props) {
                                 <div>
                                     <Field
                                         name="name"
-                                        placeholder="Cheese"
                                         type="text"
                                         className={classname(styles.formInput)}
                                         autoFocus={true}
@@ -68,7 +67,6 @@ export default function AddGroup(props) {
                                 <div>
                                     <Field
                                         name="min_required"
-                                        placeholder="1"
                                         value={values.min_required}
                                         type="number"
                                         min={1}
@@ -88,7 +86,6 @@ export default function AddGroup(props) {
                                 <div>
                                     <Field
                                         name="max_allowed"
-                                        placeholder="1"
                                         value={values.max_allowed}
                                         type="number"
                                         min={1}
@@ -108,7 +105,6 @@ export default function AddGroup(props) {
                                 <div>
                                     <Field
                                         name="price_default"
-                                        placeholder="1"
                                         value={values.price_default}
                                         type="number"
                                         min={1}
@@ -128,7 +124,6 @@ export default function AddGroup(props) {
                                 <div>
                                     <Field
                                         name="display_order"
-                                        placeholder="1"
                                         value={values.display_order}
                                         type="number"
                                         min={0}
@@ -149,7 +144,6 @@ export default function AddGroup(props) {
                                     <Field
                                         as="textarea"
                                         name="description"
-                                        placeholder="part-skim mozzarella cheese"
                                         type="text"
                                         className={classname(styles.descriptionContainer)}
                                     />

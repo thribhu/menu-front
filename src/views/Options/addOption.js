@@ -49,7 +49,6 @@ export default function AddOption(props) {
                             <div>
                                 <Field
                                     name="name"
-                                    placeholder="pepperoni"
                                     type="text"
                                     className={classname(styles.formInput)}
                                     autoFocus={true}
@@ -68,7 +67,6 @@ export default function AddOption(props) {
                             <div>
                                 <Field
                                     name="price"
-                                    placeholder="0"
                                     type="number"
                                     className={classname(styles.formInput)}
                                     min={0}
@@ -88,7 +86,6 @@ export default function AddOption(props) {
                             <div>
                                 <Field
                                     name="type"
-                                    placeholder="meat"
                                     type="text"
                                     className={classname(styles.formInput)}
                                 />
@@ -117,7 +114,6 @@ export default function AddOption(props) {
                                 <Field
                                     as="textarea"
                                     name="description"
-                                    placeholder="All natural pepperoni topping"
                                     type="text"
                                     className={classname(styles.descriptionContainer)}
                                 />
