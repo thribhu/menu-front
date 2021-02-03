@@ -1,11 +1,16 @@
 import React from 'react';
 import classname from 'classnames'
 import styles from './Modifiers.module.sass';
-
-export default function ListModifiers (){
+import {useHistory} from 'react-router-dom'
+export default function Modifiers (){
+    const history = useHistory()
     return (
         <div>
-            I am working on list modifier
+            <div className={classname(styles.home_top_bar)}>
+                <button onClick={() => history.push('/addModifier')} className={classname(styles.home_button)}>
+                    Add Modifier
+                </button>
+            </div>
         </div>
     )
 }

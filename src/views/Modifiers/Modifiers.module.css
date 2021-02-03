@@ -107,4 +107,32 @@
   background-color: #6692b9;
   color: white;
 }
+
+.home_button {
+  width: 200px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.home_button:hover {
+  background-color: #01a1dd;
+  color: white;
+}
+
+.home_top_bar {
+  height: 80px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 20px;
+}
 /*# sourceMappingURL=Modifiers.module.css.map */

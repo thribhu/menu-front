@@ -3,9 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import styles from './Pizza.module.sass'
 import classname from 'classnames';
 import routes from 'routes';
-import {map} from 'lodash'
-import Options from 'views/Options';
-import AddOption from 'views/Options/addOption'
+import Group from 'views/Groups'
 export default function Pizza(props){
     const {component} = props;
     const getRoutes = (routes) => {
@@ -32,8 +30,7 @@ export default function Pizza(props){
           </div> */}
            <Switch>
                {getRoutes(routes())}
-               {/* <Route path="/options" component={Options}/>
-               <Route path="/addOption" component={AddOption}/> */}
+               <Route path="/groups" component={Group}/>
            </Switch> 
         </div>
     )

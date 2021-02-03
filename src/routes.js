@@ -1,6 +1,6 @@
 import AddOptions from 'views/Options/addOption'
 import OptionsList from 'views/Options'
-import Groups from 'views/Groups/index';
+import Groups from 'views/Groups';
 import AddGroup from 'views/Groups/addGroup'
 import ListItems from 'views/Items';
 import AddItem from 'views/Items/addItem';

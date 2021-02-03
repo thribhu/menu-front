@@ -63,27 +63,7 @@ export default function AddGroup(props) {
                             </div>
                             <div className={classname(styles.formControl)}>
                                 <div className={classname(styles.labelContainer)}>
-                                    <label htmlFor="price" className={classname(styles.formLabel, styles.labelContainer)}>Price</label>
-                                </div>
-                                <div>
-                                    <Field
-                                        name="price"
-                                        placeholder="0"
-                                        type="number"
-                                        className={classname(styles.formInput)}
-                                        min={0.01}
-                                        step={.01}
-                                    />
-                                </div>
-                                <ErrorMessage
-                                    name={"price"}
-                                    component="div"
-                                    className="field-error"
-                                />
-                            </div>
-                            <div className={classname(styles.formControl)}>
-                                <div className={classname(styles.labelContainer)}>
-                                    <label htmlFor="min_required" className={classname(styles.formLabel, styles.labelContainer)}>Minimum</label>
+                                    <label htmlFor="min_required" className={classname(styles.formLabel, styles.labelContainer)}>Min Required</label>
                                 </div>
                                 <div>
                                     <Field
@@ -103,7 +83,7 @@ export default function AddGroup(props) {
                             </div>
                             <div className={classname(styles.formControl)}>
                                 <div className={classname(styles.labelContainer)}>
-                                    <label htmlFor="max_allowed" className={classname(styles.formLabel, styles.labelContainer)}>Maximum</label>
+                                    <label htmlFor="max_allowed" className={classname(styles.formLabel, styles.labelContainer)}>Max Allowed</label>
                                 </div>
                                 <div>
                                     <Field
