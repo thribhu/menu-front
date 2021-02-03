@@ -1,0 +1,20 @@
+[
+    { 
+        "name": "cheese", 
+        "description": "Choose one of the following options", 
+        "options": ["mozzarella", "gorgonzola"], 
+        "max_allowed": 1, 
+        "min_required": 1, 
+        "price_default": 2.00, 
+        "display_order":  2 
+   }, 
+   { 
+        "name":"sauce", 
+        "description": "Choose one of the following options", 
+        "options": ["tomato sauce", "garlic sauce"], 
+        "max_allowed": 2, 
+        "min_required": 1, 
+        "price_default": 2.00, 
+        "display_order":  2 
+   }  
+]
