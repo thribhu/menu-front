@@ -42,49 +42,5 @@
             "amount",
             "side"
         ]
-    },
-    {
-        "name": "mozzarella",
-        "description": "part-skim mozzarella cheese",
-        "image_url": "img/mozzarella.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "gorgonzola",
-        "description": "gorgonzola cheese",
-        "image_url": "img/ gorgonzola.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "tomato sauce",
-        "description": "organic tomato sauce",
-        "image_url": "img/ tomato_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "garlic sauce",
-        "description": "garlic sauce",
-        "image_url": "img/ garlic_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
     }
 ]

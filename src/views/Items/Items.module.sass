@@ -1,6 +1,9 @@
 
 .container
     margin: 50px 0
+    display: grid
+    grid-template-columns: 1fr auto
+    column-gap: 16px
 .labelContainer
     display: flex
     justify-content: flex-end
@@ -13,7 +16,7 @@
     width: 100%
 .formInput
     border: none
-    border-bottom: 2.8px solid #6692b9
+    border-bottom: 1px solid
     width: 400px
     font-size: 1.2rem
     font-family: inherit
@@ -22,7 +25,7 @@
         outline: none
 .formControl
     display: grid
-    grid-template-columns: 150px 1fr
+    grid-template-columns: 70px 1fr
     grid-column-gap: 10px
     margin: 15px
 .horizontalContent
@@ -63,7 +66,7 @@
     background-color: #6692b9
     color: white
 .descriptionContainer
-    width: 600px
+    width: 450px
     height: 120px
     border: 3px solid #cccccc
     padding: 10px
@@ -99,3 +102,24 @@
     justify-content: flex-end;
     align-items: center;
     padding: 20px;
+.right_bar
+    border: none
+    display: flex
+    flex-direction: column
+    justify-content: space-evenly
+.right_bar_content
+    display: flex
+    height: 100%
+    flex-direction: column
+    margin: 0 10px
+.right_bar_button
+    padding: 5px;
+    border: none
+    cursor: pointer 
+    display: grid
+    grid-template-columns: 3fr 3fr 
+    column-gap: 16px
+    &:hover
+        color: #6692b9
+.multiSelectWidth
+    max-width: 400px
