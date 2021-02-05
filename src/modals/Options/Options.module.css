@@ -1,0 +1,51 @@
+.modal_title {
+  background-color: #adadad;
+  /* width: 100%; */
+  height: 30px;
+  color: white;
+  /* text-align: center; */
+  padding: 5px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.padding_5px {
+  padding: 5px;
+}
+
+.modal_label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #6692b9;
+}
+
+.display_container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+}
+
+.row_with_margin {
+  margin: 10px 0;
+}
+
+.text_area {
+  padding: 10px;
+  width: 300px;
+  margin: 10 300px;
+}
+
+.avatar {
+  height: 38px;
+  width: 40px;
+}
+/*# sourceMappingURL=Options.module.css.map */

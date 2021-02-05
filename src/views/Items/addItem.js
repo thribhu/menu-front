@@ -10,6 +10,8 @@ import { normalizeText as normalize } from 'utils/normalize'
 import Select from 'react-select';
 import Modal from 'react-modal'
 import GroupModal from 'modals/Groups'
+import OptionModal from 'modals/Options'
+import Switch from 'react-switch'
 const groupOptions = Groups.map(g => { return { label: normalize(g.name), value: g.name } })
 const optionsForSelect = Options.map(g => { return { label: normalize(g.name), value: g.name } })
 const initialValues = {
@@ -19,9 +21,6 @@ const initialValues = {
     price: '',
     type: '',
     stock: '',
-    active: true,
-    options_groups: [],
-    options: []
 }
 const validationSchema = yup.object({
     name: yup.string().required('A valid option must have name'),
@@ -29,8 +28,17 @@ const validationSchema = yup.object({
     price: yup.number().required('A valid option must have price'),
     type: yup.string().optional(),
     stock: yup.number().optional(),
-    active: yup.boolean().optional(),
 })
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)',
+        width: '400px'
+    }
+};
 
 export default function AddOption(props) {
     const [groups, setGroups] = React.useState([]);
@@ -38,11 +46,13 @@ export default function AddOption(props) {
     const [nowGroup, setNowGroup] = React.useState();
     const [nowOption, setNowOption] = React.useState();
     const [open, setOpen] = React.useState(false)
+    const [optionOpen, setOptionOpen] = React.useState(false)
+    const [active, setActive] = React.useState(true)
     function showSingleOption(option) {
         let validOptions = Options.map(o => o.name);
         if (validOptions.indexOf(option) > -1) {
             return (
-                <div className={classname(styles.right_bar_button)} onClick={() => setNowOption(option)}>
+                <div className={classname(styles.right_bar_button)} onClick={() => { setNowOption(option); setOptionOpen(true) }}>
                     <div>
                         {option}
                     </div>
@@ -59,7 +69,7 @@ export default function AddOption(props) {
         if (names.indexOf(group) > -1) {
             let optionsToShow = _.filter(Groups, { name: group }).options
             return (
-                <div className={classname(styles.right_bar_button)} onClick={() => {setNowGroup(group);setOpen(true)}}>
+                <div className={classname(styles.right_bar_button)} onClick={() => { setNowGroup(group); setOpen(true) }}>
                     <div>
                         {group}
                     </div>
@@ -83,7 +93,8 @@ export default function AddOption(props) {
                     initialValues={initialValues}
                     onSubmit={async (values) => {
                         await new Promise((r) => setTimeout(r, 500));
-                        alert(JSON.stringify(values, null, 2));
+                        let item = _.assign({}, values, {options_groups: groups, active, options})
+                        alert(JSON.stringify(item, null, 2));
                     }}
                 >
                     {({ values }) => (
@@ -136,6 +147,29 @@ export default function AddOption(props) {
                                             type="text"
                                             className={classname(styles.formInput)}
                                         />
+                                    </div>
+                                    <ErrorMessage
+                                        name={"type"}
+                                        component="div"
+                                        className="field-error"
+                                    />
+                                </div>
+                                <div className={classname(styles.formControl)}>
+                                    <div className={classname(styles.labelContainer)}>
+                                        <label htmlFor="active" className={classname(styles.formLabel, styles.labelContainer)}>Active</label>
+                                    </div>
+                                    <div>
+                                        <Field
+                                            name="active"
+                                        >
+                                          {({field, form, meta}) => (
+                                              <Switch name="active" {...field}
+                                              onChange={e => {
+                                                  setActive(e)
+                                              }}
+                                              checked={active}/>
+                                          )}  
+                                        </Field>
                                     </div>
                                     <ErrorMessage
                                         name={"type"}
@@ -243,8 +277,16 @@ export default function AddOption(props) {
             <Modal
                 isOpen={open}
                 onRequestClose={() => setOpen(false)}
+                style={customStyles}
             >
-                <GroupModal group={nowGroup}/>
+                <GroupModal group={nowGroup} />
+            </Modal>
+            <Modal
+                isOpen={optionOpen}
+                onRequestClose={() => setOptionOpen(false)}
+                style={customStyles}
+            >
+                <OptionModal option={nowOption} />
             </Modal>
         </div>
     )
