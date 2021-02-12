@@ -3,17 +3,17 @@
     margin: 50px 0
 .labelContainer
     display: flex
-    justify-content: flex-end
     align-items: center
+.formContainer
+    display: flex
+    justify-content: center
 .formLabel
     margin: 0 15px
     font-size: 1.2rem
     font-family: inherit
-    // color: #842261
+    color: #333
     width: 100%
 .formInput
-    border: none
-    border-bottom: 2.8px solid #6692b9
     width: 400px
     font-size: 1.2rem
     font-family: inherit
@@ -36,6 +36,9 @@
     background: transparent
     &:focus
         outline: none
+.titleContainer
+    display: flex
+    justify-content: center
 .formTitle
     height: 60px
     width: 140px
@@ -72,7 +75,6 @@
     background-repeat: no-repeat
     font-size: 1rem
     border-radius: 10px
-
 .checkboxContainer
     display: flex
     flex-direction: column
@@ -103,3 +105,7 @@
     justify-content: flex-end;
     align-items: center;
     padding: 20px;
+.buttonGroup
+    display: flex
+    justify-content: space-between
+    margin: 20px

@@ -6,6 +6,26 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import options from '../Options/options.json'
 import { normalizeText as normalize } from 'utils/normalize'
+import Table from 'components/orderTable'
+import Modal from 'react-modal'
+const columns = [
+    {
+        Header: 'Image',
+        accessor: 'image'
+    },
+    {
+        Header: 'Name',
+        accessor: 'name'
+    },
+    {
+        Header: 'Price',
+        accessor: 'price'
+    },
+    {
+        Header: 'Type',
+        accessor: 'type'
+    },
+]
 const initialValues = {
     name: '',
     description: '',
@@ -24,18 +44,41 @@ const validationSchema = yup.object({
     type: yup.string().optional(),
 })
 export default function AddGroup(props) {
+    const [showTable, setTableShow] = React.useState(false);
+    const [selected, setSelected] = React.useState([]);
+    const customStyles = {
+        content : {
+          top                   : '50%',
+          left                  : '50%',
+          right                 : 'auto',
+          bottom                : 'auto',
+          marginRight           : '-50%',
+          transform             : 'translate(-50%, -50%)'
+        }
+      };
     return (
         <div className={classname(styles.container)}>
+        <Modal
+            isOpen={showTable}
+            onRequestClose={() => setTableShow(false)}
+            style={customStyles}
+        >
+            <Table updateSelectItems={setSelected} columns={columns} data={options}/>
+        </Modal>
+            <div className={classname(styles.titleContainer)}>
             <div className={classname(styles.formTitle)}>
                 <h4>
                     Add Group
                 </h4>
             </div>
+            </div>
+            <div className={styles.formContainer}>
             <Formik
-                initialValues={initialValues}
+                enableReinitialize
+                initialValues={_.merge(initialValues, props.currentForm)}
                 onSubmit={async (values) => {
-                    await new Promise((r) => setTimeout(r, 500));
-                    alert(JSON.stringify(values, null, 2));
+                    props.formMethod(values)
+                    props.next(true)
                 }}
             >
                 {({ values }) => (
@@ -139,7 +182,7 @@ export default function AddGroup(props) {
                             <div className={classname(styles.titleWithNoBox)}>
                                 <h4>Description</h4>
                             </div>
-                            <div className={classname(styles.formControl)}>
+                            <div>
                                 <div>
                                     <Field
                                         as="textarea"
@@ -154,28 +197,15 @@ export default function AddGroup(props) {
                                     className="field-error"
                                 />
                             </div>
-
-                            <div>
-                                <h4 className={classname(styles.titleWithNoBox)}>
-                                    Select Options
-                            </h4>
-                                <div role="group" className={classname(styles.checkboxContainer)}>
-                                    {options.map((m, i) => (
-                                        <label className={classname(styles.checkBoxLabel)}>
-                                            <Field type="checkbox" name="options" value={m.name + i} key={i} />
-                                            {normalize(m.name)}
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
                             <div className={classname(styles.saveButtonContainer)}>
-                                <button type="submit" className={classname(styles.ctaButton)}>Save Option</button>
+                                <button type="submit" className={classname(styles.ctaButton)}>Add Option</button>
                             </div>
                         </div>
                     </Form>
                 )
                 }
             </Formik >
+            </div>
         </div>
     )
 }

@@ -6,24 +6,29 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+.formContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .formLabel {
   margin: 0 15px;
   font-size: 1.2rem;
   font-family: inherit;
+  color: #333;
   width: 100%;
 }
 
 .formInput {
-  border: none;
-  border-bottom: 2.8px solid #6692b9;
   width: 400px;
   font-size: 1.2rem;
   font-family: inherit;
@@ -66,6 +71,15 @@
 
 .common_button:focus {
   outline: none;
+}
+
+.titleContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .formTitle {
@@ -187,5 +201,15 @@
       -ms-flex-align: center;
           align-items: center;
   padding: 20px;
+}
+
+.buttonGroup {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 20px;
 }
 /*# sourceMappingURL=Groups.module.css.map */

@@ -1,0 +1,161 @@
+[
+    {
+    "name": "pepperoni",
+    "description": "ingredients: Organic tomato sauce, part-skim mozzarella, all-natural pepperoni",
+    "type": "meat pizza",
+    "image_url": "img/pepperoni_pizza.jpg",
+    "price": 12.50,
+    "active": 1,
+    "stock":70,
+    "option_groups": [
+        {
+            "name": "sauce",
+            "description": "Choose one of the following options",
+            "options": [
+                {
+                    "name": "tomato sauce",
+                    "description": "organic tomato sauce",
+                    "image_url":"img/ tomato_sauce.jpg",
+                    "price":2.00,
+                    "type": "sauce",
+                    "modifiers": [
+                        {
+                            "name": "amount",
+                            "options": {
+                                "Normal" :0.00,
+                                "Light": -0.50,
+                                "Extra": 1.50
+                            }
+                        },
+                        {
+                            "name": "side",
+                            "options": {
+                                "Whole":0.00,
+                                "Right":-1.25,
+                                "Left":-1.25
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "garlic sauce",
+                    "description": "garlic sauce",
+                    "image_url": "img/ garlic_sauce.jpg",
+                    "price":2.00,
+                    "type": "sauce",
+                    "modifiers": [
+                        {
+                            "name": "amount",
+                            "options": {
+                                "Normal": 0.00,
+                                "Light": -0.50,
+                                "Extra":1.50
+                            }
+                        },
+                        {
+                            "name": "side",
+                            "options": {
+                                "Whole": 0.00,
+                                "Right": -1.25,
+                                "Left": -1.25
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_allowed":2,
+            "min_required":1,
+            "price_default":2.00,
+            "display_order":2
+        },
+        {
+            "name": "cheese",
+            "description": "Choose one of the following options",
+            "options": [
+                {
+                    "name": "mozzarella",
+                    "description": "part-skim mozzarella cheese",
+                    "image_url": "img/mozzarella.jpg",
+                    "price":2.00,
+                    "type": "cheese",
+                    "modifiers": [
+                        {
+                            "name": "amount",
+                            "options": {
+                                "Normal": 0.00,
+                                "Light": -0.50,
+                                "Extra": 1.50
+                            }
+                        },
+                        {
+                            "name": "side",
+                            "options": {
+                                "Whole": 0.00,
+                                "Right": -1.25,
+                                "Left": -1.25
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "gorgonzola",
+                    "description": "gorgonzola cheese",
+                    "image_url": "img/gorgonzola.jpg",
+                    "price":2.00,
+                    "type": "cheese",
+                    "modifiers": [
+                        {
+                            "name": "amount",
+                            "options": {
+                                "Normal":0.00,
+                                "Light": -0.50,
+                                "Extra":1.50
+                            }
+                        },
+                        {
+                            "name": "side",
+                            "options": {
+                                "Whole": 0.00,
+                                "Right": -1.25,
+                                "Left": -1.25
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_allowed": 1,
+            "min_required": 1,
+            "price_default": 2.00,
+            "display_order":2
+        }
+    ],
+    "options": [
+        {
+            "name": "pepperoni",
+            "description": "All natural pepperoni topping",
+            "image_url": "img/pepperoni.jpg",
+            "price": 2.00,
+            "type": "meat",
+            "modifiers": [
+                {
+                    "name": "amount",
+                    "options": {
+                        "Normal":0.00,
+                        "Light": -0.50,
+                        "Extra":1.50
+                    }
+                },
+                {
+                    "name": "side",
+                    "options": {
+                        "Whole": 0.00,
+                        "Right": -1.25,
+                        "Left": -1.25
+                    }
+                }
+            ]
+        }
+    ]
+}
+
+]

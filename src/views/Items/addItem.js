@@ -93,7 +93,7 @@ export default function AddOption(props) {
                     initialValues={initialValues}
                     onSubmit={async (values) => {
                         await new Promise((r) => setTimeout(r, 500));
-                        let item = _.assign({}, values, {options_groups: groups, active, options})
+                        let item = _.assign({}, values, { options_groups: groups, active, options })
                         alert(JSON.stringify(item, null, 2));
                     }}
                 >
@@ -162,13 +162,13 @@ export default function AddOption(props) {
                                         <Field
                                             name="active"
                                         >
-                                          {({field, form, meta}) => (
-                                              <Switch name="active" {...field}
-                                              onChange={e => {
-                                                  setActive(e)
-                                              }}
-                                              checked={active}/>
-                                          )}  
+                                            {({ field, form, meta }) => (
+                                                <Switch name="active" {...field}
+                                                    onChange={e => {
+                                                        setActive(e)
+                                                    }}
+                                                    checked={active} />
+                                            )}
                                         </Field>
                                     </div>
                                     <ErrorMessage
@@ -181,7 +181,7 @@ export default function AddOption(props) {
                                     <div className={classname(styles.labelContainer)}>
                                         <label htmlFor="modifier_image" className={classname(styles.formLabel, styles.labelContainer)}>
                                             Image
-                            </label>
+                                        </label>
                                     </div>
                                     <div>
                                         <input type="file" name="modifier_image" max={1} className={classname(styles.formInput)} />
@@ -205,32 +205,6 @@ export default function AddOption(props) {
                                         className="field-error"
                                     />
                                 </div>
-
-                                <div className={classname(styles.multiSelectWidth)}>
-                                    <h6 className={classname(styles.titleWithNoBox)}>
-                                        Select Groups
-                            </h6>
-                                    <div role="group" className={classname(styles.checkboxContainer)}>
-                                        <Select name="options_groups" options={groupOptions} isMulti onChange={
-                                            e => {
-                                                setGroups(e.map(i => i.value))
-                                            }
-                                        }
-                                        />
-                                    </div>
-                                </div>
-                                <div className={classname(styles.multiSelectWidth)}>
-                                    <h6 className={classname(styles.titleWithNoBox)}>
-                                        Select Options
-                            </h6>
-                                    <div role="group" className={classname(styles.checkboxContainer)}>
-                                        <Select name="options_groups" options={optionsForSelect} isMulti onChange={
-                                            e => {
-                                                setOptions(e.map(i => i.value))
-                                            }
-                                        } />
-                                    </div>
-                                </div>
                                 <div className={classname(styles.saveButtonContainer)}>
                                     <button type="submit" className={classname(styles.ctaButton)}>Save Option</button>
                                 </div>
@@ -240,54 +214,6 @@ export default function AddOption(props) {
                     }
                 </Formik >
             </div>
-            <div className={classname(styles.right_bar)}>
-                <div className={classname(styles.right_bar_content)}>
-                    <div className={classname(styles.titleWithNoBox)}>
-                        <h4>Selected Groups</h4>
-                    </div>
-                    <div>
-                        {groups.length ?
-                            groups.map(g => (
-                                <div>
-                                    {ShowSingleGroup(g)}
-                                </div>
-                            ))
-                            :
-                            'Your selected groups are shown here '
-                        }
-                    </div>
-                </div>
-                <div className={classname(styles.right_bar_content)}>
-                    <div className={classname(styles.titleWithNoBox)}>
-                        <h4>Selectd Options</h4>
-                    </div>
-                    <div>
-                        {
-                            options.length ? options.map(option => (
-                                <div>
-                                    {showSingleOption(option)}
-                                </div>
-                            ))
-                                :
-                                'You selected options are shown here'
-                        }
-                    </div>
-                </div>
-            </div>
-            <Modal
-                isOpen={open}
-                onRequestClose={() => setOpen(false)}
-                style={customStyles}
-            >
-                <GroupModal group={nowGroup} />
-            </Modal>
-            <Modal
-                isOpen={optionOpen}
-                onRequestClose={() => setOptionOpen(false)}
-                style={customStyles}
-            >
-                <OptionModal option={nowOption} />
-            </Modal>
         </div>
     )
 }
