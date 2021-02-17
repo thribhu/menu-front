@@ -23,9 +23,9 @@ const initialValues = {
     stock: '',
 }
 const validationSchema = yup.object({
-    name: yup.string().required('A valid option must have name'),
+    name: yup.string().required('Name is required'),
     description: yup.string().optional(),
-    price: yup.number().required('A valid option must have price'),
+    price: yup.number().required('Price is required'),
     type: yup.string().optional(),
     stock: yup.number().optional(),
 })
@@ -93,7 +93,6 @@ export default function AddOption(props) {
     const [step1, setStep1] = React.useState(false)
     const [selected, setSelected] = React.useState([])
     const [formValues, setForm] = React.useState()
-    debugger
     const history = useHistory()
     _.map(tableData, item => _.assign(item, {
         actions: (
@@ -112,12 +111,13 @@ export default function AddOption(props) {
                 {!step1 &&
                     <div>
                         <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <h4 style={{fontSize: '1.5rem', color: 'red'}}>
+                            <p style={{fontSize: '1.5rem', color: 'red'}}>
                                 Add Item
-                </h4>
+                </p>
                         </div>
                         <Formik
                             initialValues={_.merge(initialValues, formValues)}
+                            validationSchema={validationSchema}
                             onSubmit={async (values) => {
                                 // await new Promise((r) => setTimeout(r, 500));
                                 // let item = _.assign({}, values)
@@ -140,12 +140,12 @@ export default function AddOption(props) {
                                                     className={classname(styles.formInput)}
                                                     autoFocus={true}
                                                 />
-                                            </div>
                                             <ErrorMessage
                                                 name={"name"}
                                                 component="div"
-                                                className="field-error"
+                                                style={{color: 'red'}}
                                             />
+                                            </div>
                                         </div>
                                         <div className={classname(styles.formControl)}>
                                             <div className={classname(styles.labelContainer)}>
@@ -159,12 +159,12 @@ export default function AddOption(props) {
                                                     min={0}
                                                     step={0.01}
                                                 />
-                                            </div>
                                             <ErrorMessage
                                                 name={"price"}
                                                 component="div"
-                                                className="field-error"
+                                                style={{color: 'red'}}
                                             />
+                                            </div>
                                         </div>
                                         <div className={classname(styles.formControl)}>
                                             <div className={classname(styles.labelContainer)}>
@@ -219,7 +219,7 @@ export default function AddOption(props) {
                                         <div className={classname(styles.titleWithNoBox)}>
                                             <h4>Description</h4>
                                         </div>
-                                        <div className={classname(styles.formControl)}>
+                                        <div className={classname(styles.descriptionBox)}>
                                             <div>
                                                 <Field
                                                     as="textarea"
@@ -229,7 +229,7 @@ export default function AddOption(props) {
                                                 />
                                             </div>
                                             <ErrorMessage
-                                                name={"name"}
+                                                name={"description"}
                                                 component="div"
                                                 className="field-error"
                                             />
@@ -281,7 +281,7 @@ export default function AddOption(props) {
                 (selected.length && !step1) ?
                     <div style={{ flex: 1 }}>
                         <div>
-                        <OrderTable columns={columns} data={selected}/>
+                        <Table columns={columns} data={selected} withCheckBox={true} noAction={true}/>
                         </div>
                         <div style={{margin: '10px auto', display: 'flex', justifyContent: 'center'}}>
                             <button className={styles.ctaButton} onClick={() => {props.setOpen(false); setForm(null)}}>

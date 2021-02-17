@@ -12,16 +12,15 @@ import AddItem from './addItem'
 const customStyles = {
     content : {
         margin: 'auto',
-        maxWidth: '75%',
-        overflow: 'auto'
-    //   top                   : '50%',
-    //   left                  : '50%',
-    //   right                 : 'auto',
-    //   bottom                : 'auto',
-    //   marginRight           : '-50%',
-    //   transform             : 'translate(-50%, -50%)',
-    //   margin: '30px 0',
-    //   overflow: 'auto'
+        height: '80%',
+        width: '100%',
+        maxWidth: '600px',
+        overflow: 'auto',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        bottom: 'auto',
+        transform: 'translate(-50%, -50%)'
     }
   };
 export default function Items() {
@@ -49,33 +48,6 @@ export default function Items() {
             Header: "Stock",
             accessor: 'stock'
         },
-        // {
-        //     Header: normalize("option group"),
-        //     accessor: "option_groups",
-        //     Cell: row => {
-        //         debugger
-        //         return (
-        //             _.map(row.value, (r, i) => (
-        //                 <div key={i}>
-        //                     {normalize(r.name)}
-        //                 </div>
-        //             ))
-        //         )
-        //     }
-        // },
-        // {
-        //     Header: normalize("options"),
-        //     accessor: "options",
-        //     Cell: row => {
-        //         return (
-        //             _.map(row.value, r => (
-        //                 <div>
-        //                     {normalize(r.name)}
-        //                 </div>
-        //             ))
-        //         )
-        //     }
-        // },
         {
             Header: "Actions",
             accessor: "actions"

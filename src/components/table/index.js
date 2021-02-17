@@ -4,10 +4,11 @@ import {
   useFilters,
   useAsyncDebounce,
   useSortBy,
-  ReactTable,
   usePagination,
-  useRowSelect
+  useRowSelect,
+  useGlobalFilter
 } from "react-table";
+import _ from 'lodash'
 import classnames from "classnames";
 import { matchSorter } from "match-sorter";
 import FormControl from "@material-ui/core/FormControl";
@@ -17,7 +18,6 @@ import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import styles from './table.module.css'
 
-import CssBaseline from '@material-ui/core/CssBaseline'
 import MaUTable from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -62,7 +62,32 @@ function DefaultColumnFilter({
     </div>
   );
 }
-
+// global filter
+function GlobalFilter({preGlobalFilteredRows, globalFilter, setGlobalFilter}){
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter)
+  const onChange = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined)
+  }, 200)
+  return (
+    <span>
+      Search: {''}
+      <input 
+        value={value || ''}
+        onChange={e => {
+          setValue(e.target.value)
+          onChange(e.target.value)
+        }}
+        placeholder={`${count} records`}
+        style={{
+          fontSize: '1rem',
+          border: '0',
+          padding: '10px'
+        }}
+      />
+    </span>
+  )
+}
 function fuzzyTextFilterFn(rows, id, filterValue) {
   return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
 }
@@ -87,10 +112,15 @@ const IndeterminateCheckbox = React.forwardRef(
 )
 
 // Our table component
-function Table({ columns, data, updateSelectItems }) {
+function Table({ columns, data, updateSelectItems, withCheckBox, noAction }) {
   const [numberOfRows, setNumberOfRows] = React.useState(10);
   const [pageSelect, handlePageSelect] = React.useState(0);
-  const memo_columns = React.useMemo(() => columns)
+  const memo_columns = React.useMemo(() => {
+    if(noAction) {
+      return _.map(columns, col => col.pop)
+    }
+    else return columns
+  }, [noAction])
   const memo_data = React.useMemo(() => data)
   const filterTypes = React.useMemo(
     () => ({
@@ -137,7 +167,9 @@ function Table({ columns, data, updateSelectItems }) {
     setPageSize,
     gotoPage,
     state: {pageIndex, pageSize, selectedRowIds},
-    selectedFlatRows
+    selectedFlatRows,
+    preGlobalFilteredRows,
+    setGlobalFilter
   } = useTable(
     {
       columns: memo_columns,
@@ -147,11 +179,12 @@ function Table({ columns, data, updateSelectItems }) {
       initialState: { pageSize: 10, pageIndex: 0 },
     },
     useFilters, // useFilters!
+    useGlobalFilter,
     useSortBy,
     usePagination,
     useRowSelect,
     hooks => {
-      hooks.visibleColumns.push(columns => [
+      withCheckBox &&  hooks.visibleColumns.push(columns => [
         {
           id: 'selection',
           Header: ({ getToggleAllPageRowsSelectedProps }) => (
@@ -274,7 +307,7 @@ function Table({ columns, data, updateSelectItems }) {
             </div>
           </div>
         </div>
-        <MaUTable {...getTableProps()} className={classnames(styles.rt_table)}>
+        <MaUTable {...getTableProps()} >
           <TableHead>
             {headerGroups.map((headerGroup) => (
               <TableRow {...headerGroup.getHeaderGroupProps()} className="rt-tr">
@@ -290,18 +323,15 @@ function Table({ columns, data, updateSelectItems }) {
                     <div className="rt-resizable-header-content" style={{textAlign: 'center'}}>
                       {column.render("Header")}
                     </div>
-                    {/* Render the columns filter UI */}
-                    <div>
-                      {/* {headerGroup.headers.length - 1 === key
-                        ? null
-                        : column.canFilter
-                          ? column.render("Filter")
-                          : null} */}
-                    </div>
                   </TableCell>
                 ))}
               </TableRow>
             ))}
+            <TableRow >
+                  <TableCell colSpan={visibleColumns.length} style={{textAlign: 'left'}}>
+                    <GlobalFilter preGlobalFilteredRows={preGlobalFilteredRows} globalFilter={state.globalFilter} setGlobalFilter={setGlobalFilter}/>
+                  </TableCell>
+            </TableRow>
           </TableHead>
           <TableBody
             // style={{ textAlign: "center" }}
@@ -333,24 +363,7 @@ function Table({ columns, data, updateSelectItems }) {
             })}
           </TableBody>
         </MaUTable>
-        <div className="pagination-bottom">
-        </div>
       </div>
   );
 }
-
-// Define a custom filter filter function!
-function filterGreaterThan(rows, id, filterValue) {
-  return rows.filter((row) => {
-    const rowValue = row.values[id];
-    return rowValue >= filterValue;
-  });
-}
-
-// This is an autoRemove method on the filter function that
-// when given the new filter value and returns true, the filter
-// will be automatically removed. Normally this is just an undefined
-// check, but here, we want to remove the filter if it's not a number
-filterGreaterThan.autoRemove = (val) => typeof val !== "number";
-
 export default Table;

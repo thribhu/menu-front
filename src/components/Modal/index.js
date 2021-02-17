@@ -1,10 +1,14 @@
+import { Translate } from '@material-ui/icons';
 import React from 'react';
 import Modal from 'react-modal';
 
 const customStyles = {
     position: 'absolute',
-    top: ''
-}
+    top: '50%',
+    left: '50%',
+    tranform: 'translate(-50%, -50%)',
+    width: '100%',
+    maxWidth: '600px' }
 
 function InModal(wrappedComponent, props){
     return class extends React.Component{
@@ -28,8 +32,12 @@ function InModal(wrappedComponent, props){
             })
         }
         render(){
+            const {isOpen} = this.state
             return (
-                <Modal>
+                <Modal
+                style={customStyles}
+                isOpen={isOpen}
+                >
                     <wrappedComponent {...props} togleModal={this.toggleModal}/>
                 </Modal>
             )

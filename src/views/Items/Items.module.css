@@ -136,12 +136,20 @@
   cursor: pointer;
 }
 
+.descriptionBox {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+
 .descriptionContainer {
   width: 450px;
   height: 120px;
   border: 3px solid #cccccc;
   padding: 10px;
-  font-family: Arial, Helvetica, sans-serif;
   background-position: bottom right;
   background-repeat: no-repeat;
   font-size: 1rem;
