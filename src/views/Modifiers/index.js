@@ -56,9 +56,11 @@ export default function Modifiers (){
             </div>
         )}))
     return (
-        <div>
+        <div className={classname(styles.tableContainer)}>
+            <div>
             <Table columns={columns} data={modifiers} updateSelectItems={setSelected}/>
-            <div style={{display: 'flex', justifyContent: 'flex-end', margin: '10px'}}>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', margin: '20px'}}>
               <button onClick={() => setOpen(true)} className={classname(styles.ctaButton)}>
                 Add Modifier
               </button>

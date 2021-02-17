@@ -37,5 +37,8 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  border: solid 1px;
+  padding: 5px;
+  max-width: 200px;
 }
 /*# sourceMappingURL=table.module.css.map */

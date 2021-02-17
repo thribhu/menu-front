@@ -28,7 +28,7 @@ const columns = [
         accessor: 'type'
     },
 ]
-export default function Items (){
+export default function GroupsTable (){
   const [selected, setSelected] = React.useState([])
   const history = useHistory()
   const [form, setForm] = React.useState()
@@ -59,7 +59,7 @@ export default function Items (){
     </div>
 )}))
     return (
-        <div>
+        <div className={classname(styles.tableContainer)}>
     <Modal
       isOpen={open}
       onRequestClose={() => {setOpen(false);setSetp1(false)}}
@@ -92,6 +92,7 @@ export default function Items (){
         </div>
       }
     </Modal>
+    <div className={classname(styles.tableFlex)}>
             <Table 
             updateSelectItems={setSelected}
             columns={[
@@ -124,6 +125,7 @@ export default function Items (){
               ]}
               data={Groups}
             />
+            </div>
             <div style={{display: 'flex', justifyContent: 'flex-end', margin: '10px'}}>
               <button onClick={() => setOpen(true)} className={classname(styles.ctaButton)}>
                 Add Group

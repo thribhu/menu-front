@@ -292,11 +292,11 @@ function Table({ columns, data, updateSelectItems }) {
                     </div>
                     {/* Render the columns filter UI */}
                     <div>
-                      {headerGroup.headers.length - 1 === key
+                      {/* {headerGroup.headers.length - 1 === key
                         ? null
                         : column.canFilter
                           ? column.render("Filter")
-                          : null}
+                          : null} */}
                     </div>
                   </TableCell>
                 ))}

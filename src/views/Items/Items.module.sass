@@ -1,9 +1,14 @@
 
 .container
-    margin: 50px 0
-    display: grid
-    grid-template-columns: 1fr auto
-    column-gap: 16px
+    margin: 10px 0
+    display: flex
+    justify-content: center
+.tableContainer
+    display: flex
+    flex-direction: column
+    height: 100%
+.tableFlex
+    flex: 1
 .labelContainer
     display: flex
     justify-content: flex-end
@@ -15,14 +20,10 @@
     // color: #842261
     width: 100%
 .formInput
-    border: none
-    border-bottom: 1px solid
     width: 400px
     font-size: 1.2rem
     font-family: inherit
     padding: 5px
-    &:focus
-        outline: none
 .formControl
     display: grid
     grid-template-columns: 70px 1fr
@@ -65,6 +66,7 @@
     border-radius: 5px
     background-color: #6692b9
     color: white
+    cursor: pointer;
 .descriptionContainer
     width: 450px
     height: 120px
@@ -123,3 +125,15 @@
         color: #6692b9
 .multiSelectWidth
     max-width: 400px
+.transparent
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+.between
+    margin: 20px 0
+    display: flex
+    justify-content: space-between
+.margin5
+    margin: 10px 0
+.button200
+    width: 200px

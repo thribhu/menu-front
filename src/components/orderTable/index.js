@@ -8,12 +8,12 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
-
+import {FaStroopwafel} from 'react-icons/fa'
 const Table = ({ columns, data }) => {
   const [records, setRecords] = React.useState(data)
 
   const getRowId = React.useCallback(row => {
-    return row.id
+    return row.name
   }, [])
 
   const {
@@ -29,6 +29,7 @@ const Table = ({ columns, data }) => {
   })
 
   const moveRow = (dragIndex, hoverIndex) => {
+    debugger
     const dragRecord = records[dragIndex]
     setRecords(
       update(records, {
@@ -56,7 +57,8 @@ const Table = ({ columns, data }) => {
         <TableBody {...getTableBodyProps()}>
           {rows.map(
             (row, index) =>
-              prepareRow(row) || (
+            {
+            return   prepareRow(row) || (
                 <Row
                   index={index}
                   row={row}
@@ -64,6 +66,7 @@ const Table = ({ columns, data }) => {
                   {...row.getRowProps()}
                 />
               )
+            }
           )}
         </TableBody>
       </MaUTable>
@@ -74,6 +77,7 @@ const Table = ({ columns, data }) => {
 const DND_ITEM_TYPE = 'row'
 
 const Row = ({ row, index, moveRow }) => {
+  debugger
   const dropRef = React.useRef(null)
   const dragRef = React.useRef(null)
 
@@ -133,7 +137,7 @@ const Row = ({ row, index, moveRow }) => {
 
   return (
     <TableRow ref={dropRef} style={{ opacity }}>
-      <TableCell ref={dragRef}>move</TableCell>
+      <TableCell ref={dragRef}><FaStroopwafel/></TableCell>
       {row.cells.map(cell => {
         return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
       })}

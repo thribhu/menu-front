@@ -51,8 +51,10 @@ export default function Options (){
             </div>
         )}))
     return (
-        <div>
+        <div className={classname(styles.tableContainer)}>
+            <div className={classname(styles.tableFlex)}>
             <Table columns={columns} data={options} updateSelectItems={setSelected}/>
+            </div>
             <div style={{display: 'flex', justifyContent: 'flex-end', margin: '10px'}}>
               <button onClick={() => setOpen(true)} className={classname(styles.ctaButton)}>
                 Add Option

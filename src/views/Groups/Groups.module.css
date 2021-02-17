@@ -2,6 +2,23 @@
   margin: 50px 0;
 }
 
+.tableContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+}
+
+.tableFlex {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
 .labelContainer {
   display: -webkit-box;
   display: -ms-flexbox;
