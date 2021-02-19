@@ -1,5 +1,6 @@
 .container {
   margin: 50px 0;
+  max-width: 600px;
 }
 
 .tableContainer {
@@ -27,17 +28,11 @@
 }
 
 .formInput {
-  border: none;
-  border-bottom: 1.8px solid #591a5f;
   width: 100%;
   max-width: 400px;
   font-size: 1.2rem;
   font-family: inherit;
-  padding: 5px 0;
-}
-
-.formInput:focus {
-  outline: none;
+  padding: 5px;
 }
 
 .formControl {
@@ -151,5 +146,16 @@
       -ms-flex-align: center;
           align-items: center;
   padding: 20px;
+}
+
+.titleWithNoBox {
+  width: 140px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 1rem;
 }
 /*# sourceMappingURL=Modifiers.module.css.map */

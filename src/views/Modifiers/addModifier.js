@@ -2,7 +2,8 @@ import React from 'react';
 import classname from 'classnames'
 import styles from './Modifiers.module.sass';
 import { Formik, ErrorMessage, Field, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
+import * as yup from 'yup';
+import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
 import _ from 'lodash';
 const initialValues = {
     name: '',
@@ -13,20 +14,31 @@ const initialValues = {
         },
     ],
 };
-export default function AddModifier() {
+const validationSchema = yup.object({
+    name: yup.string().required('Name is required')
+}) 
+export default function AddModifier(props) {
     return (
         <div className={classname(styles.container)}>
-            <div className={classname(styles.formTitle)}>
-                Add Modifier
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Modifier</p>
             </div>
             <Formik
                 initialValues={initialValues}
+                validationSchema={validationSchema}
                 onSubmit={async (values) => {
                     await new Promise((r) => setTimeout(r, 500));
-                    if((values.options[0].name || values.options[0].price) === ''){
-                        values.options.splice(0,1)
-                    }
+                    if(values.options.length ){
+                        _.remove(values.options, (_, i) => {
+                            if(i!==0) {
+                                return {name:'',price: ''}
+                            }
+                        })
+                    } 
                     alert(JSON.stringify(values, null, 2));
+                    if(props.setOpen) {
+                        props.setOpen(false)
+                    }
                 }}
             >
                 {({ values }) => (
@@ -42,15 +54,16 @@ export default function AddModifier() {
                                         type="text"
                                         className={classname(styles.formInput)}
                                     />
-                                </div>
                                 <ErrorMessage
                                     name={"name"}
                                     component="div"
                                     className="field-error"
+                                    style={{color: 'red'}}
                                 />
+                                </div>
                             </div>
                             <div>
-                                <div>
+                                <div className={classname(styles.titleWithNoBox)}>
                                     <h4>
                                         Options
                                     </h4>
@@ -98,27 +111,27 @@ export default function AddModifier() {
                                                         </div>
                                                         <div className={classname(styles.button_container)}>
                                                             {index === 0 ? null :
-                                                                <div>
+                                                                <div style={{padding:'10px'}}>
                                                                     <button
                                                                         type="button"
                                                                         className="secondary"
                                                                         onClick={() => remove(index)}
                                                                         className={classname(styles.common_button)}
                                                                     >
-                                                                        <img src="/assets/remove.svg" height="20px" width="20px"/>
+                                                                        <FaMinusSquare style={{fontSize: '24px'}}/>
                                                                     </button>
                                                                 </div>
                                                             }
                                                             {
                                                                 index !== 0 ? null :
-                                                                    <div className={classname(styles.buttonContainer)}>
+                                                                    <div style={{padding: '10px'}}>
                                                                         <button
                                                                             type="button"
                                                                             className="secondary"
                                                                             onClick={() => insert(0, { name: '', price: '' })}
                                                                             className={classname(styles.common_button)}
                                                                         >
-                                                                            <img src="/assets/plus.svg" height="20px" width="20px" />
+                                                                        <FaPlusSquare style={{fontSize: '24px'}}/>
                                                                         </button>
                                                                     </div>
                                                             }

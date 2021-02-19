@@ -126,7 +126,7 @@ export default function AddOption(props) {
               initialValues={_.merge(initialValues, formValues)}
               validationSchema={validationSchema}
               onSubmit={async (values) => {
-                setForm(_.merge(values, {active}));
+                setForm(values);
                 setStep1(true);
               }}
             >
