@@ -26,7 +26,11 @@ const customStyles = {
 export default function Items() {
     const [selected, setSelected] = React.useState()
     const [open, setOpen] = React.useState(false)
+    const [newItem, setItem] = React.useState()
     const history = useHistory()
+    React.useEffect(() => {
+        _.merge(items, newItem)
+    }, [newItem])
     const columns = [
         {
             Header: "Name",
@@ -55,7 +59,7 @@ export default function Items() {
     ]
     _.map(items, item => _.assign(item, {
         actions: (
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ padding: '0 5px' }} >
                     <button className={classname(styles.transparent)}>
                         <FaEdit />
@@ -81,7 +85,7 @@ export default function Items() {
                             <FaWindowClose />
                         </button>
                     </div>
-                    <AddItem setOpen={setOpen}/>
+                    <AddItem setOpen={setOpen} setItem={setItem}/>
                 </div>
             </Modal>
             <div>

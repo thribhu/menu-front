@@ -26,3 +26,9 @@ export const listOptions = () => {
         type: Actions.LIST_OPTIONS
     }
 }
+
+export const sortedOptions = (payload) => {
+    return {
+        type: Actions.SORTED_OPTIONS
+    }
+}

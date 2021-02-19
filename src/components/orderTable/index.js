@@ -8,10 +8,12 @@ import TableHead from '@material-ui/core/TableHead'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
-import {FaStroopwafel} from 'react-icons/fa'
-const Table = ({ columns, data }) => {
+import {FaHandPaper} from 'react-icons/fa'
+import {sortedOptions} from 'modules/options/actions'
+import {nowSortedArray} from 'modules/options/selector';
+import {useDispatch, useSelector} from 'react-redux'
+function Table({ columns, data, updateCurrentRows }){
   const [records, setRecords] = React.useState(data)
-
   const getRowId = React.useCallback(row => {
     return row.name
   }, [])
@@ -27,9 +29,8 @@ const Table = ({ columns, data }) => {
     columns,
     getRowId,
   })
-
+  React.useEffect(() => {updateCurrentRows(rows)}, [rows])
   const moveRow = (dragIndex, hoverIndex) => {
-    debugger
     const dragRecord = records[dragIndex]
     setRecords(
       update(records, {
@@ -77,7 +78,6 @@ const Table = ({ columns, data }) => {
 const DND_ITEM_TYPE = 'row'
 
 const Row = ({ row, index, moveRow }) => {
-  debugger
   const dropRef = React.useRef(null)
   const dragRef = React.useRef(null)
 
@@ -137,7 +137,7 @@ const Row = ({ row, index, moveRow }) => {
 
   return (
     <TableRow ref={dropRef} style={{ opacity }}>
-      <TableCell ref={dragRef}><FaStroopwafel/></TableCell>
+      <TableCell ref={dragRef}><FaHandPaper/></TableCell>
       {row.cells.map(cell => {
         return <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
       })}
@@ -145,9 +145,9 @@ const Row = ({ row, index, moveRow }) => {
   )
 }
 
-const OrderTable = ({columns, data}) => {
+const OrderTable = ({columns, data, updateCurrentRows}) => {
   return (
-      <Table columns={columns} data={data} />
+      <Table columns={columns} data={data} updateCurrentRows={updateCurrentRows}/>
   )
 }
 
