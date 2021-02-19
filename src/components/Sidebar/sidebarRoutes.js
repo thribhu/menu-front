@@ -9,7 +9,6 @@ export default function SidebarRoutes() {
     const currentPath = location.pathname;
     const sortedRoutes = sortBy(routes(), ["name"]);
     const handleClick = (route) => {
-        debugger
         if (!route) return null;
         let { component } = route
         history.push(route.path)

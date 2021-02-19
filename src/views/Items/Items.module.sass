@@ -1,6 +1,14 @@
 
 .container
-    margin: 50px 0
+    margin: 10px 0
+    display: flex
+    justify-content: center
+.tableContainer
+    display: flex
+    flex-direction: column
+    height: 100%
+.tableFlex
+    flex: 1
 .labelContainer
     display: flex
     justify-content: flex-end
@@ -9,20 +17,16 @@
     margin: 0 15px
     font-size: 1.2rem
     font-family: inherit
-    // color: #842261
+    color: #112222
     width: 100%
 .formInput
-    border: none
-    border-bottom: 2.8px solid #6692b9
     width: 400px
     font-size: 1.2rem
     font-family: inherit
     padding: 5px
-    &:focus
-        outline: none
 .formControl
     display: grid
-    grid-template-columns: 150px 1fr
+    grid-template-columns: 70px 1fr
     grid-column-gap: 10px
     margin: 15px
 .horizontalContent
@@ -62,12 +66,15 @@
     border-radius: 5px
     background-color: #6692b9
     color: white
+    cursor: pointer;
+.descriptionBox
+    display: flex
+    justify-content: flex-end
 .descriptionContainer
-    width: 600px
+    width: 450px
     height: 120px
     border: 3px solid #cccccc
     padding: 10px
-    font-family: Arial, Helvetica, sans-serif
     background-position: bottom right
     background-repeat: no-repeat
     font-size: 1rem
@@ -99,3 +106,38 @@
     justify-content: flex-end;
     align-items: center;
     padding: 20px;
+.right_bar
+    border: none
+    display: flex
+    flex-direction: column
+    justify-content: space-evenly
+.right_bar_content
+    display: flex
+    height: 100%
+    flex-direction: column
+    margin: 0 10px
+.right_bar_button
+    padding: 5px;
+    border: none
+    cursor: pointer 
+    display: grid
+    grid-template-columns: 3fr 3fr 
+    column-gap: 16px
+    &:hover
+        color: #6692b9
+.multiSelectWidth
+    max-width: 400px
+.transparent
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+.between
+    margin: 20px 0
+    display: flex
+    justify-content: space-between
+.margin5
+    margin: 10px 0
+.button200
+    width: 200px
+.errorMessage
+    color:red

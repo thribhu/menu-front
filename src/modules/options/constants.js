@@ -20,3 +20,6 @@ export const LIST_OPTIONS_ERROR = "options/LIST_OPTIONS_ERROR";
 
 export const STATE_LOADING = "options/STATE_LOADING";
 
+export const SORTED_OPTIONS = "options/SORTED_OPTIONS";
+export const SORTED_OPTIONS_SUCCESS = "options/SORTED_OPTIONS_SUCCESS";
+export const SORTED_OPTIONS_ERROR = "options/SORTED_OPTIONS_ERROR"

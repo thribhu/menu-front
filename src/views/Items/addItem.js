@@ -1,206 +1,420 @@
-import React from 'react';
-import classname from 'classnames';
-import styles from './Items.module.sass'
-import _ from 'lodash';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as yup from 'yup';
-import groups from '../Groups/groups.json'
-import options from '../Options/options.json'
-import modifiers from '../Modifiers/modifiers.json'
-import {normalizeText as normalize} from 'utils/normalize'
-import Modal from 'react-modal'
+import React from "react";
+import classname from "classnames";
+import styles from "./Items.module.sass";
+import _ from "lodash";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as yup from "yup";
+import Groups from "../Groups/groups.json";
+import Options from "../Options/options.json";
+import { normalizeText as normalize } from "utils/normalize";
+import Modal from "react-modal";
+import Switch from "react-switch";
+import Table from "components/table";
+import { useHistory } from "react-router-dom";
+import {
+  FaRegObjectGroup,
+  FaEdit,
+} from "react-icons/fa";
+import OrderTable from "components/orderTable";
+let tableData = Groups.concat(Options);
+tableData = _.sortBy(tableData, ["name"]);
 const initialValues = {
-    name: '',
-    description: '',
-    image_url: '',
-    price: '',
-    type: '',
-    active: 'true',
-    options: [],
-    groups: []
-}
+  name: "",
+  description: "",
+  image_url: "",
+  price: "",
+  type: "",
+  stock: "",
+};
 const validationSchema = yup.object({
-    name: yup.string().required('A valid option must have name'),
-    description: yup.string().optional(),
-    image_url: yup.string().optional(),
-    price: yup.number().required('A valid option must have price'),
-    type: yup.string().optional(),
-})
-const onlyOptionNames = _.map(options, o => o.name)
-export default function AddItem(props) {
-    const [itemGroups, setGroups] = React.useState([])
-    const handleGroupChange = (e) => {
-        e.preventDefault();
-        setGroups(itemGroups.concat(e.target.value))
-    }
-    const [open, setOpen] = React.useState(false)
-    return (
-        <div className={classname(styles.container)}>
-            <div className={classname(styles.formTitle)}>
-                <h4>
-                Add Item
-                </h4>
-            </div>
-            <Modal isOpen={open}>
-                <div>Hi</div>
-            </Modal>
-        <Formik
-            initialValues={initialValues}
-            onSubmit={async (values) => {
-                await new Promise((r) => setTimeout(r, 500));
-                alert(JSON.stringify(values, null, 2));
-            }}
-        >
-            {({ values, handleChange, handleSubmit }) => (
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <div className={classname(styles.formControl)}>
-                            <div className={classname(styles.labelContainer)}>
-                                <label htmlFor="name" className={classname(styles.formLabel, styles.labelContainer)}>Name</label>
-                            </div>
-                            <div>
-                                <input
-                                    name="name"
-                                    type="text"
-                                    className={classname(styles.formInput)}
-                                    autoFocus={true}
-                                />
-                            </div>
-                            <ErrorMessage
-                                name={"name"}
-                                component="div"
-                                className="field-error"
-                            />
-                        </div>
-                        <div className={classname(styles.formControl)}>
-                            <div className={classname(styles.labelContainer)}>
-                                <label htmlFor="price" className={classname(styles.formLabel, styles.labelContainer)}>Price</label>
-                            </div>
-                            <div>
-                                <input
-                                    name="price"
-                                    type="number"
-                                    className={classname(styles.formInput)}
-                                    min={0}
-                                    step={0.01}
-                                />
-                            </div>
-                            <ErrorMessage
-                                name={"price"}
-                                component="div"
-                                className="field-error"
-                            />
-                        </div>
-                        <div className={classname(styles.formControl)}>
-                            <div className={classname(styles.labelContainer)}>
-                                <label htmlFor="type" className={classname(styles.formLabel, styles.labelContainer)}>Type</label>
-                            </div>
-                            <div>
-                                <input
-                                    name="type"
-                                    type="text"
-                                    className={classname(styles.formInput)}
-                                />
-                            </div>
-                            <ErrorMessage
-                                name={"type"}
-                                component="div"
-                                className="field-error"
-                            />
-                        </div>
-                        <div className={classname(styles.imageField, styles.formControl)}>
-                            <div className={classname(styles.labelContainer)}>
-                            <label htmlFor="modifier_image" className={classname(styles.formLabel, styles.labelContainer)}>
-                                Image
-                            </label>
-                            </div>
-                            <div>
-                            <input type="file" name="modifier_image" max={1} className={classname(styles.formInput)}/>
-                            </div>
-                        </div>
-                        <div className={classname(styles.titleWithNoBox)}>
-                            <h4>Description</h4>
-                        </div>
-                        <div className={classname(styles.formControl)}>
-                            <div>
-                                <input
-                                    type="textarea"
-                                    name="description"
-                                    type="text"
-                                    className={classname(styles.descriptionContainer)}
-                                />
-                            </div>
-                            <ErrorMessage
-                                name={"name"}
-                                component="div"
-                                className="field-error"
-                            />
-                        </div>
-                        
-                        <div>
-                            <h6 className={classname(styles.titleWithNoBox)}>
-                                Select Groups
-                            </h6>
-                            <div role="group" className=''>
-                                {groups.map((m, i) => (
-                                    <div className={classname(styles.checkboxContainer)}>
-                                    <label className={classname(styles.checkBoxLabel)}>
-                                        <input type="checkbox" name="groups" onChange={(e) => {
-                                            handleChange('group')
-                                           setOpen(true) 
-                                        }} value={m.name}/>
-                                        {normalize(m.name)}
-                                    </label>
-                                    <div>
-                                        {
-                                         _.map(values.groups, g => g.name).indexOf(m.name) > -1?
-                                         <div>
-                                            {
-                                                JSON.stringify(_.filter(groups, {name: m.name}))
-                                            }
-                                        </div>
-                                        : 
-                                        null
-                                        }
-                                    </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        {/* <div>
-                            <h6 className={classname(styles.titleWithNoBox)}>
-                                Select Options
-                            </h6>
-                            <div role="group" className={classname(styles.checkboxContainer)}>
-                                {modifiers.map((m, i) => (
-                                    <label className={classname(styles.checkBoxLabel)}>
-                                         <Field name="options">
-                                             {({field, form, meta}) => (
-                                                 <div>
-                                                     <div>
-                                                     <input type="checkbox" value={m.name + i}/>
-                                                     </div>
-                                                     <div>
-                                                         <p>{normalize(m.name)}</p>
-                                                         <p>${m.price}</p>
-                                                         <p>{m.type}</p>
-                                                     </div>
-                                                 </div>
-                                             )}
-                                             </Field>
-                                         {normalize(m.name)}
-                                    </label>
-                                ))}
-                            </div>
-                        </div> */}
-                        <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)} disabled>Save Option</button>
-                        </div>
-                    </div>
-                </form>
-            )
-            }
-        </Formik >
+  name: yup.string().required("Name is required"),
+  description: yup.string().optional(),
+  price: yup.number().required("Price is required"),
+  type: yup.string().optional(),
+  stock: yup.number().optional(),
+});
+const columns = [
+  {
+    Header: "Name",
+    accessor: (d) => {
+      if (!_.isUndefined(d.min_required)) {
+        return (
+          <div>
+            {d.name}
+            <FaRegObjectGroup style={{ padding: "0 5px" }} />
+          </div>
+        );
+      } else {
+        return d.name;
+      }
+    },
+  },
+  {
+    Header: "Price",
+    accessor: (d) => {
+      if (!_.isUndefined(d.min_required)) {
+        return d.price_default;
+      } else return d.price;
+    },
+  },
+  {
+    Header: "Min",
+    accessor: (d) => {
+      if (!_.isUndefined(d.min_required)) {
+        return d.min_required;
+      } else return "-";
+    },
+  },
+  {
+    Header: "Max",
+    accessor: (d) => {
+      if (!_.isUndefined(d.min_required)) {
+        return d.max_allowed;
+      } else return "-";
+    },
+  },
+  {
+    Header: "Order",
+    accessor: (d) => {
+      if (!_.isUndefined(d.min_required)) {
+        return d.display_order;
+      } else return "-";
+    },
+  },
+  {
+    Header: "Actions",
+    accessor: "actions",
+  },
+];
+export default function AddOption(props) {
+  const [active, setActive] = React.useState(true);
+  const [step1, setStep1] = React.useState(false);
+  const [selected, setSelected] = React.useState([]);
+  const [formValues, setForm] = React.useState();
+  const [nowArray, setNowArray] = React.useState();
+  const history = useHistory();
+  _.map(tableData, (item) =>
+    _.assign(item, {
+      actions: (
+        <div style={{ display: "flex" }}>
+          <div style={{ padding: "0 5px" }}>
+            <button>
+              <FaEdit />
+            </button>
+          </div>
         </div>
-    )
+      ),
+    })
+  );
+  const handleSaveItem = () => {
+      // we get all the row props, insted we only want original
+    const originalArray = _.map(nowArray, n => n.original); 
+    const values = formValues;
+    const finalItem = _.assign({}, values, {options: originalArray})
+    props.setItem(finalItem)
+    setForm(null);
+  };
+  return (
+    <div>
+      <div className={classname(styles.container)} style={{ flex: 1 }}>
+        {!step1 && (
+          <div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Item</p>
+            </div>
+            <Formik
+              initialValues={_.merge(initialValues, formValues)}
+              validationSchema={validationSchema}
+              onSubmit={async (values) => {
+                setForm(values);
+                setStep1(true);
+              }}
+            >
+              {({ values }) => (
+                <Form>
+                  <div>
+                    <div className={classname(styles.formControl)}>
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="name"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                          Item
+                        </label>
+                      </div>
+                      <div>
+                        <Field
+                          name="name"
+                          type="text"
+                          className={classname(styles.formInput)}
+                          autoFocus={true}
+                        />
+                        <ErrorMessage
+                          name={"name"}
+                          component="div"
+                          style={{ color: "red" }}
+                        />
+                      </div>
+                    </div>
+                    <div className={classname(styles.formControl)}>
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="price"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                          Price
+                        </label>
+                      </div>
+                      <div>
+                        <Field
+                          name="price"
+                          type="number"
+                          className={classname(styles.formInput)}
+                          min={0}
+                          step={0.01}
+                        />
+                        <ErrorMessage
+                          name={"price"}
+                          component="div"
+                          style={{ color: "red" }}
+                        />
+                      </div>
+                    </div>
+                    <div className={classname(styles.formControl)}>
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="type"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                          Type
+                        </label>
+                      </div>
+                      <div>
+                        <Field
+                          name="type"
+                          type="text"
+                          className={classname(styles.formInput)}
+                        />
+                      </div>
+                      <ErrorMessage
+                        name={"type"}
+                        component="div"
+                        className="field-error"
+                      />
+                    </div>
+                    <div className={classname(styles.formControl)}>
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="stock"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                         Stock
+                        </label>
+                      </div>
+                      <div>
+                        <Field
+                          name="stock"
+                          type="number"
+                          className={classname(styles.formInput)}
+                        />
+                      </div>
+                      <ErrorMessage
+                        name={"type"}
+                        component="div"
+                        className="field-error"
+                      />
+                    </div>
+                    <div className={classname(styles.formControl)}>
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="active"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                          Active
+                        </label>
+                      </div>
+                      <div>
+                        <Field name="active">
+                          {({ field, form, meta }) => (
+                            <Switch
+                              name="active"
+                              {...field}
+                              onChange={(e) => {
+                                setActive(e);
+                              }}
+                              checked={active}
+                            />
+                          )}
+                        </Field>
+                      </div>
+                      <ErrorMessage
+                        name={"type"}
+                        component="div"
+                        className="field-error"
+                      />
+                    </div>
+                    <div
+                      className={classname(
+                        styles.imageField,
+                        styles.formControl
+                      )}
+                    >
+                      <div className={classname(styles.labelContainer)}>
+                        <label
+                          htmlFor="modifier_image"
+                          className={classname(
+                            styles.formLabel,
+                            styles.labelContainer
+                          )}
+                        >
+                          Image
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          type="file"
+                          name="modifier_image"
+                          max={1}
+                          className={classname(styles.formInput)}
+                        />
+                      </div>
+                    </div>
+                    <div className={classname(styles.titleWithNoBox)}>
+                      <h4>Description</h4>
+                    </div>
+                    <div className={classname(styles.descriptionBox)}>
+                      <div>
+                        <Field
+                          as="textarea"
+                          name="description"
+                          type="text"
+                          className={classname(styles.descriptionContainer)}
+                        />
+                      </div>
+                      <ErrorMessage
+                        name={"description"}
+                        component="div"
+                        className="field-error"
+                      />
+                    </div>
+                    <div className={classname(styles.saveButtonContainer)}>
+                      <button
+                        type="submit"
+                        className={classname(styles.ctaButton)}
+                      >
+                        Add Options
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        )}
+        {step1 && (
+          <div className={classname(styles.tableContainer)}>
+            <div className={classname(styles.tableFlex)}>
+              <Table
+                title={"Options and groups"}
+                columns={columns}
+                data={tableData}
+                updateSelectItems={setSelected}
+                withCheckBox={true}
+                noAction={true}
+                preSelected={_.map(selected, (s) => s.name)}
+              />
+            </div>
+            <div>
+              <div className={classname(styles.margin5)}>
+                <button
+                  className={classname(styles.button200)}
+                  onClick={() => history.push("/addGroup")}
+                >
+                  Add OptionGroup
+                </button>
+              </div>
+              <div>
+                <button
+                  className={classname(styles.button200)}
+                  onClick={() => history.push("/addOption")}
+                >
+                  Add Option
+                </button>
+              </div>
+            </div>
+            <div className={classname(styles.between)}>
+              <div>
+                <button
+                  onClick={() => setStep1(false)}
+                  className={classname(styles.ctaButton)}
+                >
+                  Back
+                </button>
+              </div>
+              <div>
+                <button
+                  disabled={!selected.length}
+                  className={classname(styles.ctaButton)}
+                  onClick={() => (selected.length ? setStep1(false) : null)}
+                >
+                  Save
+                </button>
+                <div style={{ fontSize: "10px" }}>
+                  {!selected.length && (
+                    <p>
+                      <span style={{ color: "red" }}>*</span> Select alteast 1
+                      option
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {selected.length && !step1 ? (
+        <div style={{ flex: 1 }}>
+          <div>
+            <OrderTable
+              columns={columns}
+              data={selected}
+              updateCurrentRows={setNowArray}
+            />
+          </div>
+          <div
+            style={{
+              margin: "10px auto",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <button
+              className={styles.ctaButton}
+              onClick={() => {
+                props.setOpen(false);
+                handleSaveItem();
+              }}
+            >
+              Save Item
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
 }

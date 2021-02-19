@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 import {isImmutable} from 'immutable'
-import _ from 'loadsh';
+import _ from 'lodash';
 
 const options = state => state.options;
 
@@ -50,5 +50,16 @@ export const errorSelector = createSelector(
              return option.toJS()
          }
          return {}
+     }
+ )
+
+ export const nowSortedArray = createSelector(
+     options, 
+     data => {
+         var sorted = data.get('sortedOptions');
+         if (sorted.size > 0) {
+             return sorted.toJS();
+         }
+         else return []
      }
  )

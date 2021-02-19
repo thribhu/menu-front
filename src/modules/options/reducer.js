@@ -6,7 +6,8 @@ const initState = fromJS({
     error: '',
     options: List(),
     selectedOptions: List(),
-    optionToEdit: ''
+    optionToEdit: '',
+    sortedOptions: List()
 })
 
 export default function optionReducer(state=initState, action) {

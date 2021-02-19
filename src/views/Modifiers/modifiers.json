@@ -1,167 +1,34 @@
 [
     {
-        "name": "pepperoni",
-        "description": "All natural pepperoni topping",
-        "image_url": "img/pepperoni.jpg",
-        "price": 2.00,
-        "type": "meat",
-        "modifiers": [
-            "amount",
-            "side"
+        "name":"amount",
+        "options": [
+            {"name":"Normal","value": 0.00},
+            {"name":"Light", "value" :-0.50},
+            {"name":"Extra", "value": 1.50}
         ]
     },
     {
-        "name": "mozzarella",
-        "description": "part-skim mozzarella cheese",
-        "image_url": "img/mozzarella.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
+        "name":"side",
+        "options": [
+            {"name":"Whole","value": 0.00},
+            {"name":"Right","value": -1.25},
+            {"name":"Left", "value":-1.25}
         ]
     },
     {
-        "name": "gorgonzola",
-        "description": "gorgonzola cheese",
-        "image_url": "img/ gorgonzola.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
+        "name":"size",
+        "options": [
+            {"name":"Small", "value": 0.00},
+            {"name":"Large", "value":9.00},
+            {"name":"X-large", "value":15.00}
         ]
     },
     {
-        "name": "tomato sauce",
-        "description": "organic tomato sauce",
-        "image_url": "img/ tomato_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "garlic sauce",
-        "description": "garlic sauce",
-        "image_url": "img/ garlic_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "pepperoni",
-        "description": "All natural pepperoni topping",
-        "image_url": "img/pepperoni.jpg",
-        "price": 2.00,
-        "type": "meat",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "mozzarella",
-        "description": "part-skim mozzarella cheese",
-        "image_url": "img/mozzarella.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "gorgonzola",
-        "description": "gorgonzola cheese",
-        "image_url": "img/ gorgonzola.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "tomato sauce",
-        "description": "organic tomato sauce",
-        "image_url": "img/ tomato_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "garlic sauce",
-        "description": "garlic sauce",
-        "image_url": "img/ garlic_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "pepperoni",
-        "description": "All natural pepperoni topping",
-        "image_url": "img/pepperoni.jpg",
-        "price": 2.00,
-        "type": "meat",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "mozzarella",
-        "description": "part-skim mozzarella cheese",
-        "image_url": "img/mozzarella.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "gorgonzola",
-        "description": "gorgonzola cheese",
-        "image_url": "img/ gorgonzola.jpg",
-        "price": 2.00,
-        "type": "cheese",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "tomato sauce",
-        "description": "organic tomato sauce",
-        "image_url": "img/ tomato_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
-        ]
-    },
-    {
-        "name": "garlic sauce",
-        "description": "garlic sauce",
-        "image_url": "img/ garlic_sauce.jpg",
-        "price": 2.00,
-        "type": "sauce",
-        "modifiers": [
-            "amount",
-            "side"
+        "name":"crust",
+        "options":[
+            {"name":"Regular","value":0.00 },
+            {"name":"Gluten-free", "value":2.00},
+            {"name":"Cauli-flower", "value":2.50}
         ]
     }
 ]
