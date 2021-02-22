@@ -74,22 +74,26 @@ function GlobalFilter({
     setGlobalFilter(value || undefined);
   }, 200);
   return (
-    <span>
-      Search: {""}
+    <div style={{display: 'flex' }}>
+      <div style={{display: 'flex', alignItems:'center'}}>
+        Search
+      </div>
       <input
         value={value || ""}
         onChange={(e) => {
           setValue(e.target.value);
           onChange(e.target.value);
         }}
-        placeholder={`${count} records`}
         style={{
+          margin: '10px',
+          width: '100%',
+          maxWidth: '50%',
           fontSize: "1rem",
-          border: "0",
+          border: "solid 1px",
           padding: "10px",
         }}
       />
-    </span>
+    </div>
   );
 }
 function fuzzyTextFilterFn(rows, id, filterValue) {
@@ -123,14 +127,14 @@ function Table({
   withCheckBox,
   noAction,
   preSelected,
-  title
+  title,
 }) {
   const [numberOfRows, setNumberOfRows] = React.useState(10);
   const [pageSelect, handlePageSelect] = React.useState(0);
   const memo_columns = React.useMemo(() => {
     if (noAction) {
-      _.remove(columns, {Header: "Actions"})
-      return columns
+      _.remove(columns, { Header: "Actions" });
+      return columns;
     } else return columns;
   }, [noAction]);
   const memo_data = React.useMemo(() => data);
@@ -161,9 +165,14 @@ function Table({
     }),
     []
   );
-  const preSelectIndex = _.map(preSelected, s => _.indexOf(memo_data.map(m => m.name), s))
-  const selected = {}
-  preSelectIndex.map(i => selected[i] = true)
+  const preSelectIndex = _.map(preSelected, (s) =>
+    _.indexOf(
+      memo_data.map((m) => m.name),
+      s
+    )
+  );
+  const selected = {};
+  preSelectIndex.map((i) => (selected[i] = true));
   const {
     getTableProps,
     getTableBodyProps,
@@ -217,8 +226,7 @@ function Table({
           },
           ...columns,
         ]);
-      }
-      else return null
+      } else return null;
     }
   );
 
@@ -237,85 +245,12 @@ function Table({
   return (
     <div className={classnames(styles.ReactTable)}>
       <div className={classnames(styles.tableTile)}>{title}</div>
-      <div className="pagination-top">
-        <div className={classnames(styles._pagination)}>
-          <div className="-previous">
-            <button
-              type="button"
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
-              className="-btn"
-            >
-              Previous
-            </button>
-          </div>
-          <div className={classnames(styles._center)}>
-            <GridContainer
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <GridItem xs={12} sm={6} md={4}>
-                <FormControl fullWidth>
-                  <Select
-                    MenuProps={{}}
-                    classes={{}}
-                    value={pageSelect}
-                    onChange={(event) => {
-                      gotoPage(event.target.value);
-                      handlePageSelect(event.target.value);
-                    }}
-                    inputProps={{
-                      name: "pageSelect",
-                      id: "page-select",
-                    }}
-                  >
-                    {pageSelectData.map((prop, key) => {
-                      return (
-                        <MenuItem key={key} classes={{}} value={key}>
-                          Page {key + 1}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </GridItem>
-              <GridItem xs={12} sm={6} md={4}>
-                <FormControl fullWidth>
-                  <Select
-                    MenuProps={{}}
-                    classes={{}}
-                    value={numberOfRows}
-                    onChange={(event) => {
-                      setPageSize(event.target.value);
-                      setNumberOfRows(event.target.value);
-                    }}
-                    inputProps={{
-                      name: "numberOfRows",
-                      id: "number-of-rows",
-                    }}
-                  >
-                    {numberOfRowsData.map((prop) => {
-                      return (
-                        <MenuItem key={prop} classes={{}} value={prop}>
-                          {prop} rows
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </GridItem>
-            </GridContainer>
-          </div>
-          <div className="-next">
-            <button
-              type="button"
-              onClick={() => nextPage()}
-              disabled={!canNextPage}
-              className="-btn"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+      <div>
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={state.globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
       </div>
       <MaUTable {...getTableProps()}>
         <TableHead>
@@ -344,13 +279,7 @@ function Table({
             <TableCell
               colSpan={visibleColumns.length}
               style={{ textAlign: "left" }}
-            >
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={state.globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </TableCell>
+            ></TableCell>
           </TableRow>
         </TableHead>
         <TableBody

@@ -372,7 +372,7 @@ export default function AddOption(props) {
                   className={classname(styles.ctaButton)}
                   onClick={() => (selected.length ? setStep1(false) : null)}
                 >
-                  Save
+                  Add to Item
                 </button>
                 <div style={{ fontSize: "10px" }}>
                   {!selected.length && (
