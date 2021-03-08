@@ -129,7 +129,6 @@ function Table({
   preSelected,
   title,
 }) {
-  debugger
   const [numberOfRows, setNumberOfRows] = React.useState(10);
   const [pageSelect, handlePageSelect] = React.useState(0);
   const memo_columns = React.useMemo(() => {

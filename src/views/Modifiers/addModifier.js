@@ -23,22 +23,40 @@ const validationSchema = yup.object().shape({
     })).required('Options are required').min(1, 'Enter atleast 2 option')
 }) 
 export default function AddModifier(props) {
+    const baseUrl = 'http://127.0.0.1:8000/api/modifiers/' 
+    const [modifier, setModifier] = React.useState()
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState(false)
+    React.useEffect(() => {
+    if(!_.isEmpty(props.location) && !_.isEmpty(props.location.state)) {
+        setModifier(_.get(props, 'location.state'))
+    }
+    }, [modifier])
     return (
         <div className={classname(styles.container)}>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Modifier</p>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>{modifier ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={initialValues}
+                initialValues={modifier ? _.merge(initialValues, modifier) : initialValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
-                    let promise = axios.post('http://127.0.0.1:8000/api/modifiers/', values)
+                    let promise
+                    if(modifier) {
+                        promise = axios.put(baseUrl+modifier.id+"/", values)
+                    }
+                    else {
+                        promise = axios.post(baseUrl, values);
+                    }
                     promise.then(res => {
-                        alert('Modifier added succesfully')
+                        if(res.status === 200) {
+                            alert('Modifier added successfully')
+                        }
+                        else if (res.status === 202){
+                            alert('Modifier updated successfully')
+                        }
                     }).catch(err => {
-
+                        alert('Unable to add modifier. Please try again')
                     })
                 }}
             >
@@ -146,7 +164,7 @@ export default function AddModifier(props) {
                                 <ErrorMessage name="options" style={{color:'red'}}/>
                         </div>
                         <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)}>Add Modifier</button>
+                            <button type="submit" className={classname(styles.ctaButton)}>{modifier ? "Save Modifier" : "Add Modifier"}</button>
                         </div>
                     </Form>
                 )}

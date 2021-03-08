@@ -38,10 +38,11 @@ export default function Modifiers() {
       });
   }, []);
   const handleEdit = (option) => {
-    history.push({
-      pathname: '/addModifiers',
-      state: option
-    })
+    delete option.actions
+    history.push(
+      '/addModifier',
+      option
+    )
   }
   const handleDelete = option => {
     const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable.`)
