@@ -15,10 +15,16 @@ const initialValues = {
         },
     ],
 };
-const validationSchema = yup.object({
-    name: yup.string().required('Name is required')
+const validationSchema = yup.object().shape({
+    name: yup.string().required('Name is required'),
+    options: yup.array().of(yup.object().shape({
+        name: yup.string(),
+        price: yup.number()
+    })).required('Options are required').min(1, 'Enter atleast 2 option')
 }) 
 export default function AddModifier(props) {
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState(false)
     return (
         <div className={classname(styles.container)}>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -32,7 +38,7 @@ export default function AddModifier(props) {
                     promise.then(res => {
                         alert('Modifier added succesfully')
                     }).catch(err => {
-                        console.log(err)
+
                     })
                 }}
             >
@@ -137,9 +143,10 @@ export default function AddModifier(props) {
                                     )}
                                 </FieldArray>
                             </div>
+                                <ErrorMessage name="options" style={{color:'red'}}/>
                         </div>
                         <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)}>Save Option</button>
+                            <button type="submit" className={classname(styles.ctaButton)}>Add Modifier</button>
                         </div>
                     </Form>
                 )}
