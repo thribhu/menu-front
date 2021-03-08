@@ -5,6 +5,7 @@ import { Formik, ErrorMessage, Field, Form, FieldArray } from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
 import _ from 'lodash';
+import axios from 'axios'
 const initialValues = {
     name: '',
     options: [
@@ -27,18 +28,12 @@ export default function AddModifier(props) {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
-                    await new Promise((r) => setTimeout(r, 500));
-                    if(values.options.length ){
-                        _.remove(values.options, (_, i) => {
-                            if(i!==0) {
-                                return {name:'',price: ''}
-                            }
-                        })
-                    } 
-                    alert(JSON.stringify(values, null, 2));
-                    if(props.setOpen) {
-                        props.setOpen(false)
-                    }
+                    let promise = axios.post('http://127.0.0.1:8000/api/modifiers/', values)
+                    promise.then(res => {
+                        alert('Modifier added succesfully')
+                    }).catch(err => {
+                        console.log(err)
+                    })
                 }}
             >
                 {({ values }) => (

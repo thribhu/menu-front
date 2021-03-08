@@ -9,12 +9,23 @@ import _ from "lodash";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
+import axios from 'axios'
 export default function Modifiers() {
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
   const [formValues, setForm] = React.useState()
   const history = useHistory();
+  const [mod, setMod] = React.useState()
+  React.useEffect(() => {
+    let promise = axios.get('http://127.0.0.1:8000/api/modifiers/')
+    promise.then(res => {
+      setMod(res)
+    }).catch(err => {
+      console.log(err)
+    })
+  }, [])
+  console.log(mod)
   const customStyles = {
     content: {
       margin: "auto",

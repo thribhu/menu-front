@@ -25,7 +25,6 @@ function App(props) {
           <Router>
             <Switch>
               <Route path="/" component={Layout}/>
-              <Redirect from="/" to="/items"/>
             </Switch>
           </Router>
         </ThemeProvider>

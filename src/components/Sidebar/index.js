@@ -5,6 +5,7 @@ import default_img from './default.jpg';
 import { normalizeText } from 'utils/normalize'
 import SidebarRoutes from './sidebarRoutes'
 export default function Sidebar(props) {
+    const [activeRoute, setActive] = React.useState('/items')
     const {
         title,
         img
@@ -22,7 +23,7 @@ export default function Sidebar(props) {
                 </div>
             </div>
             <div className={classname(styles.sidebar_content)}>
-                <SidebarRoutes />
+                <SidebarRoutes activeRoute={activeRoute} setActive={setActive}/>
             </div>
         </div>
     )
