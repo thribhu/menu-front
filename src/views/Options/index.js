@@ -8,9 +8,32 @@ import options from "./options.json";
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
+import axios from 'axios'
 export default function Options(props) {
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const [list, setList] = React.useState([])
+  const history = useHistory()
+  const baseUrl = "http://127.0.0.1:8000/api/options/"
+  const handleEdit = option => {
+    delete option.actions
+    history.push("/addOption", option)
+  }
+  const handleRemove = option => {
+    const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable`)
+    if(confirm) {
+      const response = axios.delete(baseUrl+option.id+"/")
+      response.then(snapshot => {
+        if(snapshot.status === 204) {
+          alert('Option removed successfully')
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        alert('Unable to remove option')
+      })
+    }
+  }
   const columns = [
     {
       Header: "Name",
@@ -33,17 +56,30 @@ export default function Options(props) {
       accessor: "actions",
     },
   ];
-  _.map(options, (option) =>
+  React.useEffect(() => {
+    const response = axios.get(baseUrl)
+    response.then(snapshot => {
+      const {data, status} = snapshot
+      if(status === 200) {
+        setList(data)
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      alert('Unable to get Options. Please try again') 
+    })
+  }, [])
+  _.map(list, (option) =>
     _.assign(option, {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button>
+            <button onClick={() => handleEdit(option)}>
               <FaEdit />
             </button>
           </div>
           <div>
-            <button>
+            <button onClick={() => handleRemove(option)}>
               <FaTrash />
             </button>
           </div>
@@ -84,7 +120,7 @@ export default function Options(props) {
       <div>
         <Table
           columns={columns}
-          data={options}
+          data={list}
           updateSelectItems={setSelected}
         />
       </div>

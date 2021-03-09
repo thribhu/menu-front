@@ -1,12 +1,10 @@
 import React from "react";
+import axios from 'axios'
 import classname from "classnames";
 import styles from "./Groups.module.sass";
 import Modal from "react-modal";
 import Table from "components/table";
-import OrderTable from "components/orderTable";
-import Groups from "views/Groups/groups.json";
 import AddGroup from "views/Groups/addGroup";
-import options from "views/Options/options.json";
 import _ from "lodash";
 import { useHistory } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
@@ -57,11 +55,15 @@ const columns = [
   },
 ];
 export default function GroupsTable() {
+  const baseUrl = "http://127.0.0.1:8000/api/";
+  const [groups, setGroups] = React.useState([])
+  const [options, setoptions] = React.useState([])
   const [selected, setSelected] = React.useState([]);
   const history = useHistory();
   const [form, setForm] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [step1, setSetp1] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const customStyles = {
     content: {
       margin: "auto",
@@ -76,17 +78,59 @@ export default function GroupsTable() {
       transform: "translate(-50%, -50%)",
     },
   };
-  _.map(Groups, (option) =>
+  React.useEffect(() => {
+    setLoading(true);
+    const options_res = axios.get(baseUrl + "options/");
+    options_res.then(snapshot => {
+      if(snapshot.status === 200){
+        setoptions(snapshot.data)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+    })
+    const response = axios.get(baseUrl + "groups/");
+    response.then(snapshot => {
+      if(snapshot.status === 200){
+        setGroups(snapshot.data)
+        setLoading(false)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      setLoading(false)
+    })
+  }, []);
+  const handleEdit = group => {
+    delete group.actions
+    history.push("/addGroup", group)
+  }
+  const handleRemove = group => {
+    const confirm = window.confirm(`You are about to remove ${group.name}. This is not reversable`)
+    if(confirm) {
+      const request = axios.delete(baseUrl+`groups/${group.id}`)
+      request.then(snapshot => {
+        if (snapshot.status === 204) {
+          alert('Group removed successfully')
+        }
+      })
+      .catch(err => {
+        console.error(err)
+        alert('Unable to remove Gruop')
+      })
+    }
+  }
+  _.map(groups, (option) =>
     _.assign(option, {
       actions: (
         <div style={{ display: "flex" }}>
           <div style={{ padding: "0 5px" }}>
-            <button>
+            <button onClick={() => handleEdit(option)}>
               <FaEdit />
             </button>
           </div>
           <div>
-            <button>
+            <button onClick={() => handleRemove(option)}>
               <FaTrash />
             </button>
           </div>
@@ -110,7 +154,12 @@ export default function GroupsTable() {
           </div>
         )}
         {!step1 ? (
-          <AddGroup next={setSetp1} formMethod={setForm} currentForm={form} setOpen={setOpen}/>
+          <AddGroup
+            next={setSetp1}
+            formMethod={setForm}
+            currentForm={form}
+            setOpen={setOpen}
+          />
         ) : (
           <div>
             <Table
@@ -143,7 +192,7 @@ export default function GroupsTable() {
         <Table
           updateSelectItems={setSelected}
           columns={groupColumns}
-          data={Groups}
+          data={groups}
         />
       </div>
       <div
