@@ -1,10 +1,10 @@
 import React from "react";
-import _ from "lodash";
+import _, { map } from "lodash";
 import classname from "classnames";
 import styles from "./Options.module.sass";
 import { useHistory } from "react-router-dom";
 import Table from "components/table";
-import options from "./options.json";
+import {normalizeText} from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
@@ -45,11 +45,16 @@ export default function Options(props) {
     },
     {
       Header: "Type",
-      accessor: "type",
+      accessor: d => normalizeText(d.type) || "-",
     },
     {
       Header: "Modifiers",
-      accessor: (d) => d.modifiers.join(", "),
+      accessor: d => {
+        let names = map(d.modifiers, _ => {
+          return normalizeText(_.name)
+        })
+        return names.join(', ') || "-"
+      },
     },
     {
       Header: "Actions",
