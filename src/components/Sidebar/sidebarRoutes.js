@@ -3,10 +3,11 @@ import { map, sortBy } from 'lodash'
 import { useLocation, useHistory } from 'react-router-dom'
 import classname from 'classnames';
 import styles from './Sidebar.module.sass'
-import React from 'react';
+import React from 'react'
 export default function SidebarRoutes(props) {
     const {activeRoute, setActive} = props
     const history = useHistory();
+    const location = useLocation()
     const sortedRoutes = sortBy(routes(), ["name"]);
     const handleClick = (route) => {
         if (!route) return null;
@@ -21,9 +22,10 @@ export default function SidebarRoutes(props) {
             {map(sortedRoutes, route =>
                 {
                     if(!route.icon) return null
+                    debugger
                 return (
                 <div 
-                    className={classname([styles.link_container, styles.isALinkContainer])}
+                    className={classname(styles.link_container, styles.isALinkContainer, {[styles.isActive]: "/" + route.name.toLowerCase() === location.pathname ? true : false})}
                     key={route.name} 
                     onClick={() => handleClick(route)}
                 >

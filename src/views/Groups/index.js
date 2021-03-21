@@ -5,31 +5,38 @@ import styles from "./Groups.module.sass";
 import Modal from "react-modal";
 import Table from "components/table";
 import AddGroup from "views/Groups/addGroup";
-import _ from "lodash";
+import _, { map } from "lodash";
 import { useHistory } from "react-router-dom";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import { normalizeText } from "utils/normalize";
 const groupColumns = [
   {
     Header: "Group",
-    accessor: "name",
+    accessor: d => normalizeText(d.name) || "-",
     width: 50,
   },
   {
     Header: "Display Order",
-    accessor: "display_order",
+    accessor: d => d.order || "-",
   },
   {
-    id: "price",
-    Header: "Price $",
-    accessor: "price_default",
+    Header: "Price",
+    accessor: d => d.price || 0,
   },
   {
     Header: "Max Allowed",
-    accessor: "max_allowed",
+    accessor: d => d.max_allowed || 0,
   },
   {
     Header: "Min Required",
-    accessor: "min_required",
+    accessor: d => d.min_required || 0,
+  },
+  {
+    Header: "Options",
+    accessor: d => {
+      let names = _.map(d.options, _ => normalizeText(_.name))
+      return names.join(", ") || "-"
+    }
   },
   {
     Header: "Actions",
@@ -202,7 +209,7 @@ export default function GroupsTable() {
           onClick={() => setOpen(true)}
           className={classname(styles.ctaButton)}
         >
-          AddGroup
+          Add Group
         </button>
       </div>
     </div>

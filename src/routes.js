@@ -52,7 +52,7 @@ export default function () {
         }
         ,{
             path: '/groups',
-            name: 'Option groups',
+            name: 'Groups',
             icon: '/assets/groups.svg',
             component: Groups,
             layout: "/pizza",
