@@ -23,3 +23,15 @@ export const STATE_LOADING = "options/STATE_LOADING";
 export const SORTED_OPTIONS = "options/SORTED_OPTIONS";
 export const SORTED_OPTIONS_SUCCESS = "options/SORTED_OPTIONS_SUCCESS";
 export const SORTED_OPTIONS_ERROR = "options/SORTED_OPTIONS_ERROR"
+
+export const DETAIL_OPTION = "options/DETAIL_OPTION"
+export const DETAIL_OPTION_ERROR = "options/DETAIL_OPTION_ERROR"
+export const DETAIL_OPTION_SUCCESS = "options/DETAIL_OPTION_SUCCESS"
+
+export const DELETE_OPTION = "options/DELETE_OPTION"
+export const DELETE_OPTION_SUCCESS = "optoins/DELETE_OPTION_SUCCESS"
+export const DELETE_OPTION_ERROR = "options/DELETE_OPTION_ERROR"
+
+//set and remove selected
+export const SET_SELECTED = "options/SET_SELECTED"
+export const REMOVE_SELECTED = "options/REMOVE_SELECTED"

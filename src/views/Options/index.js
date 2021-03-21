@@ -8,32 +8,39 @@ import {normalizeText} from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
-import axios from 'axios'
+import {useDispatch, useSelector} from 'react-redux'
+import {listOptions, removeOption, setSelected, removeSelected} from 'modules/options/actions'
+import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
+const useFetch = (action) => {
+  const dispatch = useDispatch()
+  React.useEffect(() => {
+    dispatch(action)
+  }, [])
+}
 export default function Options(props) {
+  useFetch(listOptions())
+  const dispatch = useDispatch()
+  const options = useSelector(optionsSelector)
+  const loading = useSelector(loadingSelector)
+  const option_error = useSelector(errorSelector)
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState([])
   const history = useHistory()
-  const baseUrl = "http://127.0.0.1:8000/api/options/"
   const handleEdit = option => {
     delete option.actions
     history.push("/addOption", option)
   }
   const handleRemove = option => {
-    const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable`)
-    if(confirm) {
-      const response = axios.delete(baseUrl+option.id+"/")
-      response.then(snapshot => {
-        if(snapshot.status === 204) {
-          alert('Option removed successfully')
-        }
-      })
-      .catch(err => {
-        console.error(err)
-        alert('Unable to remove option')
-      })
-    }
+    dispatch(removeOption(option))
   }
+  /*
+  React.useEffect(() => {
+    if(_.isEmpty(options)){
+      dispatch(listOptions())
+    }
+  }, [options])
+  */
   const columns = [
     {
       Header: "Name",
@@ -61,20 +68,7 @@ export default function Options(props) {
       accessor: "actions",
     },
   ];
-  React.useEffect(() => {
-    const response = axios.get(baseUrl)
-    response.then(snapshot => {
-      const {data, status} = snapshot
-      if(status === 200) {
-        setList(data)
-      }
-    })
-    .catch(error => {
-      console.log(error)
-      alert('Unable to get Options. Please try again') 
-    })
-  }, [])
-  _.map(list, (option) =>
+  _.map(options, (option) =>
     _.assign(option, {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>

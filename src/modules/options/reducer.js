@@ -5,7 +5,7 @@ const initState = fromJS({
     loading: false,
     error: '',
     options: List(),
-    selectedOptions: List(),
+    selected: List(),
     optionToEdit: '',
     sortedOptions: List()
 })
@@ -43,6 +43,11 @@ export default function optionReducer(state=initState, action) {
             return state.set('loading', false)
         case Actions.LIST_OPTIONS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
+        // set and remove option
+        case Actions.SET_SELECTED:
+            return state.set('selected', fromJS(payload))
+        case Actions.REMOVE_SELECTED:
+            return state.set('selected', initState.get('selected'))
         default:
             return state
     } 

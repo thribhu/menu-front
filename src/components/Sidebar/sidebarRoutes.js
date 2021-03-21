@@ -22,7 +22,6 @@ export default function SidebarRoutes(props) {
             {map(sortedRoutes, route =>
                 {
                     if(!route.icon) return null
-                    debugger
                 return (
                 <div 
                     className={classname(styles.link_container, styles.isALinkContainer, {[styles.isActive]: "/" + route.name.toLowerCase() === location.pathname ? true : false})}
