@@ -1,16 +1,15 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import {listoptions, detailOption, deleteOption, addOption, updateOption} from './service'
 import * as Actions from './constants'
-import { add } from 'lodash'
 
 function* listOptionSaga(){
     try {
-    const response = yield call(listOptionSaga)
+    const response = yield call(listoptions)
     const {status, data} = response
     if(status === 200) {
         yield put({
             type: Actions.LIST_OPTIONS_SUCCESS,
-            paylod: data
+            payload: data
         })
     }
     else throw new Error("Unable to fetch options")
@@ -93,20 +92,23 @@ function* detailOptionSaga(option){
     }
 }
 
-function* deleteOptionSaga(option){
+function* deleteOptionSaga({payload}){
     try {
-        const req = yield call(deleteOption, option)
+        const req = yield call(deleteOption, payload.id)
         const {status} = req
         if(status === 204){
             yield put({
-                type: Actions.DELETE_OPTION_SUCCESS
+                type: Actions.REMOVE_OPTION_SUCCESS
+            })
+            yield put({
+                type: Actions.LIST_OPTIONS
             })
         }
     }
     catch (err){
         console.log(err)
         yield put({
-            type: Actions.DELETE_OPTION_ERROR,
+            type: Actions.REMOVE_OPTION_ERROR,
             error: err.message
         })
     }
@@ -117,5 +119,5 @@ export default function* optionSaga(){
     yield takeEvery(Actions.LIST_OPTIONS, listOptionSaga)
     yield takeEvery(Actions.UPDATE_OPTION, updateOptionSaga)
     yield takeEvery(Actions.DETAIL_OPTION, detailOptionSaga)
-    yield takeEvery(Actions.DELETE_OPTION, deleteOptionSaga)
+    yield takeEvery(Actions.REMOVE_OPTION, deleteOptionSaga)
 }

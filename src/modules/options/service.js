@@ -1,6 +1,6 @@
 import api from 'api'
 import axios from 'axios'
-const base = api+"options/"
+const base = api()+"options/"
 
 /*
 * GET api/options/

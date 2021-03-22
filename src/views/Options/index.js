@@ -18,11 +18,13 @@ const useFetch = (action) => {
   }, [])
 }
 export default function Options(props) {
-  useFetch(listOptions())
   const dispatch = useDispatch()
   const options = useSelector(optionsSelector)
   const loading = useSelector(loadingSelector)
   const option_error = useSelector(errorSelector)
+  if(_.isEmpty(options)){
+    dispatch(listOptions())
+  }
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState([])
@@ -32,15 +34,11 @@ export default function Options(props) {
     history.push("/addOption", option)
   }
   const handleRemove = option => {
-    dispatch(removeOption(option))
-  }
-  /*
-  React.useEffect(() => {
-    if(_.isEmpty(options)){
-      dispatch(listOptions())
+    const confirm = window.confirm(`You are about to remove Option. This is permanant`)
+    if(!!confirm){
+      dispatch(removeOption(option))
     }
-  }, [options])
-  */
+  }
   const columns = [
     {
       Header: "Name",
@@ -119,7 +117,7 @@ export default function Options(props) {
       <div>
         <Table
           columns={columns}
-          data={list}
+          data={options}
           updateSelectItems={setSelected}
         />
       </div>

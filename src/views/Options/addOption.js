@@ -9,6 +9,8 @@ import Table from "components/table";
 import OrderTable from "components/orderTable";
 import { normalizeText as normalize } from "utils/normalize";
 import axios from "axios";
+import {addOption, updateOption, setSelected} from 'modules/options/actions'
+import {loadingSelector, errorSelector, selectedOptionsSelector} from 'modules/options/selector'
 const initialValues = {
   name: "",
   description: "",
@@ -45,7 +47,6 @@ const columns = [
   },
 ];
 export default function AddOption(props) {
-  const baseUrl = "http://127.0.0.1:8000/api/";
   const [step1, setStep1] = React.useState(false);
   const [nowOption, setNowOption] = React.useState();
   const [selected, setSelected] = React.useState([]);
@@ -54,6 +55,7 @@ export default function AddOption(props) {
   const [reset, setReset] = React.useState(false);
   const [modifiers, setModifiers] = React.useState([]);
   const history = useHistory();
+  const baseUrl = "http://127.0.0.1:8000/api/options"
   const handleSaveItem = () => {
     if (props.setOpen) {
       props.setOpen(false);
