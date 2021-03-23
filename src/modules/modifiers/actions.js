@@ -33,3 +33,16 @@ export const detailModifier = modifier => {
         payload: modifier
     }
 }
+
+export const selectModifier = modifier => {
+    return {
+        type: Actions.SELECTED_MODIFIERS,
+        payload: modifier
+    }
+}
+
+export const removeSelected = () => {
+    return {
+        type: Actions.REMOVE_SELECTED
+    }
+}

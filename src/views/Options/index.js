@@ -9,7 +9,7 @@ import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
 import {useDispatch, useSelector} from 'react-redux'
-import {listOptions, removeOption, setSelected as selectOption, removeSelected} from 'modules/options/actions'
+import { listOptions,removeOption, setSelected as selectOption} from 'modules/options/actions'
 import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
 export default function Options(props) {
   const dispatch = useDispatch()

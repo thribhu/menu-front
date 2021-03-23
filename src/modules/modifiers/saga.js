@@ -104,7 +104,7 @@ function* detailModifierSaga({payload}){
 
 function* deleteModifierSaga({payload}){
     try {
-        const req = yield call(deleteModifier, payload.id)
+        const req = yield call(deleteModifier, payload)
         const {status} = req
         if(status === 204){
             yield put({

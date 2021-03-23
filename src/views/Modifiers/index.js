@@ -8,10 +8,9 @@ import _ from "lodash";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
-import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from 'react-redux'
-import {listModfiers, removeModifier} from 'modules/modifiers/actions'
+import {listModfiers, removeModifier, selectModifier} from 'modules/modifiers/actions'
 import {loadingSelector, errorSelector, listSelector} from 'modules/modifiers/selectors'
 export default function Modifiers() {
   const dispatch = useDispatch()
@@ -25,34 +24,12 @@ export default function Modifiers() {
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
   const [formValues, setForm] = React.useState();
-  const [list, setList] = React.useState([]);
-  //const [loading, setLoading] = React.useState(false);
-  const [err, setError] = React.useState();
-  const [request, setRequest] = React.useState(false)
   const history = useHistory();
-  const baseUrl = "http://127.0.0.1:8000/api/modifiers/"
-  /*
-  React.useEffect(() => {
-    setLoading(true);
-    let promise = axios.get(baseUrl);
-    promise
-      .then((res) => {
-        setList(res.data);
-        setError();
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-  */
   const handleEdit = (modifier) => {
     delete modifier.actions
+    dispatch(selectModifier(modifier))
     history.push(
       '/addModifier',
-      modifier
     )
   }
   const handleDelete = modifier => {
