@@ -1,15 +1,16 @@
 import {createSelector} from 'reselect'
 import {isImmutable} from 'immutable'
+import _, { create } from 'lodash'
 
-const modifiers = state => state.modifiers
+const groups = state => state.groups
 
 export const loadingSelector = createSelector(
-    modifiers, 
+    groups, 
     data => data.get('loading')
 )
 
 export const errorSelector = createSelector(
-    modifiers,
+    groups,
     data => {
         let error = data.get('error')
         if (isImmutable(error)){
@@ -20,18 +21,18 @@ export const errorSelector = createSelector(
 )
 
 export const listSelector = createSelector(
-    modifiers,
+    groups,
     data => {
-        let modifiers = data.get('modifiers')
-        if(isImmutable(modifiers)){
-            return modifiers.toJS()
+        let groups = data.get('groups')
+        if(isImmutable(groups)){
+            return groups.toJS()
         }
         return []
     }
 )
 
 export const selectedSelector = createSelector(
-    modifiers, 
+    groups, 
     data => {
         let selected = data.get('selected')
         if(selected.size > 0 && isImmutable(selected)){

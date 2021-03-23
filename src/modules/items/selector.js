@@ -1,15 +1,14 @@
-import {createSelector} from 'reselect'
 import {isImmutable} from 'immutable'
 
-const modifiers = state => state.modifiers
+const items = state => state.items
 
 export const loadingSelector = createSelector(
-    modifiers, 
+    items, 
     data => data.get('loading')
 )
 
 export const errorSelector = createSelector(
-    modifiers,
+    items,
     data => {
         let error = data.get('error')
         if (isImmutable(error)){
@@ -20,18 +19,18 @@ export const errorSelector = createSelector(
 )
 
 export const listSelector = createSelector(
-    modifiers,
+    items,
     data => {
-        let modifiers = data.get('modifiers')
-        if(isImmutable(modifiers)){
-            return modifiers.toJS()
+        let items = data.get('items')
+        if(isImmutable(items)){
+            return items.toJS()
         }
         return []
     }
 )
 
 export const selectedSelector = createSelector(
-    modifiers, 
+    items, 
     data => {
         let selected = data.get('selected')
         if(selected.size > 0 && isImmutable(selected)){
