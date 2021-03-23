@@ -54,7 +54,7 @@ function* addItemsSaga({payload}){
 
 function* updateItemsSaga({payload}){
     try{
-        const updateReq = yield call(updateItem, payload)
+        const updateReq = yield call(updateItem, payload.id)
         const {status} = updateReq
         if(status === 200) {
             yield put({

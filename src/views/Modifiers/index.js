@@ -3,7 +3,6 @@ import classname from "classnames";
 import styles from "./Modifiers.module.sass";
 import { useHistory } from "react-router-dom";
 import Table from "components/table";
-import modifiers from "./modifiers.json";
 import { normalizeText as normalize } from "utils/normalize";
 import _ from "lodash";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -11,17 +10,28 @@ import Modal from "react-modal";
 import AddModifier from "./addModifier";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import {useDispatch, useSelector} from 'react-redux'
+import {listModfiers, removeModifier} from 'modules/modifiers/actions'
+import {loadingSelector, errorSelector, listSelector} from 'modules/modifiers/selectors'
 export default function Modifiers() {
+  const dispatch = useDispatch()
+  const loading = useSelector(loadingSelector)
+  const error = useSelector(errorSelector)
+  const modifiers = useSelector(listSelector)
+  if(_.isEmpty(modifiers)) {
+    dispatch(listModfiers())
+  }
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
   const [formValues, setForm] = React.useState();
   const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  //const [loading, setLoading] = React.useState(false);
   const [err, setError] = React.useState();
   const [request, setRequest] = React.useState(false)
   const history = useHistory();
   const baseUrl = "http://127.0.0.1:8000/api/modifiers/"
+  /*
   React.useEffect(() => {
     setLoading(true);
     let promise = axios.get(baseUrl);
@@ -37,6 +47,7 @@ export default function Modifiers() {
         setLoading(false);
       });
   }, []);
+  */
   const handleEdit = (option) => {
     delete option.actions
     history.push(
@@ -47,12 +58,7 @@ export default function Modifiers() {
   const handleDelete = option => {
     const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable.`)
     if (confirm) {
-      const removeModifier = axios.delete(baseUrl +option.id + "/")
-      removeModifier.then(res => {
-        if(res.status === 204) {
-          alert('Modifier removed successfully')
-        }
-      })
+      dispatch(removeModifier(option.id))
     }
   }
   const customStyles = {
@@ -95,7 +101,7 @@ export default function Modifiers() {
       accessor: "actions",
     },
   ];
-  _.map(list, (option) =>
+  _.map(modifiers, (option) =>
     _.assign(option, {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
@@ -143,7 +149,7 @@ export default function Modifiers() {
       <div>
         <Table
           columns={columns}
-          data={list}
+          data={modifiers}
           updateSelectItems={setSelected}
         />
       </div>

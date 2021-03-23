@@ -9,8 +9,11 @@ import Table from "components/table";
 import OrderTable from "components/orderTable";
 import { normalizeText as normalize } from "utils/normalize";
 import axios from "axios";
-import {addOption, updateOption, setSelected} from 'modules/options/actions'
+import {addOption, updateOption, removeSelected} from 'modules/options/actions'
 import {loadingSelector, errorSelector, selectedOptionsSelector} from 'modules/options/selector'
+import {listSelector, loadingSelector as modLoad, errorSelector as modErr} from 'modules/modifiers/selectors'
+import {listModfiers} from 'modules/modifiers/actions'
+import {useSelector, useDispatch} from 'react-redux'
 const initialValues = {
   name: "",
   description: "",
@@ -47,46 +50,35 @@ const columns = [
   },
 ];
 export default function AddOption(props) {
+  const dispatch = useDispatch()
+  const modifiers = useSelector(listSelector)
+  const mod_loading = useSelector(modLoad)
+  const mod_error = useSelector(modErr)
+  const nowOption = useSelector(selectedOptionsSelector)
+  if(_.isEmpty(modifiers)) {
+    dispatch(listModfiers())
+  }
   const [step1, setStep1] = React.useState(false);
-  const [nowOption, setNowOption] = React.useState();
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(nowOption.modifiers || []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState([]);
   const [reset, setReset] = React.useState(false);
-  const [modifiers, setModifiers] = React.useState([]);
+  const [showSelected, setShow] = React.useState(false)
   const history = useHistory();
   const baseUrl = "http://127.0.0.1:8000/api/options"
   const handleSaveItem = () => {
-    if (props.setOpen) {
+    if (props.setOpen){
       props.setOpen(false);
     }
     setStep1(false);
+    const option = _.assign({}, formValues, {modifiers: nowArray ? nowArray.map(_ => _.original.id) : selected.map(_ => _.id)})
     if(!_.isEmpty(nowOption)) {
-      const id = formValues.id
-      delete formValues.id
-      const option = _.assign({}, formValues, {modifiers: _.map(selected, s => s.id)})
-      const response = axios.put(baseUrl+`options/${id}/`, option)
-      response.then(snapshot => {
-        if (snapshot.status === 201){
-          alert('Option updated successfully')
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        alert('Unable update option.')
-      })
+      const id = nowOption.id
+      nowOption.modifiers = _.map(nowOption.modifiers, m => m.id)
+      dispatch(updateOption(_.merge(nowOption, option)))
     }
     else {
-      const response = axios.post(baseUrl+"options/", _.assign({}, formValues, {modifiers: _.map(selected, s => s.id)}))
-      response.then(snapshot => {
-        if(snapshot.status === 200){
-          alert('Option added option')
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        alert('Unable to add option')
-      })
+      dispatch(addOption(option))
     }
     setReset(true);
     setForm("");
@@ -94,30 +86,15 @@ export default function AddOption(props) {
     setNowArray([]);
   };
   React.useEffect(() => {
-    if (!_.isEmpty(props) && !_.isEmpty(props.location)) {
-      const data = _.get(props, "location.state")
-      setNowOption(data)
-    }
-    const response = axios.get(baseUrl + "modifiers/");
-    response
-      .then((snapshot) => {
-        if (snapshot.status === 200) {
-          setModifiers(snapshot.data);
-        }
-      })
-      .catch((err) => console.log(err));
-    return () => setNowOption("");
+    return () => dispatch(removeSelected());
   }, [nowOption]);
-  const dynamicValues = !_.isEmpty(nowOption)
-    ? _.merge(initialValues, nowOption)
-    : _.merge(initialValues, formValues);
   return (
     <div className={classname(styles.container)}>
       {!step1 && (
         <>
           <div style={{ dispay: "flex", justifyContent: "center" }}>
             <p style={{ fontSize: "1.5rem", color: "red" }}>
-              {nowOption ? "Update Option" : "Add Option"}
+              {!_.isEmpty(nowOption) ? "Update Option" : "Add Option"}
             </p>
           </div>
           <Formik
@@ -126,8 +103,8 @@ export default function AddOption(props) {
             onSubmit={async (values) => {
               setForm(values);
               setStep1(true);
+              setShow(true)
             }}
-            enableReinitialize
           >
             {({ values }) => (
               <Form>
@@ -258,7 +235,7 @@ export default function AddOption(props) {
                       type="submit"
                       className={classname(styles.ctaButton)}
                     >
-                      {nowOption ? "Edit Modifiers" : "Choose Modifers"}
+                      {!_.isEmpty(nowOption) ? "Edit Modifiers" : "Choose Modifers"}
                     </button>
                   </div>
                 </div>
@@ -278,9 +255,7 @@ export default function AddOption(props) {
               withCheckBox={true}
               noAction={true}
               preSelected={
-                !_.isEmpty(nowOption)
-                  ? nowOption.modifiers
-                  : _.map(selected, (s) => s.name)
+                selected
               }
             />
           </div>
@@ -323,7 +298,7 @@ export default function AddOption(props) {
           </div>
         </div>
       )}
-      {selected.length && !step1 ? (
+      {selected.length && !step1 && showSelected ? (
         <div style={{ flex: 1 }}>
           <div>
             <OrderTable

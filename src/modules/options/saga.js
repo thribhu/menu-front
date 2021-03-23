@@ -31,7 +31,9 @@ function* addOptionSaga({payload}){
                 type: Actions.ADD_OPTION_SUCCESS,
                 payload: addReq.data
             })
-        yield call(listOptionSaga)
+        yield put({
+            type: Actions.LIST_OPTIONS
+        }) 
         }
         throw new Error("Unable to add option")
     }
@@ -44,10 +46,10 @@ function* addOptionSaga({payload}){
     }
 }
 
-function* updateOptionSaga(payload){
+function* updateOptionSaga({payload}){
     try{
         const updateReq = yield call(updateOption, payload)
-        const {status} = updateOption
+        const {status} = updateReq
         if(status === 200) {
             yield put({
                 type: Actions.UPDATE_OPTION_SUCCESS,
@@ -71,9 +73,9 @@ function* updateOptionSaga(payload){
  * Usually we dont user this function
  * as fetching a single item or option with id is not practical
  */
-function* detailOptionSaga(option){
+function* detailOptionSaga({payload}){
     try {
-        const req = yield call(detailOption, option)
+        const req = yield call(detailOption, payload)
         const {status, data} = req
         if(status === 200) {
             yield put({
@@ -107,6 +109,9 @@ function* deleteOptionSaga({payload}){
     }
     catch (err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_OPTIONS
+        })
         yield put({
             type: Actions.REMOVE_OPTION_ERROR,
             error: err.message

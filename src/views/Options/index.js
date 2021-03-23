@@ -9,7 +9,7 @@ import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
 import {useDispatch, useSelector} from 'react-redux'
-import {listOptions, removeOption, setSelected, removeSelected} from 'modules/options/actions'
+import {listOptions, removeOption, setSelected as selectOption, removeSelected} from 'modules/options/actions'
 import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
 const useFetch = (action) => {
   const dispatch = useDispatch()
@@ -31,18 +31,19 @@ export default function Options(props) {
   const history = useHistory()
   const handleEdit = option => {
     delete option.actions
-    history.push("/addOption", option)
+    dispatch(selectOption(option))
+    history.push("/addOption")
   }
   const handleRemove = option => {
     const confirm = window.confirm(`You are about to remove Option. This is permanant`)
     if(!!confirm){
-      dispatch(removeOption(option))
+      dispatch(removeOption(option.id))
     }
   }
   const columns = [
     {
       Header: "Name",
-      accessor: "name",
+      accessor: d => normalizeText(d.name),
     },
     {
       Header: "Price",
