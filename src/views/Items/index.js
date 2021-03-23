@@ -4,7 +4,7 @@ import styles from './Items.module.sass';
 import { useHistory } from 'react-router-dom'
 import items from './items.json'
 import Table from 'components/table'
-import { normalizeText as normalize, normalizeText } from 'utils/normalize'
+import { normalizeText } from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from 'react-icons/fa'
 import _ from 'lodash';
 import Modal from 'react-modal';

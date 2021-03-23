@@ -1,5 +1,5 @@
 import React from "react";
-import _, { map } from "lodash";
+import { map, assign, isEmpty } from "lodash";
 import classname from "classnames";
 import styles from "./Options.module.sass";
 import { useHistory } from "react-router-dom";
@@ -11,18 +11,12 @@ import Modal from "react-modal";
 import {useDispatch, useSelector} from 'react-redux'
 import {listOptions, removeOption, setSelected as selectOption, removeSelected} from 'modules/options/actions'
 import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
-const useFetch = (action) => {
-  const dispatch = useDispatch()
-  React.useEffect(() => {
-    dispatch(action)
-  }, [])
-}
 export default function Options(props) {
   const dispatch = useDispatch()
   const options = useSelector(optionsSelector)
   const loading = useSelector(loadingSelector)
   const option_error = useSelector(errorSelector)
-  if(_.isEmpty(options)){
+  if(isEmpty(options)){
     dispatch(listOptions())
   }
   const [selected, setSelected] = React.useState();
@@ -67,8 +61,8 @@ export default function Options(props) {
       accessor: "actions",
     },
   ];
-  _.map(options, (option) =>
-    _.assign(option, {
+  map(options, (option) =>
+    assign(option, {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
