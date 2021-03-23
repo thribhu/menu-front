@@ -10,11 +10,11 @@ detailItems
 
 function* listItemsSaga(){
     try {
-    const response = yield call(listmodifiers)
+    const response = yield call(listitems)
     const {status, data} = response
     if(status === 200) {
         yield put({
-            type: Actions.LIST_MODIFIERS_SUCCESS,
+            type: Actions.LIST_ITEMS_SUCCESS,
             payload: data
         })
     }
@@ -23,7 +23,7 @@ function* listItemsSaga(){
     catch(err){
         console.log(err)
         yield ({
-            type: Actions.LIST_MODIFIERS_ERROR,
+            type: Actions.LIST_ITEMS_ERROR,
             error: err.message
         })
     }
@@ -31,14 +31,14 @@ function* listItemsSaga(){
 
 function* addItemsSaga({payload}){
     try{
-        const addReq = yield call(addModifiers, payload)
+        const addReq = yield call(addItems, payload)
         if(addReq.status === 201){
             yield put({
-                type: Actions.ADD_MODIFIERS_SUCCESS,
+                type: Actions.ADD_ITEM_SUCCESS,
                 payload: addReq.data
             })
         yield put({
-            type: Actions.LIST_MODIFIERS
+            type: Actions.LIST_ITEMS
         }) 
         }
         throw new Error("Unable to add items")
@@ -46,7 +46,7 @@ function* addItemsSaga({payload}){
     catch (err){
         console.log(err)
         yield put({
-            type: Actions.ADD_MODIFIERS_ERROR,
+            type: Actions.ADD_ITEM_ERROR,
             error: err.message
         })
     }
@@ -126,7 +126,7 @@ function* deleteItemsSaga({payload}){
 
 export default function* optionSaga(){
     yield takeEvery(Actions.ADD_ITEM, addItemsSaga)
-    yield takeEvery(Actions.LIST_ITEM, listItemsSaga)
+    yield takeEvery(Actions.LIST_ITEMS, listItemsSaga)
     yield takeEvery(Actions.UPDATE_ITEM, updateItemsSaga)
     yield takeEvery(Actions.DETAIL_ITEM, detailItemsSaga)
     yield takeEvery(Actions.DELETE_ITEM, deleteItemsSaga)

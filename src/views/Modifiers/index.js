@@ -48,17 +48,17 @@ export default function Modifiers() {
       });
   }, []);
   */
-  const handleEdit = (option) => {
-    delete option.actions
+  const handleEdit = (modifier) => {
+    delete modifier.actions
     history.push(
       '/addModifier',
-      option
+      modifier
     )
   }
-  const handleDelete = option => {
-    const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable.`)
+  const handleDelete = modifier => {
+    const confirm = window.confirm(`You are about to remove ${modifier.name}. This action is not reversable.`)
     if (confirm) {
-      dispatch(removeModifier(option.id))
+      dispatch(removeModifier(modifier.id))
     }
   }
   const customStyles = {
@@ -101,18 +101,18 @@ export default function Modifiers() {
       accessor: "actions",
     },
   ];
-  _.map(modifiers, (option) =>
-    _.assign(option, {
+  _.map(modifiers, (modifier) =>
+    _.assign(modifier, {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(option)}>
+            <button onClick={() => handleEdit(modifier)}>
               <FaEdit />
             </button>
           </div>
           <div>
             <button>
-              <FaTrash onClick={() => handleDelete(option)}/>
+              <FaTrash onClick={() => handleDelete(modifier)}/>
             </button>
           </div>
         </div>
