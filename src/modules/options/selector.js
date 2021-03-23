@@ -34,7 +34,7 @@ export const errorSelector = createSelector(
  export const selectedOptionsSelector = createSelector(
      options, 
      data => {
-         var list = data.get('selectedOptions')
+         var list = data.get('selected')
          if(isImmutable(list)){
              return list.toJS()
          }

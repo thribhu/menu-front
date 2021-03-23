@@ -1,10 +1,10 @@
 import React from "react";
+import axios from 'axios'
 import classname from "classnames";
 import styles from "./Groups.module.sass";
 import _ from "lodash";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import options from "../Options/options.json";
 import { normalizeText as normalize } from "utils/normalize";
 import OrderTable from "components/orderTable";
 import Table from "components/table";
@@ -44,11 +44,37 @@ const validationSchema = yup.object({
   type: yup.string().optional(),
 });
 export default function AddGroup(props) {
+  const baseUrl = 'http://127.0.0.1:8000/api/'
+  // !INFO: we use nowGroup while updating an option group, 
+  // we get this from props
+  const [nowGroup, setGroup] = React.useState()
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
+  const [loading, setLoading] = React.useState(false)
+  const [options, setOptions] = React.useState([])
   const history = useHistory();
+  React.useEffect(() => {
+    setLoading(true)
+    const response = axios.get(baseUrl+"options/")
+    response.then(snapshot => {
+      if(snapshot.status === 200){
+        const data = snapshot.data
+        setOptions(data)
+        setLoading(false) 
+      }
+    }) 
+    .catch(err => {
+      console.log(err)
+      alert('Unable to get options')
+      setLoading(false)
+    })
+    if(!_.isEmpty(props) && !_.isEmpty(props.location)) {
+      setGroup(_.get(props, 'location.state'))
+    }
+    return () => {setGroup('')}
+  }, [nowGroup])
   const customStyles = {
     content: {
       top: "50%",
@@ -60,6 +86,39 @@ export default function AddGroup(props) {
     },
   };
   const handleSaveItem = () => {
+    setLoading(true)
+    if(nowGroup) {
+      const id = formValues.id
+      delete formValues.id
+      const group = _.assign({}, formValues, {options: selected.map(a => a.id)})
+      const req = axios.put(baseUrl+`groups/${id}/`, group)
+      req.then(snapshot => {
+        if(snapshot.status === 202) {
+          alert('Group updated successfully')
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        alert('Unable to update  group')
+        setLoading(false)
+      })
+    }
+    else {
+      const group = _.assign({}, formValues, {options: selected.map(a => a.id)})
+      const req = axios.post(baseUrl+"groups/", group)
+      req.then(snapshot => {
+        if(snapshot.status === 201) {
+          alert('Group added successfully')
+          setLoading(false)
+        }
+      })
+      .catch(err => {
+        console.log(err)
+        alert('Unable to add group')
+        setLoading(false)
+      })
+    }
     setForm('')
     setNowArray([])
     setSelected([])
@@ -143,13 +202,13 @@ export default function AddGroup(props) {
                     <div className={classname(styles.formControl)}>
                       <div className={classname(styles.labelContainer)}>
                         <label
-                          htmlFor="min_allowed"
+                          htmlFor="min_requied"
                           className={classname(
                             styles.formLabel,
                             styles.labelContainer
                           )}
                         >
-                          Min Allowed
+                          Min Required
                         </label>
                       </div>
                       <div>
@@ -168,13 +227,13 @@ export default function AddGroup(props) {
                     <div className={classname(styles.formControl)}>
                       <div className={classname(styles.labelContainer)}>
                         <label
-                          htmlFor="max_required"
+                          htmlFor="max_allowed"
                           className={classname(
                             styles.formLabel,
                             styles.labelContainer
                           )}
                         >
-                          Max Required
+                          Max Allowed
                         </label>
                       </div>
                       <div>
@@ -238,7 +297,7 @@ export default function AddGroup(props) {
                         type="submit"
                         className={classname(styles.ctaButton)}
                       >
-                        Add Options
+                         Choose Options
                       </button>
                     </div>
                   </div>

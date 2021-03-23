@@ -3,29 +3,64 @@ import classname from "classnames";
 import styles from "./Modifiers.module.sass";
 import { useHistory } from "react-router-dom";
 import Table from "components/table";
-import modifiers from "./modifiers.json";
 import { normalizeText as normalize } from "utils/normalize";
 import _ from "lodash";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
-import axios from 'axios'
+import axios from "axios";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {useDispatch, useSelector} from 'react-redux'
+import {listModfiers, removeModifier} from 'modules/modifiers/actions'
+import {loadingSelector, errorSelector, listSelector} from 'modules/modifiers/selectors'
 export default function Modifiers() {
+  const dispatch = useDispatch()
+  const loading = useSelector(loadingSelector)
+  const error = useSelector(errorSelector)
+  const modifiers = useSelector(listSelector)
+  if(_.isEmpty(modifiers)) {
+    dispatch(listModfiers())
+  }
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
-  const [formValues, setForm] = React.useState()
+  const [formValues, setForm] = React.useState();
+  const [list, setList] = React.useState([]);
+  //const [loading, setLoading] = React.useState(false);
+  const [err, setError] = React.useState();
+  const [request, setRequest] = React.useState(false)
   const history = useHistory();
-  const [mod, setMod] = React.useState()
+  const baseUrl = "http://127.0.0.1:8000/api/modifiers/"
+  /*
   React.useEffect(() => {
-    let promise = axios.get('http://127.0.0.1:8000/api/modifiers/')
-    promise.then(res => {
-      setMod(res)
-    }).catch(err => {
-      console.log(err)
-    })
-  }, [])
-  console.log(mod)
+    setLoading(true);
+    let promise = axios.get(baseUrl);
+    promise
+      .then((res) => {
+        setList(res.data);
+        setError();
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err);
+        setLoading(false);
+      });
+  }, []);
+  */
+  const handleEdit = (option) => {
+    delete option.actions
+    history.push(
+      '/addModifier',
+      option
+    )
+  }
+  const handleDelete = option => {
+    const confirm = window.confirm(`You are about to remove ${option.name}. This action is not reversable.`)
+    if (confirm) {
+      dispatch(removeModifier(option.id))
+    }
+  }
   const customStyles = {
     content: {
       margin: "auto",
@@ -55,7 +90,7 @@ export default function Modifiers() {
               style={{ display: "grid", gridTemplateColumns: "100px 100px" }}
             >
               <div style={{ padding: "0 5px" }}>{normalize(r.name)}</div>
-              <div>{parseFloat(r.value).toFixed(2)}</div>
+              <div>{parseFloat(r.price).toFixed(2)}</div>
             </div>
           </div>
         ));
@@ -71,13 +106,13 @@ export default function Modifiers() {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button>
+            <button onClick={() => handleEdit(option)}>
               <FaEdit />
             </button>
           </div>
           <div>
             <button>
-              <FaTrash />
+              <FaTrash onClick={() => handleDelete(option)}/>
             </button>
           </div>
         </div>
@@ -86,6 +121,7 @@ export default function Modifiers() {
   );
   return (
     <div className={classname(styles.tableContainer)}>
+      {loading && <div style={{display: 'flex', justifyContent:'center', alignItems: 'center'}}><CircularProgress/></div>}
       <Modal
         isOpen={open}
         onRequestClose={() => {
@@ -99,16 +135,16 @@ export default function Modifiers() {
             <button onClick={() => setStep1(false)}>Back</button>
           </div>
         )}
-        {
-            !step1 ? (
-                <AddModifier next={setStep1} formMethod={setForm} currentForm={formValues} setOpen={setOpen}/>
-            )
-            :
-            (
-                <div>
-                </div>
-            )
-        }
+        {!step1 ? (
+          <AddModifier
+            next={setStep1}
+            formMethod={setForm}
+            currentForm={formValues}
+            setOpen={setOpen}
+          />
+        ) : (
+          <div></div>
+        )}
       </Modal>
       <div>
         <Table

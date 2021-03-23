@@ -1,13 +1,14 @@
-import {fromJS, List} from 'immutable';
+import {fromJS, List, Map} from 'immutable';
 import * as Actions from './constants';
 
 const initState = fromJS({
     loading: false,
     error: '',
     options: List(),
-    selectedOptions: List(),
+    selected: List(),
     optionToEdit: '',
-    sortedOptions: List()
+    sortedOptions: List(),
+    nowOption: Map()
 })
 
 export default function optionReducer(state=initState, action) {
@@ -40,9 +41,14 @@ export default function optionReducer(state=initState, action) {
         case Actions.LIST_OPTIONS:
             return state.set('loading', true).set('error', initState.get('error'));
         case Actions.LIST_OPTIONS_SUCCESS:
-            return state.set('loading', false)
+            return state.set('loading', false).set('options', fromJS(payload))
         case Actions.LIST_OPTIONS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
+        // set and remove option
+        case Actions.SET_SELECTED:
+            return state.set('selected', fromJS(payload))
+        case Actions.REMOVE_SELECTED:
+            return state.set('selected', initState.get('selected'))
         default:
             return state
     } 

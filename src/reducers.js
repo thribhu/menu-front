@@ -1,8 +1,10 @@
 import {combineReducers} from 'redux'
 import optionReducer from 'modules/options/reducer';
+import modifierReducer from 'modules/modifiers/reducer'
 
-export default function () {
-    return combineReducers({
-        options: optionReducer
-    })
-}
+const rootReducer = combineReducers({
+    options: optionReducer,
+    modifiers: modifierReducer
+})
+
+export default rootReducer

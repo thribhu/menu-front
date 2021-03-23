@@ -7,7 +7,7 @@ export const addOption = option => {
     } 
 }
 
-export const remvoeOption = option => {
+export const removeOption = option => {
     return {
         type: Actions.REMOVE_OPTION,
         payload: option
@@ -30,5 +30,18 @@ export const listOptions = () => {
 export const sortedOptions = (payload) => {
     return {
         type: Actions.SORTED_OPTIONS
+    }
+}
+
+export const setSelected = (payload) => {
+    return {
+        type: Actions.SET_SELECTED,
+        payload
+    }
+}
+
+export const removeSelected = () => {
+    return {
+        type: Actions.REMOVE_SELECTED
     }
 }

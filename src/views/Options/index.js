@@ -1,20 +1,49 @@
 import React from "react";
-import _ from "lodash";
+import _, { map } from "lodash";
 import classname from "classnames";
 import styles from "./Options.module.sass";
 import { useHistory } from "react-router-dom";
 import Table from "components/table";
-import options from "./options.json";
+import {normalizeText} from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import AddOption from './addOption'
 import Modal from "react-modal";
+import {useDispatch, useSelector} from 'react-redux'
+import {listOptions, removeOption, setSelected as selectOption, removeSelected} from 'modules/options/actions'
+import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
+const useFetch = (action) => {
+  const dispatch = useDispatch()
+  React.useEffect(() => {
+    dispatch(action)
+  }, [])
+}
 export default function Options(props) {
+  const dispatch = useDispatch()
+  const options = useSelector(optionsSelector)
+  const loading = useSelector(loadingSelector)
+  const option_error = useSelector(errorSelector)
+  if(_.isEmpty(options)){
+    dispatch(listOptions())
+  }
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const [list, setList] = React.useState([])
+  const history = useHistory()
+  const handleEdit = option => {
+    delete option.actions
+    dispatch(selectOption(option))
+    history.push("/addOption")
+  }
+  const handleRemove = option => {
+    const confirm = window.confirm(`You are about to remove Option. This is permanant`)
+    if(!!confirm){
+      dispatch(removeOption(option.id))
+    }
+  }
   const columns = [
     {
       Header: "Name",
-      accessor: "name",
+      accessor: d => normalizeText(d.name),
     },
     {
       Header: "Price",
@@ -22,11 +51,16 @@ export default function Options(props) {
     },
     {
       Header: "Type",
-      accessor: "type",
+      accessor: d => normalizeText(d.type) || "-",
     },
     {
       Header: "Modifiers",
-      accessor: (d) => d.modifiers.join(", "),
+      accessor: d => {
+        let names = map(d.modifiers, _ => {
+          return normalizeText(_.name)
+        })
+        return names.join(', ') || "-"
+      },
     },
     {
       Header: "Actions",
@@ -38,12 +72,12 @@ export default function Options(props) {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button>
+            <button onClick={() => handleEdit(option)}>
               <FaEdit />
             </button>
           </div>
           <div>
-            <button>
+            <button onClick={() => handleRemove(option)}>
               <FaTrash />
             </button>
           </div>

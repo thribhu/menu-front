@@ -5,10 +5,15 @@ import styles from "./Options.module.sass";
 import _ from "lodash";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import modifiers from "../Modifiers/modifiers.json";
 import Table from "components/table";
 import OrderTable from "components/orderTable";
 import { normalizeText as normalize } from "utils/normalize";
+import axios from "axios";
+import {addOption, updateOption, removeSelected} from 'modules/options/actions'
+import {loadingSelector, errorSelector, selectedOptionsSelector} from 'modules/options/selector'
+import {listSelector, loadingSelector as modLoad, errorSelector as modErr} from 'modules/modifiers/selectors'
+import {listModfiers} from 'modules/modifiers/actions'
+import {useSelector, useDispatch} from 'react-redux'
 const initialValues = {
   name: "",
   description: "",
@@ -37,7 +42,7 @@ const columns = [
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ display: "grid", gridTemplateColumns: "100px 100px" }}>
             <div style={{ padding: "0 5px" }}>{normalize(r.name)}</div>
-            <div>{parseFloat(r.value).toFixed(2)}</div>
+            <div>{parseFloat(r.price).toFixed(2)}</div>
           </div>
         </div>
       ));
@@ -45,35 +50,60 @@ const columns = [
   },
 ];
 export default function AddOption(props) {
+  const dispatch = useDispatch()
+  const modifiers = useSelector(listSelector)
+  const mod_loading = useSelector(modLoad)
+  const mod_error = useSelector(modErr)
+  const nowOption = useSelector(selectedOptionsSelector)
+  if(_.isEmpty(modifiers)) {
+    dispatch(listModfiers())
+  }
   const [step1, setStep1] = React.useState(false);
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(nowOption.modifiers || []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState([]);
   const [reset, setReset] = React.useState(false);
+  const [showSelected, setShow] = React.useState(false)
   const history = useHistory();
+  const baseUrl = "http://127.0.0.1:8000/api/options"
   const handleSaveItem = () => {
-    if (props.setOpen) {
+    if (props.setOpen){
       props.setOpen(false);
-      setStep1(false);
-      setReset(true);
-      setForm("");
-      setSelected([]);
-      setNowArray([])
     }
+    setStep1(false);
+    const option = _.assign({}, formValues, {modifiers: nowArray ? nowArray.map(_ => _.original.id) : selected.map(_ => _.id)})
+    if(!_.isEmpty(nowOption)) {
+      const id = nowOption.id
+      nowOption.modifiers = _.map(nowOption.modifiers, m => m.id)
+      dispatch(updateOption(_.merge(nowOption, option)))
+    }
+    else {
+      dispatch(addOption(option))
+    }
+    setReset(true);
+    setForm("");
+    setSelected([]);
+    setNowArray([]);
   };
+  React.useEffect(() => {
+    return () => dispatch(removeSelected());
+  }, [nowOption]);
   return (
     <div className={classname(styles.container)}>
       {!step1 && (
         <>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <p style={{ fontSize: "1.5rem", color: "red" }}>Add Option</p>
+          <div style={{ dispay: "flex", justifyContent: "center" }}>
+            <p style={{ fontSize: "1.5rem", color: "red" }}>
+              {!_.isEmpty(nowOption) ? "Update Option" : "Add Option"}
+            </p>
           </div>
           <Formik
-            initialValues={_.merge(initialValues, formValues)}
+            initialValues={_.merge(initialValues, nowOption, formValues)}
             validationSchema={validationSchema}
             onSubmit={async (values) => {
               setForm(values);
               setStep1(true);
+              setShow(true)
             }}
           >
             {({ values }) => (
@@ -205,7 +235,7 @@ export default function AddOption(props) {
                       type="submit"
                       className={classname(styles.ctaButton)}
                     >
-                      Add Modifers
+                      {!_.isEmpty(nowOption) ? "Edit Modifiers" : "Choose Modifers"}
                     </button>
                   </div>
                 </div>
@@ -224,7 +254,9 @@ export default function AddOption(props) {
               updateSelectItems={setSelected}
               withCheckBox={true}
               noAction={true}
-              preSelected={_.map(selected, (s) => s.name)}
+              preSelected={
+                selected
+              }
             />
           </div>
           <div>
@@ -266,7 +298,7 @@ export default function AddOption(props) {
           </div>
         </div>
       )}
-      {selected.length && !step1 ? (
+      {selected.length && !step1 && showSelected ? (
         <div style={{ flex: 1 }}>
           <div>
             <OrderTable
@@ -288,7 +320,7 @@ export default function AddOption(props) {
                 handleSaveItem();
               }}
             >
-              Save Item
+              {!_.isEmpty(nowOption) ? "Update Option" : "Add Option"}
             </button>
           </div>
         </div>

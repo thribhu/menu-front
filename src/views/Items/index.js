@@ -4,7 +4,7 @@ import styles from './Items.module.sass';
 import { useHistory } from 'react-router-dom'
 import items from './items.json'
 import Table from 'components/table'
-import { normalizeText as normalize } from 'utils/normalize'
+import { normalizeText as normalize, normalizeText } from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from 'react-icons/fa'
 import _ from 'lodash';
 import Modal from 'react-modal';
@@ -34,11 +34,11 @@ export default function Items() {
     const columns = [
         {
             Header: "Name",
-            accessor: 'name'
+            accessor: d => normalizeText(d.name)
         },
         {
             Header: 'Type',
-            accessor: 'type'
+            accessor: d => normalizeText(d.type)
         },
         {
             Header: 'Price',
@@ -51,6 +51,20 @@ export default function Items() {
         {
             Header: "Stock",
             accessor: 'stock'
+        },
+        {
+            Header: "Options",
+            accessor: d => {
+                let names = _.map(d.options, _ => normalizeText(_.name))
+                return names.join(", ") || "-"
+            }
+        },
+        {
+            Header: "Groups",
+            accessor: d => {
+                let names = _.map(d.option_groups, _ => normalizeText(_.name))
+                return names.join(", ") || "-"
+            }
         },
         {
             Header: "Actions",

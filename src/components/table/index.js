@@ -167,8 +167,8 @@ function Table({
   );
   const preSelectIndex = _.map(preSelected, (s) =>
     _.indexOf(
-      memo_data.map((m) => m.name),
-      s
+      memo_data.map((m) => m.id),
+      s.id
     )
   );
   const selected = {};
