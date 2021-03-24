@@ -75,7 +75,7 @@ export default function AddGroup(props) {
     dispatch(listOptions())
   }
   const handleSaveItem = () => {
-      const group = _.assign({}, formValues, {options: selected.map(a => a.id)})
+      const group = _.assign({}, formValues, {options: nowArray.map(i => i.original.id)})
     if(!isEmpty(nowGroup)) {
       dispatch(updateGroup(group))
     }

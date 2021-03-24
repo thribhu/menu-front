@@ -71,6 +71,9 @@ function* updateGroupSaga({payload}){
     catch(err){
         console.log(err)
         yield put({
+            type: Actions.LIST_GROUPS
+        })
+        yield put({
             type: Actions.UPDATE_GROUP_SUCCESS,
             error: err.message 
         })

@@ -83,7 +83,7 @@ export default function GroupsTable() {
     dispatch(listGroup())
   }
   if(isEmpty(options)){
-    dispatch(listOptions)
+    dispatch(listOptions())
   }
   const customStyles = {
     content: {

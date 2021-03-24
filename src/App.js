@@ -17,6 +17,9 @@ const theme = createMuiTheme({
     fontFamily: ["Poppins"],
   },
 });
+window.onbeforeunload = function() {
+   localStorage.clear();
+}
 function App(props) {
   return (
     <Provider store={store}>
