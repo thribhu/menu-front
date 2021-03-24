@@ -65,7 +65,7 @@ function* updateModifierSaga({payload}){
             type: Actions.LIST_MODIFIERS
         })
         }
-        throw new Error("Unable to update modifier")
+        else throw new Error("Unable to update modifier")
     }
     catch(err){
         console.log(err)

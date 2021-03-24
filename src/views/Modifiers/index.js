@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import Table from "components/table";
 import { normalizeText as normalize } from "utils/normalize";
 import _ from "lodash";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -107,6 +107,13 @@ export default function Modifiers() {
         }}
         style={customStyles}
       >
+        <div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setOpen(false)} style={{ cursor: 'pointer' }} className={classname(styles.transparent)}>
+                            <FaWindowClose />
+                        </button>
+                    </div>
         {step1 && (
           <div>
             <button onClick={() => setStep1(false)}>Back</button>
@@ -122,6 +129,7 @@ export default function Modifiers() {
         ) : (
           <div></div>
         )}
+        </div>
       </Modal>
       <div>
         <Table

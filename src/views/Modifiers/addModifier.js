@@ -8,7 +8,7 @@ import {isEmpty, merge} from 'lodash';
 import {addModifier, removeSelected, updateModifier} from 'modules/modifiers/actions'
 import {loadingSelector, errorSelector, selectedSelector} from 'modules/modifiers/selectors'
 import { useSelector, useDispatch } from 'react-redux';
-const initialValues = {
+const init = {
     name: '',
     options: [
         {
@@ -36,7 +36,7 @@ export default function AddModifier(props) {
         dispatch(updateModifier(modifier))
     }
     React.useEffect(() => {
-        return () => !isEmpty(nowModifier) ? dispatch(removeSelected) : null
+        return () => !isEmpty(nowModifier) ? dispatch(removeSelected()) : null
     })
     return (
         <div className={classname(styles.container)}>
@@ -44,7 +44,7 @@ export default function AddModifier(props) {
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={nowModifier ? merge(initialValues, nowModifier) : initialValues}
+                initialValues={!isEmpty(nowModifier) ? nowModifier : init}
                 validationSchema={validationSchema}
                 onSubmit={(values,{resetForm}) => {
                     if(!isEmpty(nowModifier)){
@@ -55,6 +55,7 @@ export default function AddModifier(props) {
                     } 
                     resetForm()
                 }}
+                enableReinitialize
             >
                 {({ values }) => (
                     <Form>
