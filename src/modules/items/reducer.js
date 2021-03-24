@@ -5,8 +5,8 @@ const initState = fromJS({
     loading:  false,
     error: '',
     items: List(),
-    selected: List(),
-    nowItem: Map()
+    selected: Map(),
+    message: ''
 })
 
 export default function GroupReducer(state=initState, action){
@@ -17,7 +17,10 @@ export default function GroupReducer(state=initState, action){
         case Actions.LIST_ITEMS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.LIST_ITEMS_SUCCESS:
-            return state.set('loading', false).set('error', '').set('items', fromJS(payload))
+            if (typeof payload === "string") {
+                return state.set('loading', false).set('error', '').set('items', initState.get('items')).set('message'), payload
+            }
+            return state.set('loading', false).set('error', '').set('items', fromJS(payload)).set('message', '')
         
         case Actions.ADD_ITEM:
             return state.set('loading', true)

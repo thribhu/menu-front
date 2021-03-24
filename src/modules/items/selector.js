@@ -1,4 +1,5 @@
 import {isImmutable} from 'immutable'
+import { createSelector } from 'reselect'
 
 const items = state => state.items
 
@@ -37,5 +38,12 @@ export const selectedSelector = createSelector(
             return selected.toJS()
         }
         return []
+    }
+)
+
+export const itemInfoSelector = createSelector(
+    items,
+    data => {
+        return data.get('message')
     }
 )

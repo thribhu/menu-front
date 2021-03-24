@@ -6,9 +6,16 @@ import items from './items.json'
 import Table from 'components/table'
 import { normalizeText } from 'utils/normalize'
 import { FaEdit, FaTrash, FaWindowClose } from 'react-icons/fa'
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import Modal from 'react-modal';
 import AddItem from './addItem'
+import {useDispatch, useSelector} from 'react-redux'
+import {listItems, removeItem, setSelected} from 'modules/items/actions'
+import {listSelector, loadingSelector, errorSelector, itemInfoSelector} from 'modules/items/selector'
+import {listGroup} from 'modules/groups/actions'
+import {listSelector as groupsSelector} from 'modules/groups/selector'
+import {listOptions} from 'modules/options/actions'
+import {optionsSelector} from 'modules/options/selector'
 const customStyles = {
     content : {
         margin: 'auto',
@@ -24,13 +31,20 @@ const customStyles = {
     }
   };
 export default function Items() {
+    const dispatch = useDispatch()
+    const items = useSelector(listSelector)
+    const groups = useSelector(groupsSelector)
+    const options = useSelector(optionsSelector)
+    const loading = useSelector(loadingSelector)
+    const error = useSelector(errorSelector)
+    const itemInfo = useSelector(itemInfoSelector)
     const [selected, setSelected] = React.useState()
     const [open, setOpen] = React.useState(false)
     const [newItem, setItem] = React.useState()
     const history = useHistory()
-    React.useEffect(() => {
-        _.merge(items, newItem)
-    }, [newItem])
+    if(isEmpty(items)) {
+        dispatch(listItems())
+    }
     const columns = [
         {
             Header: "Name",
@@ -38,11 +52,11 @@ export default function Items() {
         },
         {
             Header: 'Type',
-            accessor: d => normalizeText(d.type)
+            accessor: d => normalizeText(d.type) || "-"
         },
         {
             Header: 'Price',
-            accessor: 'price'
+            accessor: d => d.price || '-'
         },
         {
             Header: 'Active',
@@ -50,7 +64,7 @@ export default function Items() {
         },
         {
             Header: "Stock",
-            accessor: 'stock'
+            accessor: d => d.stock || "-"
         },
         {
             Header: "Options",
