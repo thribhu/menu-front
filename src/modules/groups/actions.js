@@ -33,3 +33,16 @@ export const detailGroup = group => {
         payload: group
     }
 }
+
+export const selectGroup = group => {
+    return {
+        type: Actions.SET_SELECTED,
+        payload: group
+    }
+}
+
+export const removeSelected = group => {
+    return {
+        type: Actions.REMOVE_SELECTED
+    }
+}

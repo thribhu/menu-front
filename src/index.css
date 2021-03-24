@@ -20,3 +20,14 @@ input[type=textare] {
   border-radius: 5px;
   border-color: #6692b9;
 }
+.UcenterWithMargin {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.IamInfo {
+  color: indianred;
+  font-size: 1.2rem;
+}

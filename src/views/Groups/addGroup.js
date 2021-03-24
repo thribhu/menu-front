@@ -2,13 +2,18 @@ import React from "react";
 import axios from 'axios'
 import classname from "classnames";
 import styles from "./Groups.module.sass";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { normalizeText as normalize } from "utils/normalize";
 import OrderTable from "components/orderTable";
 import Table from "components/table";
 import { useHistory } from "react-router-dom";
+import {useDispatch, useSelector} from 'react-redux'
+import {addGroup, updateGroup, removeSelected} from 'modules/groups/actions'
+import {loadingSelector,errorSelector, selectedSelector } from 'modules/groups/selector'
+import {listOptions} from 'modules/options/actions'
+import {loadingSelector as optionLoading, optionsSelector, errorSelector as optionError} from 'modules/options/selector'
 const columns = [
   {
     Header: "Image",
@@ -16,65 +21,46 @@ const columns = [
   },
   {
     Header: "Name",
-    accessor: "name",
+    accessor: d => normalize(d.name),
   },
   {
     Header: "Price",
-    accessor: "price",
+    accessor: d => d.price || 0,
   },
   {
     Header: "Type",
-    accessor: "type",
+    accessor: d => normalize(d.type),
   },
 ];
 const initialValues = {
   name: "",
   description: "",
-  price_default: 2,
+  price: 2,
   options: [],
   min_required: 1,
   max_allowed: 1,
-  display_order: 100,
+  order: 100,
 };
 const validationSchema = yup.object({
   name: yup.string().required("A valid option must have name"),
   description: yup.string().optional(),
   image_url: yup.string().optional(),
-  price_default: yup.number().required("A valid option must have price"),
+  price: yup.number().required("A valid option must have price"),
   type: yup.string().optional(),
 });
 export default function AddGroup(props) {
-  const baseUrl = 'http://127.0.0.1:8000/api/'
-  // !INFO: we use nowGroup while updating an option group, 
-  // we get this from props
-  const [nowGroup, setGroup] = React.useState()
+  const dispatch = useDispatch()
+  const history = useHistory();
+  const options = useSelector(optionsSelector)
+  const loading = useSelector(loadingSelector)
+  const error = useSelector(errorSelector)
+  const option_loding = useSelector(optionLoading)
+  const option_error = useSelector(optionError)
+  const nowGroup = useSelector(selectedSelector)
   const [step1, setStep1] = React.useState(false);
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState(!isEmpty(nowGroup) ? nowGroup.options : []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
-  const [loading, setLoading] = React.useState(false)
-  const [options, setOptions] = React.useState([])
-  const history = useHistory();
-  React.useEffect(() => {
-    setLoading(true)
-    const response = axios.get(baseUrl+"options/")
-    response.then(snapshot => {
-      if(snapshot.status === 200){
-        const data = snapshot.data
-        setOptions(data)
-        setLoading(false) 
-      }
-    }) 
-    .catch(err => {
-      console.log(err)
-      alert('Unable to get options')
-      setLoading(false)
-    })
-    if(!_.isEmpty(props) && !_.isEmpty(props.location)) {
-      setGroup(_.get(props, 'location.state'))
-    }
-    return () => {setGroup('')}
-  }, [nowGroup])
   const customStyles = {
     content: {
       top: "50%",
@@ -85,39 +71,16 @@ export default function AddGroup(props) {
       transform: "translate(-50%, -50%)",
     },
   };
+  if(isEmpty(options)){
+    dispatch(listOptions())
+  }
   const handleSaveItem = () => {
-    setLoading(true)
-    if(nowGroup) {
-      const id = formValues.id
-      delete formValues.id
       const group = _.assign({}, formValues, {options: selected.map(a => a.id)})
-      const req = axios.put(baseUrl+`groups/${id}/`, group)
-      req.then(snapshot => {
-        if(snapshot.status === 202) {
-          alert('Group updated successfully')
-          setLoading(false)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        alert('Unable to update  group')
-        setLoading(false)
-      })
+    if(!isEmpty(nowGroup)) {
+      dispatch(updateGroup(group))
     }
     else {
-      const group = _.assign({}, formValues, {options: selected.map(a => a.id)})
-      const req = axios.post(baseUrl+"groups/", group)
-      req.then(snapshot => {
-        if(snapshot.status === 201) {
-          alert('Group added successfully')
-          setLoading(false)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        alert('Unable to add group')
-        setLoading(false)
-      })
+      dispatch(addGroup(group))
     }
     setForm('')
     setNowArray([])
@@ -126,16 +89,19 @@ export default function AddGroup(props) {
         props.setOpen(false)
     }
   };
+  React.useEffect(() => {
+    return (() => dispatch(removeSelected()))
+  }, [nowGroup])
   return (
     <div>
       <div className={classname(styles.container)} style={{ flex: 1 }}>
         {!step1 && (
           <div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Group</p>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowGroup) ? 'Update Group' : 'Add Group'}</p>
             </div>
             <Formik
-              initialValues={_.merge(initialValues, formValues)}
+              initialValues={!isEmpty(nowGroup) ? nowGroup : _.merge(initialValues, formValues)}
               enableReinitialize
               validationSchema={validationSchema}
               onSubmit={async (values) => {
@@ -163,7 +129,6 @@ export default function AddGroup(props) {
                           name="name"
                           type="text"
                           className={classname(styles.formInput)}
-                          autoFocus={true}
                         />
                         <ErrorMessage
                           name={"name"}
@@ -175,7 +140,7 @@ export default function AddGroup(props) {
                     <div className={classname(styles.formControl)}>
                       <div className={classname(styles.labelContainer)}>
                         <label
-                          htmlFor="price_default"
+                          htmlFor="price"
                           className={classname(
                             styles.formLabel,
                             styles.labelContainer
@@ -186,7 +151,7 @@ export default function AddGroup(props) {
                       </div>
                       <div>
                         <Field
-                          name="price_default"
+                          name="price"
                           type="number"
                           className={classname(styles.formInput)}
                           min={0}
@@ -213,13 +178,13 @@ export default function AddGroup(props) {
                       </div>
                       <div>
                         <Field
-                          name="max_requried"
+                          name="min_required"
                           type="number"
                           className={classname(styles.formInput)}
                         />
                       </div>
                       <ErrorMessage
-                        name={"min_allowed"}
+                        name={"min_required"}
                         component="div"
                         className="field-error"
                       />
@@ -238,13 +203,13 @@ export default function AddGroup(props) {
                       </div>
                       <div>
                         <Field
-                          name="max_required"
+                          name="max_allowed"
                           type="number"
                           className={classname(styles.formInput)}
                         />
                       </div>
                       <ErrorMessage
-                        name={"max_required"}
+                        name={"max_allowed"}
                         component="div"
                         className="field-error"
                       />
@@ -252,7 +217,7 @@ export default function AddGroup(props) {
                     <div className={classname(styles.formControl)}>
                       <div className={classname(styles.labelContainer)}>
                         <label
-                          htmlFor="display_order"
+                          htmlFor="order"
                           className={classname(
                             styles.formLabel,
                             styles.labelContainer
@@ -263,13 +228,13 @@ export default function AddGroup(props) {
                       </div>
                       <div>
                         <Field
-                          name="display_order"
+                          name="order"
                           type="number"
                           className={classname(styles.formInput)}
                         />
                       </div>
                       <ErrorMessage
-                        name={"display_order"}
+                        name={"order"}
                         component="div"
                         className="field-error"
                       />
@@ -316,7 +281,7 @@ export default function AddGroup(props) {
                 updateSelectItems={setSelected}
                 withCheckBox={true}
                 noAction={true}
-                preSelected={_.map(selected, (s) => s.name)}
+                preSelected={selected}
               />
             </div>
             <div>

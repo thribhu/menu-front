@@ -1,5 +1,6 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import * as Actions from './constants'
+import {isEmpty} from 'lodash'
 import {
     listGroups,
     addGroup,
@@ -15,7 +16,7 @@ function* listGroupSaga(){
     if(status === 200) {
         yield put({
             type: Actions.LIST_GROUPS_SUCCESS,
-            payload: data
+            payload: isEmpty(data) ? "Please add option groups" : data
         })
     }
     else throw new Error("Unable to fetch modifiers")
@@ -104,7 +105,7 @@ function* detailGroupSaga({payload}){
 
 function* deleteGroupSaga({payload}){
     try {
-        const req = yield call(deleteGroup, payload.id)
+        const req = yield call(deleteGroup, payload)
         const {status} = req
         if(status === 204){
             yield put({
@@ -117,6 +118,9 @@ function* deleteGroupSaga({payload}){
     }
     catch (err){
         console.log(err)
+            yield put({
+                type: Actions.LIST_GROUPS
+            })
         yield put({
             type: Actions.DELETE_GROUP_ERROR,
             error: err.message
