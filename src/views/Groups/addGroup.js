@@ -1,5 +1,4 @@
 import React from "react";
-import axios from 'axios'
 import classname from "classnames";
 import styles from "./Groups.module.sass";
 import _, { isEmpty } from "lodash";
@@ -61,6 +60,7 @@ export default function AddGroup(props) {
   const [selected, setSelected] = React.useState(!isEmpty(nowGroup) ? nowGroup.options : []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
+  const [showOrder, setShowOrder] = React.useState(false)
   const customStyles = {
     content: {
       top: "50%",
@@ -107,6 +107,7 @@ export default function AddGroup(props) {
               onSubmit={async (values) => {
                 setForm(values);
                 setStep1(true);
+                setShowOrder(true)
               }}
             >
               {({ values }) => (
@@ -324,7 +325,7 @@ export default function AddGroup(props) {
           </div>
         )}
       </div>
-      {selected.length && !step1 ? (
+      {selected.length && !step1 && showOrder ? (
         <div style={{ flex: 1 }}>
           <div>
             <OrderTable

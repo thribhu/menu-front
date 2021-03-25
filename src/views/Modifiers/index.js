@@ -5,10 +5,9 @@ import { useHistory } from "react-router-dom";
 import Table from "components/table";
 import { normalizeText as normalize } from "utils/normalize";
 import _ from "lodash";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
-import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {useDispatch, useSelector} from 'react-redux'
 import {listModfiers, removeModifier} from 'modules/modifiers/actions'
@@ -30,24 +29,6 @@ export default function Modifiers() {
   const [err, setError] = React.useState();
   const [request, setRequest] = React.useState(false)
   const history = useHistory();
-  const baseUrl = "http://127.0.0.1:8000/api/modifiers/"
-  /*
-  React.useEffect(() => {
-    setLoading(true);
-    let promise = axios.get(baseUrl);
-    promise
-      .then((res) => {
-        setList(res.data);
-        setError();
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-  */
   const handleEdit = (modifier) => {
     delete modifier.actions
     history.push(
@@ -101,10 +82,10 @@ export default function Modifiers() {
       accessor: "actions",
     },
   ];
-  _.map(modifiers, (modifier) =>
+  _.map(modifiers, (modifier, i) =>
     _.assign(modifier, {
       actions: (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center" }} key={i}>
           <div style={{ padding: "0 5px" }}>
             <button onClick={() => handleEdit(modifier)}>
               <FaEdit />
@@ -130,6 +111,12 @@ export default function Modifiers() {
         }}
         style={customStyles}
       >
+        <div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setOpen(false)} style={{ cursor: 'pointer' }} className={classname(styles.transparent)}>
+                            <FaWindowClose />
+                        </button>
+                    </div>
         {step1 && (
           <div>
             <button onClick={() => setStep1(false)}>Back</button>
@@ -143,8 +130,9 @@ export default function Modifiers() {
             setOpen={setOpen}
           />
         ) : (
-          <div></div>
+          <div/>
         )}
+        </div>
       </Modal>
       <div>
         <Table

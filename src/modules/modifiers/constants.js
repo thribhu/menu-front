@@ -17,3 +17,6 @@ export const DELETE_MODIFIERS_ERROR = "modifiers/DELETE_MODIFIERS_ERROR"
 export const DETAIL_MODIFIERS = "modifiers/DETAIL_MODIFIERS"
 export const DETAIL_MODIFIERS_SUCCESS = "modifiers/DETAIL_MODIFIERS_SUCCESS"
 export const DETAIL_MODIFIERS_ERROR = "modifiers/DETAIL_MODIFIERS_ERROR"
+
+export const SET_SELECTED = "modifiers/SET_SELECTED"
+export const REMOVE_SELECTED = "modifiers/REMOVE_SELECTED"

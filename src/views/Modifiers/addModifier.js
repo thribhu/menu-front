@@ -1,11 +1,14 @@
 import React from 'react';
 import classname from 'classnames'
 import styles from './Modifiers.module.sass';
-import { Formik, ErrorMessage, Field, Form, FieldArray } from 'formik';
+import { Formik, ErrorMessage, Field, Form, FieldArray, isEmptyArray } from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import _ from 'lodash';
+import _, { isEmpty, merge } from 'lodash';
 import axios from 'axios'
+import {useSelector, useDispatch} from 'react-redux'
+import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
+import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
 const initialValues = {
     name: '',
     options: [
@@ -23,41 +26,35 @@ const validationSchema = yup.object().shape({
     })).required('Options are required').min(1, 'Enter atleast 2 option')
 }) 
 export default function AddModifier(props) {
-    const baseUrl = 'http://127.0.0.1:8000/api/modifiers/' 
-    const [modifier, setModifier] = React.useState()
-    const [loading, setLoading] = React.useState(false)
-    const [error, setError] = React.useState(false)
+    const dispatch = useDispatch()
+    const nowModifier = useSelector(selectedSelector)
+    const loading = useSelector(loadingSelector)
+    const error = useSelector(errorSelector)
+    const [form, setForm] = React.useState()
     React.useEffect(() => {
-    if(!_.isEmpty(props.location) && !_.isEmpty(props.location.state)) {
-        setModifier(_.get(props, 'location.state'))
+        return () => {
+            dispatch(removeSelected())
+        }
+    }, [nowModifier])
+    const handleSubmit = () => {
+        let modifier = form
+        if(!isEmpty(nowModifier)){
+            dispatch(updateModifier(modifier))
+        }
+        else {
+            dispatch(addModifier(modifier))
+        }
     }
-    }, [modifier])
     return (
         <div className={classname(styles.container)}>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <p style={{ fontSize: "1.5rem", color: "red" }}>{modifier ? "Update Modifier" : "Add Modifier"}</p>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={modifier ? _.merge(initialValues, modifier) : initialValues}
-                validationSchema={validationSchema}
+                initialValues={!isEmpty(nowModifier) ? nowModifier : initialValues}
                 onSubmit={async (values) => {
-                    let promise
-                    if(modifier) {
-                        promise = axios.put(baseUrl+modifier.id+"/", values)
-                    }
-                    else {
-                        promise = axios.post(baseUrl, values);
-                    }
-                    promise.then(res => {
-                        if(res.status === 200) {
-                            alert('Modifier added successfully')
-                        }
-                        else if (res.status === 202){
-                            alert('Modifier updated successfully')
-                        }
-                    }).catch(err => {
-                        alert('Unable to add modifier. Please try again')
-                    })
+                    setForm(values)
+                    handleSubmit()
                 }}
             >
                 {({ values }) => (
@@ -164,7 +161,7 @@ export default function AddModifier(props) {
                                 <ErrorMessage name="options" style={{color:'red'}}/>
                         </div>
                         <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)}>{modifier ? "Save Modifier" : "Add Modifier"}</button>
+                            <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
                         </div>
                     </Form>
                 )}

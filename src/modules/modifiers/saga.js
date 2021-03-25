@@ -32,7 +32,8 @@ function* listModifierSaga(){
 function* addModifierSaga({payload}){
     try{
         const addReq = yield call(addModifiers, payload)
-        if(addReq.status === 201){
+        const {status} = addReq
+        if(status === 201){
             yield put({
                 type: Actions.ADD_MODIFIERS_SUCCESS,
                 payload: addReq.data
@@ -41,10 +42,13 @@ function* addModifierSaga({payload}){
             type: Actions.LIST_MODIFIERS
         }) 
         }
-        throw new Error("Unable to add modifiers")
+        else throw new Error("Unable to add modifiers")
     }
     catch (err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.ADD_MODIFIERS_ERROR,
             error: err.message
@@ -69,6 +73,9 @@ function* updateModifierSaga({payload}){
     }
     catch(err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.UPDATE_MODIFIERS_ERROR,
             error: err.message 
@@ -104,7 +111,7 @@ function* detailModifierSaga({payload}){
 
 function* deleteModifierSaga({payload}){
     try {
-        const req = yield call(deleteModifier, payload.id)
+        const req = yield call(deleteModifier, payload)
         const {status} = req
         if(status === 204){
             yield put({
@@ -117,6 +124,9 @@ function* deleteModifierSaga({payload}){
     }
     catch (err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.DELETE_MODIFIERS_ERROR,
             error: err.message

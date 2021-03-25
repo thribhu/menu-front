@@ -45,6 +45,17 @@ export default function Items() {
     if(isEmpty(items)) {
         dispatch(listItems())
     }
+    const handleEdit = item => {
+        delete item.actions
+        dispatch(setSelected(item))
+        history.push("/addItem")
+    }
+    const handleDelete = item => {
+        const confirm = window.confirm("You are about to remove an item. This is permanant")
+        if (!!confirm){
+            dispatch(removeItem(item.id))
+        }
+    }
     const columns = [
         {
             Header: "Name",
@@ -89,12 +100,12 @@ export default function Items() {
         actions: (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div style={{ padding: '0 5px' }} >
-                    <button className={classname(styles.transparent)}>
+                    <button className={classname(styles.transparent)} onClick={() => handleEdit(item)}>
                         <FaEdit />
                     </button>
                 </div>
                 <div>
-                    <button className={classname(styles.transparent)}>
+                    <button className={classname(styles.transparent)} onClick= {() => handleDelete(item)}>
                         <FaTrash />
                     </button>
                 </div>

@@ -1,23 +1,37 @@
 import React from "react";
 import classname from "classnames";
 import styles from "./Items.module.sass";
-import _ from "lodash";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import _, { isEmpty } from "lodash";
+import { Formik, Form, Field, ErrorMessage, isEmptyArray } from "formik";
 import * as yup from "yup";
-import Groups from "../Groups/groups.json";
-import Options from "../Options/options.json";
 import { normalizeText as normalize } from "utils/normalize";
-import Modal from "react-modal";
 import Switch from "react-switch";
 import Table from "components/table";
 import { useHistory } from "react-router-dom";
+import {useDispatch, useSelector} from 'react-redux'
+import {listGroup} from 'modules/groups/actions'
+import {listOptions} from 'modules/options/actions'
+import {addItem, updateItem, removeSelected} from 'modules/items/actions'
+import {
+  errorSelector as group_error,
+  loadingSelector as group_loading,
+  listSelector as groupsSelector,
+  messageSelector
+} from 'modules/groups/selector'
+import {
+  errorSelector as options_error,
+  loadingSelector as options_loading,
+  optionsSelector
+} from 'modules/options/selector'
+import {
+  selectedSelector,
+  loadingSelector,
+  errorSelector
+} from 'modules/items/selector'
 import {
   FaRegObjectGroup,
-  FaEdit,
 } from "react-icons/fa";
 import OrderTable from "components/orderTable";
-let tableData = Groups.concat(Options);
-tableData = _.sortBy(tableData, ["name"]);
 const initialValues = {
   name: "",
   description: "",
@@ -40,7 +54,7 @@ const columns = [
       if (!_.isUndefined(d.min_required)) {
         return (
           <div>
-            {d.name}
+            {normalize(d.name)}
             <FaRegObjectGroup style={{ padding: "0 5px" }} />
           </div>
         );
@@ -73,45 +87,51 @@ const columns = [
       } else return "-";
     },
   },
-  {
-    Header: "Order",
-    accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
-        return d.display_order;
-      } else return "-";
-    },
-  },
-  {
-    Header: "Actions",
-    accessor: "actions",
-  },
 ];
-export default function AddOption(props) {
+export default function AddItem(props) {
+  const dispatch = useDispatch()
+  const groups = useSelector(groupsSelector)
+  const options = useSelector(optionsSelector)
+  const nowItem = useSelector(selectedSelector)
+  const groupError = useSelector(group_error) 
+  const optionError = useSelector(options_error)
+  const error = useSelector(errorSelector)
+  const loading = useSelector(loadingSelector)
+  const groupLoading = useSelector(group_loading)
+  const optionLoading = useSelector(options_loading)
+  const groupInfo = useSelector(messageSelector)
+  if (isEmpty(groups) && isEmpty(groupInfo)) {
+    dispatch(listGroup())
+  }
+  if (isEmpty(options)){
+    dispatch(listOptions())
+  }
+  /*
+  React.useEffect(() => {
+    return () => {
+      dispatch(removeSelected())
+    }
+  }, [nowItem])
+  */
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
+  const [showOrder, setShow] = React.useState(false)
   const history = useHistory();
-  _.map(tableData, (item) =>
-    _.assign(item, {
-      actions: (
-        <div style={{ display: "flex" }}>
-          <div style={{ padding: "0 5px" }}>
-            <button>
-              <FaEdit />
-            </button>
-          </div>
-        </div>
-      ),
-    })
-  );
+  const tableData = groups.concat(options)
   const handleSaveItem = () => {
       // we get all the row props, insted we only want original
     const originalArray = _.map(nowArray, n => n.original); 
     const values = formValues;
     const finalItem = _.assign({}, values, {options: originalArray})
-    props.setItem(finalItem)
+    if(!isEmpty(nowItem)){
+      dispatch(updateItem(finalItem))
+    }
+    else {
+      dispatch(addItem(finalItem))
+    }
     setForm(null);
   };
   return (
@@ -120,10 +140,10 @@ export default function AddOption(props) {
         {!step1 && (
           <div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Item</p>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowItem) ? 'Update Item' : 'Add Item'}</p>
             </div>
             <Formik
-              initialValues={_.merge(initialValues, formValues)}
+              initialValues={!isEmpty(nowItem) ? nowItem :  _.merge(initialValues, formValues)}
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 setForm(values);
@@ -317,7 +337,7 @@ export default function AddOption(props) {
                         type="submit"
                         className={classname(styles.ctaButton)}
                       >
-                        Add Options
+                        Choose Options
                       </button>
                     </div>
                   </div>
@@ -336,9 +356,10 @@ export default function AddOption(props) {
                 updateSelectItems={setSelected}
                 withCheckBox={true}
                 noAction={true}
-                preSelected={_.map(selected, (s) => s.name)}
+                preSelected={selected}
               />
             </div>
+            {/**
             <div>
               <div className={classname(styles.margin5)}>
                 <button
@@ -357,6 +378,7 @@ export default function AddOption(props) {
                 </button>
               </div>
             </div>
+            */}
             <div className={classname(styles.between)}>
               <div>
                 <button
@@ -387,7 +409,7 @@ export default function AddOption(props) {
           </div>
         )}
       </div>
-      {selected.length && !step1 ? (
+      {selected.length && !step1 && showOrder ? (
         <div style={{ flex: 1 }}>
           <div>
             <OrderTable

@@ -5,13 +5,16 @@ const initState = fromJS({
     loading:  false,
     error: '',
     modifiers: List(),
-    selected: List(),
-    nowModifier: Map()
+    selected: Map(),
 })
 
 export default function modifierReducer(state=initState, action){
     const {type, payload, error} = action
     switch (type){
+        case Actions.SET_SELECTED:
+            return state.set('selected', fromJS(payload))
+        case Actions.REMOVE_SELECTED:
+            return state.set('selected', initState.get('selected'))
         case Actions.LIST_MODIFIERS:
             return state.set('loading', true)
         case Actions.LIST_MODIFIERS_ERROR:
