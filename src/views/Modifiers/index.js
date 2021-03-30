@@ -8,40 +8,38 @@ import _ from "lodash";
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import {useDispatch, useSelector} from 'react-redux'
-import {listModfiers, removeModifier} from 'modules/modifiers/actions'
-import {loadingSelector, errorSelector, listSelector} from 'modules/modifiers/selectors'
+import { useDispatch, useSelector } from "react-redux";
+import { listModfiers, removeModifier, setSelected as selectModifier } from "modules/modifiers/actions";
+import {
+  loadingSelector,
+  listSelector,
+} from "modules/modifiers/selectors";
+import { ClockLoader } from "react-spinners";
 export default function Modifiers() {
-  const dispatch = useDispatch()
-  const loading = useSelector(loadingSelector)
-  const error = useSelector(errorSelector)
-  const modifiers = useSelector(listSelector)
-  if(_.isEmpty(modifiers)) {
-    dispatch(listModfiers())
+  const dispatch = useDispatch();
+  const loading = useSelector(loadingSelector);
+  const modifiers = useSelector(listSelector);
+  if (_.isEmpty(modifiers)) {
+    dispatch(listModfiers());
   }
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
   const [formValues, setForm] = React.useState();
-  const [list, setList] = React.useState([]);
-  //const [loading, setLoading] = React.useState(false);
-  const [err, setError] = React.useState();
-  const [request, setRequest] = React.useState(false)
   const history = useHistory();
   const handleEdit = (modifier) => {
-    delete modifier.actions
-    history.push(
-      '/addModifier',
-      modifier
-    )
-  }
-  const handleDelete = modifier => {
-    const confirm = window.confirm(`You are about to remove ${modifier.name}. This action is not reversable.`)
+    delete modifier.actions;
+    dispatch(selectModifier(modifier))
+    history.push("/addModifier");
+  };
+  const handleDelete = (modifier) => {
+    const confirm = window.confirm(
+      `You are about to remove ${modifier.name}. This action is not reversable.`
+    );
     if (confirm) {
-      dispatch(removeModifier(modifier.id))
+      dispatch(removeModifier(modifier.id));
     }
-  }
+  };
   const customStyles = {
     content: {
       margin: "auto",
@@ -65,8 +63,8 @@ export default function Modifiers() {
       Header: "Options",
       accessor: "options",
       Cell: (row) => {
-        return _.map(row.value, (r) => (
-          <div style={{ display: "flex", justifyContent: "center" }}>
+        return _.map(row.value, (r, i) => (
+          <div style={{ display: "flex", justifyContent: "center" }} key={i}>
             <div
               style={{ display: "grid", gridTemplateColumns: "100px 100px" }}
             >
@@ -93,7 +91,11 @@ export default function Modifiers() {
           </div>
           <div>
             <button>
-              <FaTrash onClick={() => handleDelete(modifier)}/>
+              <FaTrash onClick={() =>{
+                 handleDelete(modifier)
+              }
+                } 
+                 />
             </button>
           </div>
         </div>
@@ -101,56 +103,71 @@ export default function Modifiers() {
     })
   );
   return (
-    <div className={classname(styles.tableContainer)}>
-      {loading && <div style={{display: 'flex', justifyContent:'center', alignItems: 'center'}}><CircularProgress/></div>}
-      <Modal
-        isOpen={open}
-        onRequestClose={() => {
-          setOpen(false);
-          setStep1(false);
-        }}
-        style={customStyles}
-      >
-        <div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button onClick={() => setOpen(false)} style={{ cursor: 'pointer' }} className={classname(styles.transparent)}>
-                            <FaWindowClose />
-                        </button>
-                    </div>
-        {step1 && (
-          <div>
-            <button onClick={() => setStep1(false)}>Back</button>
-          </div>
-        )}
-        {!step1 ? (
-          <AddModifier
-            next={setStep1}
-            formMethod={setForm}
-            currentForm={formValues}
-            setOpen={setOpen}
-          />
-        ) : (
-          <div/>
-        )}
+    <div>
+      {loading ? (
+        <div className="CenterMe">
+          <ClockLoader className="IamLoader"/>
         </div>
-      </Modal>
-      <div>
-        <Table
-          columns={columns}
-          data={modifiers}
-          updateSelectItems={setSelected}
-        />
-      </div>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "20px" }}
-      >
-        <button
-          onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
-        >
-          Add Modifier
-        </button>
-      </div>
+      ) : (
+        <div className={classname(styles.tableContainer)}>
+          <Modal
+            isOpen={open}
+            onRequestClose={() => {
+              setOpen(false);
+              setStep1(false);
+            }}
+            style={customStyles}
+          >
+            <div>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <button
+                  onClick={() => setOpen(false)}
+                  style={{ cursor: "pointer" }}
+                  className={classname(styles.transparent)}
+                >
+                  <FaWindowClose />
+                </button>
+              </div>
+              {step1 && (
+                <div>
+                  <button onClick={() => setStep1(false)}>Back</button>
+                </div>
+              )}
+              {!step1 ? (
+                <AddModifier
+                  next={setStep1}
+                  formMethod={setForm}
+                  currentForm={formValues}
+                  setOpen={setOpen}
+                />
+              ) : (
+                <div />
+              )}
+            </div>
+          </Modal>
+          <div>
+            <Table
+              columns={columns}
+              data={modifiers}
+              updateSelectItems={setSelected}
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "20px",
+            }}
+          >
+            <button
+              onClick={() => setOpen(true)}
+              className={classname(styles.ctaButton)}
+            >
+              Add Modifier
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -20,3 +20,5 @@ export const DETAIL_MODIFIERS_ERROR = "modifiers/DETAIL_MODIFIERS_ERROR"
 
 export const SET_SELECTED = "modifiers/SET_SELECTED"
 export const REMOVE_SELECTED = "modifiers/REMOVE_SELECTED"
+
+export const RESET_ERROR = "modifiers/RESET_ERROR"

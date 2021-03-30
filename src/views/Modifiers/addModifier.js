@@ -1,14 +1,14 @@
 import React from 'react';
 import classname from 'classnames'
 import styles from './Modifiers.module.sass';
-import { Formik, ErrorMessage, Field, Form, FieldArray, isEmptyArray } from 'formik';
+import { Formik, ErrorMessage, Field, Form, FieldArray} from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import _, { isEmpty, merge } from 'lodash';
-import axios from 'axios'
+import { isEmpty } from 'lodash';
 import {useSelector, useDispatch} from 'react-redux'
 import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
 import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
+import {ClockLoader} from 'react-spinners'
 const initialValues = {
     name: '',
     options: [
@@ -35,9 +35,9 @@ export default function AddModifier(props) {
         return () => {
             dispatch(removeSelected())
         }
-    }, [nowModifier])
-    const handleSubmit = () => {
-        let modifier = form
+    }, [nowModifier, dispatch])
+    const handleSubmit = (values) => {
+        let modifier = values
         if(!isEmpty(nowModifier)){
             dispatch(updateModifier(modifier))
         }
@@ -52,9 +52,10 @@ export default function AddModifier(props) {
             </div>
             <Formik
                 initialValues={!isEmpty(nowModifier) ? nowModifier : initialValues}
-                onSubmit={async (values) => {
+                validationSchema = {validationSchema}
+                onSubmit={(values) => {
                     setForm(values)
-                    handleSubmit()
+                    handleSubmit(values)
                 }}
             >
                 {({ values }) => (
@@ -130,7 +131,6 @@ export default function AddModifier(props) {
                                                                 <div style={{padding:'10px'}}>
                                                                     <button
                                                                         type="button"
-                                                                        className="secondary"
                                                                         onClick={() => remove(index)}
                                                                         className={classname(styles.common_button)}
                                                                     >
@@ -143,7 +143,6 @@ export default function AddModifier(props) {
                                                                     <div style={{padding: '10px'}}>
                                                                         <button
                                                                             type="button"
-                                                                            className="secondary"
                                                                             onClick={() => insert(0, { name: '', price: '' })}
                                                                             className={classname(styles.common_button)}
                                                                         >
@@ -161,7 +160,12 @@ export default function AddModifier(props) {
                                 <ErrorMessage name="options" style={{color:'red'}}/>
                         </div>
                         <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                            {
+                                loading ?
+                                    <ClockLoader className="IamLoader"/>
+                                    :
+                                    <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                            }
                         </div>
                     </Form>
                 )}

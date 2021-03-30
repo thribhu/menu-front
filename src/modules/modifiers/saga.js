@@ -69,7 +69,9 @@ function* updateModifierSaga({payload}){
             type: Actions.LIST_MODIFIERS
         })
         }
-        throw new Error("Unable to update modifier")
+        else{
+            throw new Error("Unable to update modifier")
+        }
     }
     catch(err){
         console.log(err)
@@ -121,9 +123,12 @@ function* deleteModifierSaga({payload}){
                 type: Actions.LIST_MODIFIERS
             })
         }
+        else if (status === 500) {
+            throw new Error('Modifier being referenced')
+        }
     }
     catch (err){
-        console.log(err)
+        alert('Unable to delete Modifier')
         yield put({
             type: Actions.LIST_MODIFIERS
         }) 

@@ -11,6 +11,9 @@ const initState = fromJS({
 export default function modifierReducer(state=initState, action){
     const {type, payload, error} = action
     switch (type){
+        //reset error after alert
+        case Actions.RESET_ERROR:
+            return state.set('error', initState.get('error'))
         case Actions.SET_SELECTED:
             return state.set('selected', fromJS(payload))
         case Actions.REMOVE_SELECTED:
