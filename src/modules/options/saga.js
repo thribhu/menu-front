@@ -106,9 +106,13 @@ function* deleteOptionSaga({payload}){
                 type: Actions.LIST_OPTIONS
             })
         }
+        else if(status === 500){
+            throw new Error('Option is being referenced, Unable to remove')
+        }
     }
     catch (err){
         console.log(err)
+        alert(err.message)
         yield put({
             type: Actions.LIST_OPTIONS
         })

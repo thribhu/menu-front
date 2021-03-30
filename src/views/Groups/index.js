@@ -4,7 +4,7 @@ import styles from "./Groups.module.sass";
 import Modal from "react-modal";
 import Table from "components/table";
 import AddGroup from "views/Groups/addGroup";
-import _, { isEmpty, map } from "lodash";
+import  { isEmpty, map, assign } from "lodash";
 import { useHistory } from "react-router-dom";
 import { FaTrash, FaEdit, FaWindowClose } from "react-icons/fa";
 import { normalizeText } from "utils/normalize";
@@ -38,7 +38,7 @@ const groupColumns = [
   {
     Header: "Options",
     accessor: d => {
-      let names = _.map(d.options, _ => normalizeText(_.name))
+      let names = map(d.options, _ => normalizeText(_.name))
       return names.join(", ") || "-"
     }
   },
@@ -110,10 +110,10 @@ export default function GroupsTable() {
       dispatch(removeGroup(group.id))
     }
   }
-  _.map(groups, (option) =>
-    _.assign(option, {
+  map(groups, (option, i) =>
+    assign(option, {
       actions: (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }} key={i}>
           <div style={{ padding: "0 5px" }}>
             <button onClick={() => handleEdit(option)}>
               <FaEdit />
@@ -195,7 +195,7 @@ export default function GroupsTable() {
         {
           !isEmpty(message) && 
           <div className="UcenterWithMargin IamInfo">
-           * Add modifiers to view in this table 
+           * Add Groups to view in this table 
           </div>
         }
       </div>
