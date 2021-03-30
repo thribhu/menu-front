@@ -1,7 +1,7 @@
 import React from "react";
 import classname from "classnames";
 import styles from "./Items.module.sass";
-import _, { isEmpty } from "lodash";
+import _, { isEmpty, merge } from "lodash";
 import { Formik, Form, Field, ErrorMessage, isEmptyArray } from "formik";
 import * as yup from "yup";
 import { normalizeText as normalize } from "utils/normalize";
@@ -12,21 +12,19 @@ import {useDispatch, useSelector} from 'react-redux'
 import {listGroup} from 'modules/groups/actions'
 import {listOptions} from 'modules/options/actions'
 import {addItem, updateItem, removeSelected} from 'modules/items/actions'
+import { ClockLoader } from 'react-spinners'
 import {
-  errorSelector as group_error,
   loadingSelector as group_loading,
   listSelector as groupsSelector,
   messageSelector
 } from 'modules/groups/selector'
 import {
-  errorSelector as options_error,
   loadingSelector as options_loading,
   optionsSelector
 } from 'modules/options/selector'
 import {
   selectedSelector,
   loadingSelector,
-  errorSelector
 } from 'modules/items/selector'
 import {
   FaRegObjectGroup,
@@ -90,12 +88,10 @@ const columns = [
 ];
 export default function AddItem(props) {
   const dispatch = useDispatch()
+  const history = useHistory();
   const groups = useSelector(groupsSelector)
   const options = useSelector(optionsSelector)
   const nowItem = useSelector(selectedSelector)
-  const groupError = useSelector(group_error) 
-  const optionError = useSelector(options_error)
-  const error = useSelector(errorSelector)
   const loading = useSelector(loadingSelector)
   const groupLoading = useSelector(group_loading)
   const optionLoading = useSelector(options_loading)
@@ -106,21 +102,18 @@ export default function AddItem(props) {
   if (isEmpty(options)){
     dispatch(listOptions())
   }
-  /*
-  React.useEffect(() => {
-    return () => {
-      dispatch(removeSelected())
-    }
-  }, [nowItem])
-  */
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState([]);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
   const [showOrder, setShow] = React.useState(false)
-  const history = useHistory();
-  const tableData = groups.concat(options)
+  const tableData = [...groups, ...options] 
+  React.useEffect(() => {
+    return () => {
+      dispatch(removeSelected())
+    }
+  }, [nowItem, dispatch])
   const handleSaveItem = () => {
       // we get all the row props, insted we only want original
     const originalArray = _.map(nowArray, n => n.original); 
@@ -143,7 +136,7 @@ export default function AddItem(props) {
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowItem) ? 'Update Item' : 'Add Item'}</p>
             </div>
             <Formik
-              initialValues={!isEmpty(nowItem) ? nowItem :  _.merge(initialValues, formValues)}
+              initialValues={!isEmpty(nowItem) ? !isEmpty(formValues) ?formValues :  nowItem :  _.merge(initialValues, formValues)}
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 setForm(values);
@@ -359,26 +352,6 @@ export default function AddItem(props) {
                 preSelected={selected}
               />
             </div>
-            {/**
-            <div>
-              <div className={classname(styles.margin5)}>
-                <button
-                  className={classname(styles.button200)}
-                  onClick={() => history.push("/addGroup")}
-                >
-                  Add OptionGroup
-                </button>
-              </div>
-              <div>
-                <button
-                  className={classname(styles.button200)}
-                  onClick={() => history.push("/addOption")}
-                >
-                  Add Option
-                </button>
-              </div>
-            </div>
-            */}
             <div className={classname(styles.between)}>
               <div>
                 <button
