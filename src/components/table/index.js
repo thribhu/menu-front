@@ -11,11 +11,6 @@ import {
 import _ from "lodash";
 import classnames from "classnames";
 import { matchSorter } from "match-sorter";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
 import styles from "./table.module.css";
 
 import MaUTable from "@material-ui/core/Table";

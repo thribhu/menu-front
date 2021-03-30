@@ -57,7 +57,7 @@ function* updateOptionSaga({payload}){
             })
         yield call(listOptionSaga)
         }
-        throw new Error("Unable to update option")
+        else throw new Error("Unable to update option")
     }
     catch(err){
         console.log(err)
@@ -96,7 +96,7 @@ function* detailOptionSaga({payload}){
 
 function* deleteOptionSaga({payload}){
     try {
-        const req = yield call(deleteOption, payload.id)
+        const req = yield call(deleteOption, payload)
         const {status} = req
         if(status === 204){
             yield put({

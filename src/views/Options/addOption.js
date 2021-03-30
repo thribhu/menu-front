@@ -2,17 +2,29 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import classname from "classnames";
 import styles from "./Options.module.sass";
-import _ from "lodash";
+import { isEmpty, merge, map, assign } from "lodash";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import Table from "components/table";
 import OrderTable from "components/orderTable";
 import { normalizeText as normalize } from "utils/normalize";
-import {addOption, updateOption, removeSelected} from 'modules/options/actions'
-import {loadingSelector, errorSelector, selectedOptionsSelector} from 'modules/options/selector'
-import {listSelector, loadingSelector as modLoad, errorSelector as modErr} from 'modules/modifiers/selectors'
-import {listModfiers} from 'modules/modifiers/actions'
-import {useSelector, useDispatch} from 'react-redux'
+import {
+  addOption,
+  updateOption,
+  removeSelected,
+} from "modules/options/actions";
+import {
+  loadingSelector,
+  errorSelector,
+  selectedOptionsSelector,
+} from "modules/options/selector";
+import {
+  listSelector,
+  loadingSelector as modLoad,
+  errorSelector as modErr,
+} from "modules/modifiers/selectors";
+import { listModfiers } from "modules/modifiers/actions";
+import { useSelector, useDispatch } from "react-redux";
 const initialValues = {
   name: "",
   description: "",
@@ -24,7 +36,6 @@ const initialValues = {
 const validationSchema = yup.object({
   name: yup.string().required("A valid option must have name"),
   description: yup.string().optional(),
-  image_url: yup.string().optional(),
   price: yup.number().required("A valid option must have price"),
   type: yup.string().optional(),
 });
@@ -37,7 +48,7 @@ const columns = [
     Header: "Options",
     accessor: "options",
     Cell: (row) => {
-      return _.map(row.value, (r) => (
+      return map(row.value, (r) => (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ display: "grid", gridTemplateColumns: "100px 100px" }}>
             <div style={{ padding: "0 5px" }}>{normalize(r.name)}</div>
@@ -49,62 +60,63 @@ const columns = [
   },
 ];
 export default function AddOption(props) {
-  const dispatch = useDispatch()
-  const modifiers = useSelector(listSelector)
-  const mod_loading = useSelector(modLoad)
-  const mod_error = useSelector(modErr)
-  const nowOption = useSelector(selectedOptionsSelector)
-  if(_.isEmpty(modifiers)) {
-    dispatch(listModfiers())
+  const dispatch = useDispatch();
+  const modifiers = useSelector(listSelector);
+  const mod_loading = useSelector(modLoad);
+  const mod_error = useSelector(modErr);
+  const nowOption = useSelector(selectedOptionsSelector);
+  if (isEmpty(modifiers)) {
+    dispatch(listModfiers());
   }
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState(nowOption.modifiers || []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState([]);
-  const [reset, setReset] = React.useState(false);
-  const [showSelected, setShow] = React.useState(false)
+  const [showSelected, setShow] = React.useState(false);
   const history = useHistory();
   const handleSaveItem = () => {
-    if (props.setOpen){
+    if (props.setOpen) {
       props.setOpen(false);
     }
     setStep1(false);
-    const option = _.assign({}, formValues, {modifiers: nowArray ? nowArray.map(_ => _.original.id) : selected.map(_ => _.id)})
-    if(!_.isEmpty(nowOption)) {
-      const id = nowOption.id
-      nowOption.modifiers = _.map(nowOption.modifiers, m => m.id)
-      dispatch(updateOption(_.merge(nowOption, option)))
+    const option = assign({}, formValues, {
+      modifiers: nowArray.map((_) => _.original.id),
+    });
+    if (!isEmpty(nowOption)) {
+      delete nowOption.modifiers
+      dispatch(updateOption(option));
+    } else {
+      dispatch(addOption(option));
     }
-    else {
-      dispatch(addOption(option))
-    }
-    setReset(true);
     setForm("");
     setSelected([]);
     setNowArray([]);
   };
   React.useEffect(() => {
     return () => dispatch(removeSelected());
-  }, [nowOption]);
+  }, [nowOption, dispatch]);
   return (
     <div className={classname(styles.container)}>
       {!step1 && (
         <>
           <div style={{ dispay: "flex", justifyContent: "center" }}>
             <p style={{ fontSize: "1.5rem", color: "red" }}>
-              {!_.isEmpty(nowOption) ? "Update Option" : "Add Option"}
+              {!isEmpty(nowOption) ? "Update Option" : "Add Option"}
             </p>
           </div>
           <Formik
-            initialValues={_.merge(initialValues, nowOption, formValues)}
+            initialValues={
+              !isEmpty(nowOption) ? !isEmpty(formValues) ? formValues : nowOption : merge(initialValues, formValues)
+            }
             validationSchema={validationSchema}
-            onSubmit={async (values) => {
+            onSubmit={(values) => {
               setForm(values);
               setStep1(true);
-              setShow(true)
+              setShow(true);
             }}
+            enableReinitialize
           >
-            {({ values }) => (
+            {({ values, isValid }) => (
               <Form>
                 <div>
                   <div className={classname(styles.formControl)}>
@@ -192,7 +204,7 @@ export default function AddOption(props) {
                   >
                     <div className={classname(styles.labelContainer)}>
                       <label
-                        htmlFor="modifier_image"
+                        htmlFor="image_url"
                         className={classname(
                           styles.formLabel,
                           styles.labelContainer
@@ -204,7 +216,7 @@ export default function AddOption(props) {
                     <div>
                       <input
                         type="file"
-                        name="modifier_image"
+                        name="image_url"
                         max={1}
                         className={classname(styles.formInput)}
                       />
@@ -231,9 +243,12 @@ export default function AddOption(props) {
                   <div className={classname(styles.saveButtonContainer)}>
                     <button
                       type="submit"
+                      disabled={!isValid}
                       className={classname(styles.ctaButton)}
                     >
-                      {!_.isEmpty(nowOption) ? "Edit Modifiers" : "Choose Modifers"}
+                      {!isEmpty(nowOption)
+                        ? "Edit Modifiers"
+                        : "Choose Modifers"}
                     </button>
                   </div>
                 </div>
@@ -246,15 +261,13 @@ export default function AddOption(props) {
         <div className={classname(styles.tableContainer)}>
           <div className={classname(styles.tableFlex)}>
             <Table
-              title={"Options and groups"}
+              title={"Modifiers"}
               columns={columns}
               data={modifiers}
               updateSelectItems={setSelected}
               withCheckBox={true}
               noAction={true}
-              preSelected={
-                selected
-              }
+              preSelected={selected}
             />
           </div>
           <div>
@@ -288,7 +301,7 @@ export default function AddOption(props) {
                 {!selected.length && (
                   <p>
                     <span style={{ color: "red" }}>*</span> Select alteast 1
-                    modifer
+                    modifier
                   </p>
                 )}
               </div>
@@ -318,7 +331,7 @@ export default function AddOption(props) {
                 handleSaveItem();
               }}
             >
-              {!_.isEmpty(nowOption) ? "Update Option" : "Add Option"}
+              {!isEmpty(nowOption) ? "Update Option" : "Add Option"}
             </button>
           </div>
         </div>
