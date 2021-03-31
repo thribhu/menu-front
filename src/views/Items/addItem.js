@@ -13,6 +13,8 @@ import {listGroup} from 'modules/groups/actions'
 import {listOptions} from 'modules/options/actions'
 import {addItem, updateItem, removeSelected} from 'modules/items/actions'
 import { ClockLoader } from 'react-spinners'
+import options from '../Options/options.json'
+import groups from '../Groups/groups.json'
 import {
   loadingSelector as group_loading,
   listSelector as groupsSelector,
@@ -89,8 +91,8 @@ const columns = [
 export default function AddItem(props) {
   const dispatch = useDispatch()
   const history = useHistory();
-  const groups = useSelector(groupsSelector)
-  const options = useSelector(optionsSelector)
+ // const groups = useSelector(groupsSelector)
+  //const options = useSelector(optionsSelector)
   const nowItem = useSelector(selectedSelector)
   const loading = useSelector(loadingSelector)
   const groupLoading = useSelector(group_loading)
@@ -108,7 +110,7 @@ export default function AddItem(props) {
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState();
   const [showOrder, setShow] = React.useState(false)
-  const tableData = [...groups, ...options] 
+  let tableData = groups.concat(options)
   React.useEffect(() => {
     return () => {
       dispatch(removeSelected())
@@ -345,7 +347,7 @@ export default function AddItem(props) {
               <Table
                 title={"Options and groups"}
                 columns={columns}
-                data={tableData}
+                data={!isEmpty(tableData) ? tableData : []}
                 updateSelectItems={setSelected}
                 withCheckBox={true}
                 noAction={true}
