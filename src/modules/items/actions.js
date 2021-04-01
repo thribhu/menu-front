@@ -45,3 +45,9 @@ export const removeSelected = () => {
         type: Actions.REMOVE_SELECTED
     }
 }
+
+export const getListOptionGroups = () => {
+    return {
+        type: Actions.LIST_OPTIONS_GROUPS
+    }
+}

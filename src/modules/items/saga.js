@@ -6,6 +6,7 @@ import {
   updateItem,
   deleteItem,
   detailItems,
+  listOptionGroupSerive,
 } from "./service";
 import { isEmpty } from "lodash";
 function* listItemsSaga() {
@@ -130,10 +131,31 @@ function* deleteItemsSaga({ payload }) {
   }
 }
 
+function* listOptionGroupsSaga(){
+  try {
+    const req = yield call(listOptionGroupSerive)
+    const {status, data} = req
+    if(200 === status) {
+      yield put({
+        type: Actions.LIST_OPTIONS_GROUPS_SUCCESS,
+        payload: data.data
+      })
+    }
+  }
+  catch (err) {
+    console.error(err)
+    yield put({
+      type: Actions.LIST_OPTIONS_GROUPS_ERROR,
+      error: err
+    })
+  }
+}
+
 export default function* optionSaga() {
   yield takeEvery(Actions.ADD_ITEM, addItemsSaga);
   yield takeEvery(Actions.LIST_ITEMS, listItemsSaga);
   yield takeEvery(Actions.UPDATE_ITEM, updateItemsSaga);
   yield takeEvery(Actions.DETAIL_ITEM, detailItemsSaga);
   yield takeEvery(Actions.DELETE_ITEM, deleteItemsSaga);
+  yield takeEvery(Actions.LIST_OPTIONS_GROUPS, listOptionGroupsSaga)
 }

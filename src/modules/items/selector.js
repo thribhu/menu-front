@@ -47,3 +47,14 @@ export const itemInfoSelector = createSelector(
         return data.get('message')
     }
 )
+
+export const optionGroupsSelector = createSelector(
+    items, 
+    data => {
+        var a = data.get('options_groups')
+        if (a.size){
+            return a.toJS()
+        }
+        else return []
+    }
+)

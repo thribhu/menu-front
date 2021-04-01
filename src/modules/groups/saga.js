@@ -121,6 +121,7 @@ function* deleteGroupSaga({payload}){
     }
     catch (err){
         console.log(err)
+        alert(err.message)
             yield put({
                 type: Actions.LIST_GROUPS
             })

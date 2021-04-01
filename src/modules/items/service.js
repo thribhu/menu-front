@@ -50,3 +50,11 @@ export const updateItem = item => {
 export const deleteItem = item => {
     return axios.delete(base+`${item}/`)
 }
+
+
+/**
+ * GET both options, groups
+ */
+export const listOptionGroupSerive = () => {
+    return axios.get(base+"list-options-groups")
+}

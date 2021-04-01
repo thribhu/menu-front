@@ -11,8 +11,8 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listGroup } from "modules/groups/actions";
 import { listOptions } from "modules/options/actions";
-import { addItem, updateItem, removeSelected } from "modules/items/actions";
-import { ClockLoader } from "react-spinners";
+import { addItem, updateItem, removeSelected, getListOptionGroups } from "modules/items/actions";
+
 import {
   loadingSelector as group_loading,
   listSelector as groupsSelector,
@@ -22,7 +22,7 @@ import {
   loadingSelector as options_loading,
   optionsSelector,
 } from "modules/options/selector";
-import { selectedSelector, loadingSelector } from "modules/items/selector";
+import { selectedSelector, loadingSelector, optionGroupsSelector } from "modules/items/selector";
 import { FaRegObjectGroup } from "react-icons/fa";
 import OrderTable from "components/orderTable";
 const initialValues = {
@@ -87,6 +87,7 @@ export default function AddItem(props) {
   const groups = useSelector(groupsSelector);
   const options = useSelector(optionsSelector);
   const nowItem = useSelector(selectedSelector);
+  const option_groups = useSelector(optionGroupsSelector) 
   const loading = useSelector(loadingSelector);
   const groupLoading = useSelector(group_loading);
   const optionLoading = useSelector(options_loading);
@@ -103,18 +104,10 @@ export default function AddItem(props) {
 
   //let tableData = groups.concat(options)
   React.useEffect(() => {
-    if (isEmpty(options)) {
-      dispatch(listOptions());
+    if(isEmpty(option_groups)) {
+      dispatch(getListOptionGroups())
     }
-  }, [dispatch, options]);
-  React.useEffect(() => {
-    if (isEmpty(groups)) {
-      dispatch(listGroup());
-    }
-    return () => {
-      dispatch(removeSelected());
-    };
-  }, [nowItem, dispatch, groups]);
+  }, [dispatch, option_groups]);
   const handleSaveItem = () => {
     // we get all the row props, insted we only want original
     const item_groups = _.map(groupArray, (n) => n.original.id);
@@ -365,7 +358,7 @@ export default function AddItem(props) {
               <Table
                 title={"Options and groups"}
                 columns={columns}
-                data={groups}
+                data={option_groups}
                 updateSelectItems={selectGroups}
                 withCheckBox={true}
                 noAction={true}

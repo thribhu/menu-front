@@ -1,4 +1,5 @@
 import {List, fromJS, Map} from 'immutable'
+import { startCase } from 'lodash-es'
 import * as Actions from './constants'
 
 const initState = fromJS({
@@ -6,6 +7,7 @@ const initState = fromJS({
     error: '',
     items: List(),
     selected: Map(),
+    options_groups: List(),
     message: ''
 })
 
@@ -53,6 +55,14 @@ export default function GroupReducer(state=initState, action){
             return state.set('selected', fromJS(payload))
         case Actions.REMOVE_SELECTED:
             return state.set('selected', initState.get('selected'))
+
+
+        case Actions.LIST_OPTIONS_GROUPS:
+            return state.set('loading', true)
+        case Actions.LIST_ITEMS_SUCCESS:
+            return state.set('loading', false).set('options_groups', fromJS(payload))
+        case Actions.LIST_OPTIONS_GROUPS_ERROR:
+            return state.set('lodaing', false).set('error', fromJS(error) )
         default:
             return state
     }
