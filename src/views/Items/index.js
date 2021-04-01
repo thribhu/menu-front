@@ -10,7 +10,7 @@ import _, { isEmpty } from 'lodash';
 import Modal from 'react-modal';
 import AddItem from './addItem'
 import {useDispatch, useSelector} from 'react-redux'
-import {listItems, removeItem, setSelected} from 'modules/items/actions'
+import {listItems, removeItem, setSelected as selectItem} from 'modules/items/actions'
 import {listSelector, loadingSelector, errorSelector, itemInfoSelector} from 'modules/items/selector'
 import {listGroup} from 'modules/groups/actions'
 import {listSelector as groupsSelector} from 'modules/groups/selector'
@@ -47,7 +47,7 @@ export default function Items() {
     }
     const handleEdit = item => {
         delete item.actions
-        dispatch(setSelected(item))
+        dispatch(selectItem(item))
         history.push("/addItem")
     }
     const handleDelete = item => {

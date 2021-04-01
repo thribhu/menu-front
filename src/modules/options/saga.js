@@ -51,6 +51,7 @@ function* updateOptionSaga({payload}){
         const updateReq = yield call(updateOption, payload)
         const {status} = updateReq
         if(status === 200) {
+            alert('Update Option success')
             yield put({
                 type: Actions.UPDATE_OPTION_SUCCESS,
                 payload: 'success'
@@ -61,6 +62,7 @@ function* updateOptionSaga({payload}){
     }
     catch(err){
         console.log(err)
+        alert('Update Option failed')
         yield put({
             type: Actions.UPDATE_OPTION_ERROR,
             error: err.message 

@@ -46,7 +46,7 @@ function* addItemsSaga({ payload }) {
         type: Actions.LIST_ITEMS,
       });
     }
-    throw new Error("Unable to add items");
+    else throw new Error("Unable to add items");
   } catch (err) {
     console.log(err);
     yield put({
@@ -58,9 +58,10 @@ function* addItemsSaga({ payload }) {
 
 function* updateItemsSaga({ payload }) {
   try {
-    const updateReq = yield call(updateItem, payload.id);
+    const updateReq = yield call(updateItem, payload);
     const { status } = updateReq;
-    if (status === 200) {
+    if (status === 201) {
+      alert('Item update success')
       yield put({
         type: Actions.UPDATE_ITEM_ERROR,
         payload: "success",
@@ -69,8 +70,9 @@ function* updateItemsSaga({ payload }) {
         type: Actions.LIST_ITEMS,
       });
     }
-    throw new Error("Unable to update items");
+    else throw new Error("Unable to update items");
   } catch (err) {
+    alert('Item update failed')
     console.log(err);
     yield put({
       type: Actions.UPDATE_ITEM_ERROR,
@@ -94,7 +96,7 @@ function* detailItemsSaga({ payload }) {
         payload: data,
       });
     }
-    throw new Error("Unable to fetch items");
+    else throw new Error("Unable to fetch items");
   } catch (err) {
     console.log(err);
     yield put({
@@ -106,7 +108,7 @@ function* detailItemsSaga({ payload }) {
 
 function* deleteItemsSaga({ payload }) {
   try {
-    const req = yield call(deleteItem, payload.id);
+    const req = yield call(deleteItem, payload);
     const { status } = req;
     if (status === 204) {
       yield put({
@@ -118,6 +120,9 @@ function* deleteItemsSaga({ payload }) {
     }
   } catch (err) {
     console.log(err);
+      yield put({
+        type: Actions.LIST_ITEMS,
+      });
     yield put({
       type: Actions.DELETE_ITEM_SUCCESS,
       error: err.message,

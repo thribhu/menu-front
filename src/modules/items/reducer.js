@@ -49,6 +49,10 @@ export default function GroupReducer(state=initState, action){
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.DETAIL_ITEM_SUCCESS:
             return state.set('loading', false).set('nowModifier', fromJS(payload))
+        case Actions.SET_SELECTED:
+            return state.set('selected', fromJS(payload))
+        case Actions.REMOVE_SELECTED:
+            return state.set('selected', initState.get('selected'))
         default:
             return state
     }

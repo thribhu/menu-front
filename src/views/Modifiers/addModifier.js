@@ -57,6 +57,7 @@ export default function AddModifier(props) {
                     setForm(values)
                     handleSubmit(values)
                 }}
+                enableReinitialize
             >
                 {({ values }) => (
                     <Form>

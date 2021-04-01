@@ -61,6 +61,7 @@ function* updateModifierSaga({payload}){
         const updateReq = yield call(updateModifier, payload)
         const {status} = updateReq
         if(status === 200) {
+            alert("Update modifier success")
             yield put({
                 type: Actions.UPDATE_MODIFIERS_SUCCESS,
                 payload: 'success'
