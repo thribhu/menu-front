@@ -33,3 +33,21 @@ export const detailItem = item => {
         payload: item
     }
 }
+export const setSelected = item => {
+    return {
+        type: Actions.SET_SELECTED,
+        payload: item
+    }
+}
+
+export const removeSelected = () => {
+    return {
+        type: Actions.REMOVE_SELECTED
+    }
+}
+
+export const getListOptionGroups = () => {
+    return {
+        type: Actions.LIST_OPTIONS_GROUPS
+    }
+}

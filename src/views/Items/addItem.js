@@ -1,23 +1,30 @@
 import React from "react";
 import classname from "classnames";
 import styles from "./Items.module.sass";
-import _ from "lodash";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import _, { isEmpty, map } from "lodash";
+import { Formik, Form, Field, ErrorMessage, isEmptyArray } from "formik";
 import * as yup from "yup";
-import Groups from "../Groups/groups.json";
-import Options from "../Options/options.json";
 import { normalizeText as normalize } from "utils/normalize";
-import Modal from "react-modal";
 import Switch from "react-switch";
 import Table from "components/table";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { listGroup } from "modules/groups/actions";
+import { listOptions } from "modules/options/actions";
+import { addItem, updateItem, removeSelected, getListOptionGroups } from "modules/items/actions";
+import {splitOptionsAndGroups} from './utils'
 import {
-  FaRegObjectGroup,
-  FaEdit,
-} from "react-icons/fa";
+  loadingSelector as group_loading,
+  listSelector as groupsSelector,
+  messageSelector,
+} from "modules/groups/selector";
+import {
+  loadingSelector as options_loading,
+  optionsSelector,
+} from "modules/options/selector";
+import { selectedSelector, loadingSelector, optionGroupsSelector } from "modules/items/selector";
+import { FaRegObjectGroup } from "react-icons/fa";
 import OrderTable from "components/orderTable";
-let tableData = Groups.concat(Options);
-tableData = _.sortBy(tableData, ["name"]);
 const initialValues = {
   name: "",
   description: "",
@@ -40,7 +47,7 @@ const columns = [
       if (!_.isUndefined(d.min_required)) {
         return (
           <div>
-            {d.name}
+            {normalize(d.name)}
             <FaRegObjectGroup style={{ padding: "0 5px" }} />
           </div>
         );
@@ -51,11 +58,7 @@ const columns = [
   },
   {
     Header: "Price",
-    accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
-        return d.price_default;
-      } else return d.price;
-    },
+    accessor:  "price",
   },
   {
     Header: "Min",
@@ -73,46 +76,59 @@ const columns = [
       } else return "-";
     },
   },
-  {
-    Header: "Order",
-    accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
-        return d.display_order;
-      } else return "-";
-    },
-  },
-  {
-    Header: "Actions",
-    accessor: "actions",
-  },
 ];
-export default function AddOption(props) {
+const stichOptionsAndGroups = (list) => {
+  let o = list.options 
+  let g = list.option_groups 
+  let res = o.concat(g)
+  return res
+}
+export default function AddItem(props) {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const groups = useSelector(groupsSelector);
+  const options = useSelector(optionsSelector);
+  const nowItem = useSelector(selectedSelector);
+  let option_groups = useSelector(optionGroupsSelector) 
+  const loading = useSelector(loadingSelector);
+  const groupLoading = useSelector(group_loading);
+  const optionLoading = useSelector(options_loading);
+  const groupInfo = useSelector(messageSelector);
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
-  const [selected, setSelected] = React.useState([]);
+  const [groupsSelected, selectGroups] = React.useState(!isEmpty(nowItem) ? stichOptionsAndGroups(nowItem) : []);
   const [formValues, setForm] = React.useState();
-  const [nowArray, setNowArray] = React.useState();
-  const history = useHistory();
-  _.map(tableData, (item) =>
-    _.assign(item, {
-      actions: (
-        <div style={{ display: "flex" }}>
-          <div style={{ padding: "0 5px" }}>
-            <button>
-              <FaEdit />
-            </button>
-          </div>
-        </div>
-      ),
-    })
-  );
+  const [groupArray, setGroupArray] = React.useState();
+  const [optionArray, setOptionArray] = React.useState()
+  const [showOrder, setShow] = React.useState(false);
+
+  //let tableData = groups.concat(options)
+  React.useEffect(() => {
+    if(isEmpty(option_groups)) {
+      dispatch(getListOptionGroups())
+    }
+    return () => dispatch(removeSelected())
+  }, [dispatch, option_groups]);
   const handleSaveItem = () => {
-      // we get all the row props, insted we only want original
-    const originalArray = _.map(nowArray, n => n.original); 
+    // we get all the row props, insted we only want original
+    const {option_groups, options} = splitOptionsAndGroups(map(groupArray, g => g.original))
+    let _active
+    if (active) {
+      _active = 1
+    }
+    else _active = 0
     const values = formValues;
-    const finalItem = _.assign({}, values, {options: originalArray})
-    props.setItem(finalItem)
+    const finalItem = _.assign({}, values, { active: _active, options, option_groups});
+    if (!isEmpty(nowItem)) {
+      dispatch(updateItem(finalItem));
+    } else {
+      dispatch(addItem(finalItem));
+    }
     setForm(null);
+    setShow(false)
+    if(props.setOpen) {
+      props.setOpen(false)
+    }
   };
   return (
     <div>
@@ -120,15 +136,25 @@ export default function AddOption(props) {
         {!step1 && (
           <div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <p style={{ fontSize: "1.5rem", color: "red" }}>Add Item</p>
+              <p style={{ fontSize: "1.5rem", color: "red" }}>
+                {!isEmpty(nowItem) ? "Update Item" : "Add Item"}
+              </p>
             </div>
             <Formik
-              initialValues={_.merge(initialValues, formValues)}
+              initialValues={
+                !isEmpty(nowItem)
+                  ? !isEmpty(formValues)
+                    ? formValues
+                    : nowItem
+                  : _.merge(initialValues, formValues)
+              }
               validationSchema={validationSchema}
               onSubmit={async (values) => {
                 setForm(values);
                 setStep1(true);
+                setShow(true)
               }}
+              enableReinitialize
             >
               {({ values }) => (
                 <Form>
@@ -220,7 +246,7 @@ export default function AddOption(props) {
                             styles.labelContainer
                           )}
                         >
-                         Stock
+                          Stock
                         </label>
                       </div>
                       <div>
@@ -317,7 +343,7 @@ export default function AddOption(props) {
                         type="submit"
                         className={classname(styles.ctaButton)}
                       >
-                        Add Options
+                        Choose Options
                       </button>
                     </div>
                   </div>
@@ -326,59 +352,44 @@ export default function AddOption(props) {
             </Formik>
           </div>
         )}
-        {step1 && (
+        {step1 &&  (
           <div className={classname(styles.tableContainer)}>
             <div className={classname(styles.tableFlex)}>
               <Table
                 title={"Options and groups"}
                 columns={columns}
-                data={tableData}
-                updateSelectItems={setSelected}
+                data={option_groups}
+                updateSelectItems={selectGroups}
                 withCheckBox={true}
                 noAction={true}
-                preSelected={_.map(selected, (s) => s.name)}
+                preSelected={groupsSelected}
               />
             </div>
-            <div>
-              <div className={classname(styles.margin5)}>
-                <button
-                  className={classname(styles.button200)}
-                  onClick={() => history.push("/addGroup")}
-                >
-                  Add OptionGroup
-                </button>
-              </div>
-              <div>
-                <button
-                  className={classname(styles.button200)}
-                  onClick={() => history.push("/addOption")}
-                >
-                  Add Option
-                </button>
-              </div>
-            </div>
             <div className={classname(styles.between)}>
-              <div>
-                <button
-                  onClick={() => setStep1(false)}
-                  className={classname(styles.ctaButton)}
-                >
-                  Back
-                </button>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div style={{ paddingTop: "5px" }}>
+                  <button
+                    onClick={() => setStep1(false)}
+                    className={classname(styles.ctaButton)}
+                  >
+                    Back
+                  </button>
+                </div>
               </div>
               <div>
                 <button
-                  disabled={!selected.length}
+                  disabled={!groupsSelected.length}
                   className={classname(styles.ctaButton)}
-                  onClick={() => (selected.length ? setStep1(false) : null)}
+                  onClick={() =>
+                    groupsSelected.length ? setStep1(false) : null
+                  }
                 >
                   Add to Item
                 </button>
                 <div style={{ fontSize: "10px" }}>
-                  {!selected.length && (
+                  {!groupsSelected.length && (
                     <p>
                       <span style={{ color: "red" }}>*</span> Select alteast 1
-                      option
                     </p>
                   )}
                 </div>
@@ -387,13 +398,14 @@ export default function AddOption(props) {
           </div>
         )}
       </div>
-      {selected.length && !step1 ? (
+      {groupsSelected.length && !step1 && showOrder ? (
         <div style={{ flex: 1 }}>
+          <div>Option Groups</div>
           <div>
             <OrderTable
               columns={columns}
-              data={selected}
-              updateCurrentRows={setNowArray}
+              data={groupsSelected}
+              updateCurrentRows={setGroupArray}
             />
           </div>
           <div
@@ -406,7 +418,6 @@ export default function AddOption(props) {
             <button
               className={styles.ctaButton}
               onClick={() => {
-                props.setOpen(false);
                 handleSaveItem();
               }}
             >

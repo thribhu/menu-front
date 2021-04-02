@@ -1,5 +1,6 @@
 import {isImmutable} from 'immutable'
-
+import { createSelector } from 'reselect'
+import {orderBy} from 'lodash'
 const items = state => state.items
 
 export const loadingSelector = createSelector(
@@ -37,5 +38,23 @@ export const selectedSelector = createSelector(
             return selected.toJS()
         }
         return []
+    }
+)
+
+export const itemInfoSelector = createSelector(
+    items,
+    data => {
+        return data.get('message')
+    }
+)
+
+export const optionGroupsSelector = createSelector(
+    items, 
+    data => {
+        var a = data.get('options_groups')
+        if (a.size){
+            return orderBy(a.toJS(), ['name'])
+        }
+        else return []
     }
 )

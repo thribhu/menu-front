@@ -1,14 +1,18 @@
 import React from "react";
-import axios from 'axios'
 import classname from "classnames";
 import styles from "./Groups.module.sass";
 import Modal from "react-modal";
 import Table from "components/table";
 import AddGroup from "views/Groups/addGroup";
-import _, { map } from "lodash";
+import  { isEmpty, map, assign } from "lodash";
 import { useHistory } from "react-router-dom";
-import { FaTrash, FaEdit } from "react-icons/fa";
+import { FaTrash, FaEdit, FaWindowClose } from "react-icons/fa";
 import { normalizeText } from "utils/normalize";
+import {listGroup, removeGroup, selectGroup} from 'modules/groups/actions'
+import { loadingSelector, errorSelector, listSelector, messageSelector } from 'modules/groups/selector'
+import {listOptions} from 'modules/options/actions'
+import {loadingSelector as optionLoading, optionsSelector, errorSelector as optionError} from 'modules/options/selector'
+import {useDispatch, useSelector} from 'react-redux'
 const groupColumns = [
   {
     Header: "Group",
@@ -34,7 +38,7 @@ const groupColumns = [
   {
     Header: "Options",
     accessor: d => {
-      let names = _.map(d.options, _ => normalizeText(_.name))
+      let names = map(d.options, _ => normalizeText(_.name))
       return names.join(", ") || "-"
     }
   },
@@ -62,15 +66,25 @@ const columns = [
   },
 ];
 export default function GroupsTable() {
-  const baseUrl = "http://127.0.0.1:8000/api/";
-  const [groups, setGroups] = React.useState([])
-  const [options, setoptions] = React.useState([])
-  const [selected, setSelected] = React.useState([]);
+  const dispatch = useDispatch()
   const history = useHistory();
+  const groups = useSelector(listSelector)
+  const message = useSelector(messageSelector)
+  const options = useSelector(optionsSelector)
+  const loading = useSelector(loadingSelector)
+  const error = useSelector(errorSelector)
+  const options_loading = useSelector(optionLoading)
+  const option_error = useSelector(optionError)
+  const [selected, setSelected] = React.useState([]);
   const [form, setForm] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [step1, setSetp1] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  if(isEmpty(groups) && !message){
+    dispatch(listGroup())
+  }
+  if(isEmpty(options)){
+    dispatch(listOptions())
+  }
   const customStyles = {
     content: {
       margin: "auto",
@@ -85,52 +99,21 @@ export default function GroupsTable() {
       transform: "translate(-50%, -50%)",
     },
   };
-  React.useEffect(() => {
-    setLoading(true);
-    const options_res = axios.get(baseUrl + "options/");
-    options_res.then(snapshot => {
-      if(snapshot.status === 200){
-        setoptions(snapshot.data)
-      }
-    })
-    .catch(err => {
-      console.error(err)
-    })
-    const response = axios.get(baseUrl + "groups/");
-    response.then(snapshot => {
-      if(snapshot.status === 200){
-        setGroups(snapshot.data)
-        setLoading(false)
-      }
-    })
-    .catch(err => {
-      console.error(err)
-      setLoading(false)
-    })
-  }, []);
   const handleEdit = group => {
     delete group.actions
-    history.push("/addGroup", group)
+    dispatch(selectGroup(group))
+    history.push("/addGroup")
   }
   const handleRemove = group => {
     const confirm = window.confirm(`You are about to remove ${group.name}. This is not reversable`)
     if(confirm) {
-      const request = axios.delete(baseUrl+`groups/${group.id}`)
-      request.then(snapshot => {
-        if (snapshot.status === 204) {
-          alert('Group removed successfully')
-        }
-      })
-      .catch(err => {
-        console.error(err)
-        alert('Unable to remove Gruop')
-      })
+      dispatch(removeGroup(group.id))
     }
   }
-  _.map(groups, (option) =>
-    _.assign(option, {
+  map(groups, (option, i) =>
+    assign(option, {
       actions: (
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }} key={i}>
           <div style={{ padding: "0 5px" }}>
             <button onClick={() => handleEdit(option)}>
               <FaEdit />
@@ -155,6 +138,13 @@ export default function GroupsTable() {
         }}
         style={customStyles}
       >
+        <div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <button onClick={() => setOpen(false)} style={{ cursor: 'pointer' }} className={classname(styles.transparent)}>
+                            <FaWindowClose />
+                        </button>
+                    </div>
         {step1 && (
           <div>
             <button onClick={() => setSetp1(false)}>Back</button>
@@ -194,6 +184,7 @@ export default function GroupsTable() {
             </div>
           </div>
         )}
+        </div>
       </Modal>
       <div>
         <Table
@@ -201,6 +192,12 @@ export default function GroupsTable() {
           columns={groupColumns}
           data={groups}
         />
+        {
+          !isEmpty(message) && 
+          <div className="UcenterWithMargin IamInfo">
+           * Add Groups to view in this table 
+          </div>
+        }
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", margin: "20px" }}

@@ -18,6 +18,7 @@ export const DETAIL_MODIFIERS = "modifiers/DETAIL_MODIFIERS"
 export const DETAIL_MODIFIERS_SUCCESS = "modifiers/DETAIL_MODIFIERS_SUCCESS"
 export const DETAIL_MODIFIERS_ERROR = "modifiers/DETAIL_MODIFIERS_ERROR"
 
-//add and remove selected
-export const SELECTED_MODIFIERS = "modifiers/SELECT_MODIFEIRS"
+export const SET_SELECTED = "modifiers/SET_SELECTED"
 export const REMOVE_SELECTED = "modifiers/REMOVE_SELECTED"
+
+export const RESET_ERROR = "modifiers/RESET_ERROR"

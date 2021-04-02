@@ -32,7 +32,8 @@ function* listModifierSaga(){
 function* addModifierSaga({payload}){
     try{
         const addReq = yield call(addModifiers, payload)
-        if(addReq.status === 201){
+        const {status} = addReq
+        if(status === 201){
             yield put({
                 type: Actions.ADD_MODIFIERS_SUCCESS,
                 payload: addReq.data
@@ -41,10 +42,13 @@ function* addModifierSaga({payload}){
             type: Actions.LIST_MODIFIERS
         }) 
         }
-        throw new Error("Unable to add modifiers")
+        else throw new Error("Unable to add modifiers")
     }
     catch (err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.ADD_MODIFIERS_ERROR,
             error: err.message
@@ -57,6 +61,7 @@ function* updateModifierSaga({payload}){
         const updateReq = yield call(updateModifier, payload)
         const {status} = updateReq
         if(status === 200) {
+            alert("Update modifier success")
             yield put({
                 type: Actions.UPDATE_MODIFIERS_SUCCESS,
                 payload: 'success'
@@ -65,10 +70,15 @@ function* updateModifierSaga({payload}){
             type: Actions.LIST_MODIFIERS
         })
         }
-        else throw new Error("Unable to update modifier")
+        else{
+            throw new Error("Unable to update modifier")
+        }
     }
     catch(err){
         console.log(err)
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.UPDATE_MODIFIERS_ERROR,
             error: err.message 
@@ -114,9 +124,15 @@ function* deleteModifierSaga({payload}){
                 type: Actions.LIST_MODIFIERS
             })
         }
+        else if (status === 500) {
+            throw new Error('Modifier being referenced')
+        }
     }
     catch (err){
-        console.log(err)
+        alert('Unable to delete Modifier')
+        yield put({
+            type: Actions.LIST_MODIFIERS
+        }) 
         yield put({
             type: Actions.DELETE_MODIFIERS_ERROR,
             error: err.message

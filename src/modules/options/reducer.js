@@ -20,7 +20,7 @@ export default function optionReducer(state=initState, action) {
         case Actions.ADD_OPTION:
             return state.set('loading', true).set('error', initState.get('error'))
         case Actions.ADD_OPTION_SUCCESS:
-            return state.set('loading', false).set('options', fromJS(payload)).set('error', initState.get('error')) 
+            return state.set('loading', false).set('error', initState.get('error')) 
         case Actions.ADD_OPTION_SUCCESS:
             return state.set('loading', false).set('error', fromJS(error))
         //remove

@@ -33,3 +33,7 @@ export const DELETE_ITEM_ERROR = "items/DELETE_ITEM_ERROR"
 //set and remove selected
 export const SET_SELECTED = "items/SET_SELECTED"
 export const REMOVE_SELECTED = "items/REMOVE_SELECTED"
+
+export const LIST_OPTIONS_GROUPS = "items/LIST_OPTIONS_GROUPS"
+export const LIST_OPTIONS_GROUPS_SUCCESS = "items/LIST_OPTIONS_GROUPS_SUCCESS"
+export const LIST_OPTIONS_GROUPS_ERROR = "items/LIST_OPTIONS_GROUPS_ERROR"

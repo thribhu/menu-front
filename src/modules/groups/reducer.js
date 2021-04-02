@@ -5,8 +5,9 @@ const initState = fromJS({
     loading:  false,
     error: '',
     groups: List(),
-    selected: List(),
-    nowGroup: Map()
+    selected: Map(),
+    nowGroup: Map(),
+    message: ''
 })
 
 export default function GroupReducer(state=initState, action){
@@ -17,7 +18,11 @@ export default function GroupReducer(state=initState, action){
         case Actions.LIST_GROUPS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.LIST_GROUPS_SUCCESS:
-            return state.set('loading', false).set('error', '').set('groups', fromJS(payload))
+            // add this logic to every module
+            if (typeof payload === "string") {
+                return state.set('lodaing', false).set('error', '').set('message', payload).set('groups', [])
+            }
+            return state.set('loading', false).set('error', '').set('groups', fromJS(payload)).set('message', '')
         
         case Actions.ADD_GROUP:
             return state.set('loading', true)
@@ -46,6 +51,10 @@ export default function GroupReducer(state=initState, action){
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.DETAIL_GROUP_SUCCESS:
             return state.set('loading', false).set('nowModifier', fromJS(payload))
+        case Actions.SET_SELECTED:
+            return state.set('selected', fromJS(payload))
+        case Actions.REMOVE_SELECTED:
+            return state.set('selected', initState.get('selected'))
         default:
             return state
     }

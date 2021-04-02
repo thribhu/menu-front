@@ -23,7 +23,7 @@ export const detailModifiers = id => {
 
 /**
  * POST api/modifiers/
- * add an modifier
+ * add a modifier
  * returns modifier
  * status 201
  */

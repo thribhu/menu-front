@@ -1,14 +1,15 @@
 import React from 'react';
 import classname from 'classnames'
 import styles from './Modifiers.module.sass';
-import { Formik, ErrorMessage, Field, Form, FieldArray } from 'formik';
+import { Formik, ErrorMessage, Field, Form, FieldArray} from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import {isEmpty, merge} from 'lodash';
-import {addModifier, removeSelected, updateModifier} from 'modules/modifiers/actions'
-import {loadingSelector, errorSelector, selectedSelector} from 'modules/modifiers/selectors'
-import { useSelector, useDispatch } from 'react-redux';
-const init = {
+import { isEmpty } from 'lodash';
+import {useSelector, useDispatch} from 'react-redux'
+import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
+import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
+import {ClockLoader} from 'react-spinners'
+const initialValues = {
     name: '',
     options: [
         {
@@ -26,34 +27,35 @@ const validationSchema = yup.object().shape({
 }) 
 export default function AddModifier(props) {
     const dispatch = useDispatch()
+    const nowModifier = useSelector(selectedSelector)
     const loading = useSelector(loadingSelector)
     const error = useSelector(errorSelector)
-    const nowModifier = useSelector(selectedSelector)
-    const handleSubmit = modifier => {
-        dispatch(addModifier(modifier))
-    }
-    const handleUpdate = modifier => {
-        dispatch(updateModifier(modifier))
-    }
+    const [form, setForm] = React.useState()
     React.useEffect(() => {
-        return () => !isEmpty(nowModifier) ? dispatch(removeSelected()) : null
-    })
+        return () => {
+            dispatch(removeSelected())
+        }
+    }, [nowModifier, dispatch])
+    const handleSubmit = (values) => {
+        let modifier = values
+        if(!isEmpty(nowModifier)){
+            dispatch(updateModifier(modifier))
+        }
+        else {
+            dispatch(addModifier(modifier))
+        }
+    }
     return (
         <div className={classname(styles.container)}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={!isEmpty(nowModifier) ? nowModifier : init}
-                validationSchema={validationSchema}
-                onSubmit={(values,{resetForm}) => {
-                    if(!isEmpty(nowModifier)){
-                        handleUpdate(values)
-                    }
-                    else {
-                        handleSubmit(values)
-                    } 
-                    resetForm()
+                initialValues={!isEmpty(nowModifier) ? nowModifier : initialValues}
+                validationSchema = {validationSchema}
+                onSubmit={(values) => {
+                    setForm(values)
+                    handleSubmit(values)
                 }}
                 enableReinitialize
             >
@@ -130,7 +132,6 @@ export default function AddModifier(props) {
                                                                 <div style={{padding:'10px'}}>
                                                                     <button
                                                                         type="button"
-                                                                        className="secondary"
                                                                         onClick={() => remove(index)}
                                                                         className={classname(styles.common_button)}
                                                                     >
@@ -143,7 +144,6 @@ export default function AddModifier(props) {
                                                                     <div style={{padding: '10px'}}>
                                                                         <button
                                                                             type="button"
-                                                                            className="secondary"
                                                                             onClick={() => insert(0, { name: '', price: '' })}
                                                                             className={classname(styles.common_button)}
                                                                         >
@@ -161,7 +161,12 @@ export default function AddModifier(props) {
                                 <ErrorMessage name="options" style={{color:'red'}}/>
                         </div>
                         <div className={classname(styles.saveButtonContainer)}>
-                            <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                            {
+                                loading ?
+                                    <ClockLoader className="IamLoader"/>
+                                    :
+                                    <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                            }
                         </div>
                     </Form>
                 )}

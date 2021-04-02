@@ -34,9 +34,9 @@ export const detailModifier = modifier => {
     }
 }
 
-export const selectModifier = modifier => {
+export const setSelected = modifier => {
     return {
-        type: Actions.SELECTED_MODIFIERS,
+        type: Actions.SET_SELECTED,
         payload: modifier
     }
 }

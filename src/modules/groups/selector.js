@@ -4,6 +4,10 @@ import _, { create } from 'lodash'
 
 const groups = state => state.groups
 
+export const messageSelector = createSelector(
+    groups,
+    data => data.get('message')
+)
 export const loadingSelector = createSelector(
     groups, 
     data => data.get('loading')

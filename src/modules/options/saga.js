@@ -51,16 +51,18 @@ function* updateOptionSaga({payload}){
         const updateReq = yield call(updateOption, payload)
         const {status} = updateReq
         if(status === 200) {
+            alert('Update Option success')
             yield put({
                 type: Actions.UPDATE_OPTION_SUCCESS,
                 payload: 'success'
             })
         yield call(listOptionSaga)
         }
-        throw new Error("Unable to update option")
+        else throw new Error("Unable to update option")
     }
     catch(err){
         console.log(err)
+        alert('Update Option failed')
         yield put({
             type: Actions.UPDATE_OPTION_ERROR,
             error: err.message 
@@ -96,7 +98,7 @@ function* detailOptionSaga({payload}){
 
 function* deleteOptionSaga({payload}){
     try {
-        const req = yield call(deleteOption, payload.id)
+        const req = yield call(deleteOption, payload)
         const {status} = req
         if(status === 204){
             yield put({
@@ -106,9 +108,13 @@ function* deleteOptionSaga({payload}){
                 type: Actions.LIST_OPTIONS
             })
         }
+        else if(status === 500){
+            throw new Error('Option is being referenced, Unable to remove')
+        }
     }
     catch (err){
         console.log(err)
+        alert(err.message)
         yield put({
             type: Actions.LIST_OPTIONS
         })
