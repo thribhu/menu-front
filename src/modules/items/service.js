@@ -56,5 +56,5 @@ export const deleteItem = item => {
  * GET both options, groups
  */
 export const listOptionGroupSerive = () => {
-    return axios.get(base+"list-options-groups")
+    return axios.get(api()+"list-options-groups/")
 }

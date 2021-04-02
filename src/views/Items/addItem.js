@@ -1,7 +1,7 @@
 import React from "react";
 import classname from "classnames";
 import styles from "./Items.module.sass";
-import _, { isEmpty, merge } from "lodash";
+import _, { isEmpty, map } from "lodash";
 import { Formik, Form, Field, ErrorMessage, isEmptyArray } from "formik";
 import * as yup from "yup";
 import { normalizeText as normalize } from "utils/normalize";
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { listGroup } from "modules/groups/actions";
 import { listOptions } from "modules/options/actions";
 import { addItem, updateItem, removeSelected, getListOptionGroups } from "modules/items/actions";
-
+import {splitOptionsAndGroups} from './utils'
 import {
   loadingSelector as group_loading,
   listSelector as groupsSelector,
@@ -58,11 +58,7 @@ const columns = [
   },
   {
     Header: "Price",
-    accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
-        return d.price_default;
-      } else return d.price;
-    },
+    accessor:  "price",
   },
   {
     Header: "Min",
@@ -81,22 +77,26 @@ const columns = [
     },
   },
 ];
+const stichOptionsAndGroups = (list) => {
+  let o = list.options 
+  let g = list.option_groups 
+  let res = o.concat(g)
+  return res
+}
 export default function AddItem(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const groups = useSelector(groupsSelector);
   const options = useSelector(optionsSelector);
   const nowItem = useSelector(selectedSelector);
-  const option_groups = useSelector(optionGroupsSelector) 
+  let option_groups = useSelector(optionGroupsSelector) 
   const loading = useSelector(loadingSelector);
   const groupLoading = useSelector(group_loading);
   const optionLoading = useSelector(options_loading);
   const groupInfo = useSelector(messageSelector);
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
-  const [step2, setStep2] = React.useState(false);
-  const [groupsSelected, selectGroups] = React.useState(!isEmpty(nowItem) ? nowItem.option_groups : []);
-  const [optionsSelected, selectOptions] = React.useState(!isEmpty(nowItem)? nowItem.options: [])
+  const [groupsSelected, selectGroups] = React.useState(!isEmpty(nowItem) ? stichOptionsAndGroups(nowItem) : []);
   const [formValues, setForm] = React.useState();
   const [groupArray, setGroupArray] = React.useState();
   const [optionArray, setOptionArray] = React.useState()
@@ -107,18 +107,18 @@ export default function AddItem(props) {
     if(isEmpty(option_groups)) {
       dispatch(getListOptionGroups())
     }
+    return () => dispatch(removeSelected())
   }, [dispatch, option_groups]);
   const handleSaveItem = () => {
     // we get all the row props, insted we only want original
-    const item_groups = _.map(groupArray, (n) => n.original.id);
-    const item_options = _.map(optionArray, n => n.original.id)
+    const {option_groups, options} = splitOptionsAndGroups(map(groupArray, g => g.original))
     let _active
     if (active) {
       _active = 1
     }
     else _active = 0
     const values = formValues;
-    const finalItem = _.assign({}, values, { active: _active, options: item_options, option_groups: item_groups});
+    const finalItem = _.assign({}, values, { active: _active, options, option_groups});
     if (!isEmpty(nowItem)) {
       dispatch(updateItem(finalItem));
     } else {
@@ -352,7 +352,7 @@ export default function AddItem(props) {
             </Formik>
           </div>
         )}
-        {step1 && !step2 && (
+        {step1 &&  (
           <div className={classname(styles.tableContainer)}>
             <div className={classname(styles.tableFlex)}>
               <Table
@@ -367,16 +367,6 @@ export default function AddItem(props) {
             </div>
             <div className={classname(styles.between)}>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>
-                  <button
-                    onClick={() => {
-                      setStep2(true);
-                    }}
-                    className={classname(styles.ctaButton)}
-                  >
-                    Choose Options
-                  </button>
-                </div>
                 <div style={{ paddingTop: "5px" }}>
                   <button
                     onClick={() => setStep1(false)}
@@ -400,54 +390,6 @@ export default function AddItem(props) {
                   {!groupsSelected.length && (
                     <p>
                       <span style={{ color: "red" }}>*</span> Select alteast 1
-                      option group
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        {step2 && (
-          <div className={classname(styles.tableContainer)}>
-            <div className={classname(styles.tableFlex)}>
-              <Table
-                title={"Options"}
-                columns={columns}
-                data={options}
-                updateSelectItems={selectOptions}
-                withCheckBox={true}
-                noAction={true}
-                preSelected={optionsSelected}
-              />
-            </div>
-            <div className={classname(styles.between)}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>
-                  <button
-                    onClick={() => setStep2(false)}
-                    className={classname(styles.ctaButton)}
-                  >
-                    Back
-                  </button>
-                </div>
-              </div>
-              <div>
-                <button
-                  disabled={!groupsSelected.length}
-                  className={classname(styles.ctaButton)}
-                  onClick={() => {
-                    setStep1(false);
-                    setStep2(false);
-                  }}
-                >
-                  Add to Item
-                </button>
-                <div style={{ fontSize: "10px" }}>
-                  {!groupsSelected.length && (
-                    <p>
-                      <span style={{ color: "red" }}>*</span> Select alteast 1
-                      option
                     </p>
                   )}
                 </div>
@@ -464,14 +406,6 @@ export default function AddItem(props) {
               columns={columns}
               data={groupsSelected}
               updateCurrentRows={setGroupArray}
-            />
-          </div>
-          <div>Options</div>
-          <div>
-            <OrderTable
-              columns={columns}
-              data={optionsSelected}
-              updateCurrentRows={setOptionArray}
             />
           </div>
           <div

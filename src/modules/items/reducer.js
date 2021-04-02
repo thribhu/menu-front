@@ -59,7 +59,7 @@ export default function GroupReducer(state=initState, action){
 
         case Actions.LIST_OPTIONS_GROUPS:
             return state.set('loading', true)
-        case Actions.LIST_ITEMS_SUCCESS:
+        case Actions.LIST_OPTIONS_GROUPS_SUCCESS:
             return state.set('loading', false).set('options_groups', fromJS(payload))
         case Actions.LIST_OPTIONS_GROUPS_ERROR:
             return state.set('lodaing', false).set('error', fromJS(error) )

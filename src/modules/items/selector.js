@@ -1,6 +1,6 @@
 import {isImmutable} from 'immutable'
 import { createSelector } from 'reselect'
-
+import {orderBy} from 'lodash'
 const items = state => state.items
 
 export const loadingSelector = createSelector(
@@ -53,7 +53,7 @@ export const optionGroupsSelector = createSelector(
     data => {
         var a = data.get('options_groups')
         if (a.size){
-            return a.toJS()
+            return orderBy(a.toJS(), ['name'])
         }
         else return []
     }
