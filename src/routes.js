@@ -6,12 +6,13 @@ import ListItems from 'views/Items';
 import AddItem from 'views/Items/addItem';
 import Modifiers from 'views/Modifiers'
 import AddModifier from 'views/Modifiers/addModifier';
+import {FaObjectGroup, FaSitemap, FaPizzaSlice, FaDiceD6 } from 'react-icons/fa'
 export default function () {
     return [
         {
             path: "/options",
             name: "Options",
-            icon: '/assets/options.svg',
+            icon: (<div><FaSitemap/></div>),
             component: OptionsList,
             layout: "/pizza",
         },
@@ -25,7 +26,7 @@ export default function () {
         {
             path: '/modifiers',
             name: 'Modifiers',
-            icon: '/assets/modifier.svg',
+            icon: (<div><FaDiceD6/></div>),
             component: Modifiers,
             layout: "/pizza",
         },
@@ -39,7 +40,7 @@ export default function () {
         {
             path: '/items',
             name: 'Items',
-            icon: '/assets/menu.svg',
+            icon: (<div><FaPizzaSlice/></div>),
             component: ListItems,
             layout: "/pizza",
         },
@@ -53,7 +54,7 @@ export default function () {
         ,{
             path: '/groups',
             name: 'Groups',
-            icon: '/assets/groups.svg',
+            icon: (<div><FaObjectGroup/></div>),
             component: Groups,
             layout: "/pizza",
             children: [

@@ -158,4 +158,10 @@
           justify-content: center;
   font-size: 1rem;
 }
+
+.transparent {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+}
 /*# sourceMappingURL=Modifiers.module.css.map */

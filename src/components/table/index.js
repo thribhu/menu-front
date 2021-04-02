@@ -82,7 +82,6 @@ function GlobalFilter({
         style={{
           margin: '10px',
           width: '100%',
-          maxWidth: '50%',
           fontSize: "1rem",
           border: "solid 1px",
           padding: "10px",
@@ -124,8 +123,6 @@ function Table({
   preSelected,
   title,
 }) {
-  const [numberOfRows, setNumberOfRows] = React.useState(10);
-  const [pageSelect, handlePageSelect] = React.useState(0);
   const memo_columns = React.useMemo(() => {
     if (noAction) {
       _.remove(columns, { Header: "Actions" });
@@ -172,19 +169,12 @@ function Table({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page,
+    rows,
     prepareRow,
     state,
     visibleColumns,
-    nextPage,
     pageOptions,
-    pageCount,
-    previousPage,
-    canPreviousPage,
-    canNextPage,
-    setPageSize,
-    gotoPage,
-    state: { pageIndex, pageSize, selectedRowIds },
+    state: {selectedRowIds },
     selectedFlatRows,
     preGlobalFilteredRows,
     setGlobalFilter,
@@ -194,7 +184,7 @@ function Table({
       data: memo_data,
       defaultColumn, // Be sure to pass the defaultColumn option
       filterTypes,
-      initialState: { pageSize: 10, pageIndex: 0, selectedRowIds: selected },
+      initialState: { selectedRowIds: selected },
     },
     useFilters, // useFilters!
     useGlobalFilter,
@@ -225,11 +215,6 @@ function Table({
     }
   );
 
-  let pageSelectData = Array.apply(
-    null,
-    Array(pageOptions.length)
-  ).map(function () {});
-  let numberOfRowsData = [5, 10, 20, 25, 50, 100];
   React.useEffect(() => {
     updateSelectItems(
       map(selectedFlatRows, (d) => {
@@ -239,7 +224,7 @@ function Table({
   }, [updateSelectItems, selectedRowIds]);
   return (
     <div className={classnames(styles.ReactTable)}>
-      <div className={classnames(styles.tableTile)}>{title}</div>
+      {title && <div className={classnames(styles.tableTile)}>{title}</div>}
       <div>
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
@@ -282,7 +267,7 @@ function Table({
           {...getTableBodyProps()}
           className="rt-tbody"
         >
-          {page.map((row, i) => {
+          {rows.map((row, i) => {
             prepareRow(row);
 
             return (

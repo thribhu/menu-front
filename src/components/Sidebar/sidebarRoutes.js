@@ -4,6 +4,7 @@ import { useLocation, useHistory } from 'react-router-dom'
 import classname from 'classnames';
 import styles from './Sidebar.module.sass'
 import React from 'react'
+import {FaObjectGroup, FaSitemap, FaPizzaSlice, FaDiceD6 } from 'react-icons/fa'
 export default function SidebarRoutes(props) {
     const {activeRoute, setActive} = props
     const history = useHistory();
@@ -29,7 +30,7 @@ export default function SidebarRoutes(props) {
                     onClick={() => handleClick(route)}
                 >
                     <div className={classname(styles.avatar_container)}>
-                        <img src={route.icon} className={classname(styles.link_avatar)} />
+                        {route.icon}
                     </div>
                     <div className={classname(styles.link_text)}>
                         <p>
