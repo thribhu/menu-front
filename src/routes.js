@@ -6,7 +6,7 @@ import ListItems from 'views/Items';
 import AddItem from 'views/Items/addItem';
 import Modifiers from 'views/Modifiers'
 import AddModifier from 'views/Modifiers/addModifier';
-import {FaObjectGroup, FaSitemap, FaPizzaSlice, FaDiceD6 } from 'react-icons/fa'
+import { FaObjectGroup, FaSitemap, FaPizzaSlice, FaDiceD6 } from 'react-icons/fa'
 export default function () {
     return [
         {
