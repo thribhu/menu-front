@@ -14,17 +14,10 @@ function* listItemsSaga() {
     const response = yield call(listitems);
     const { status, data } = response;
     if (status === 200) {
-      if (isEmpty(data)) {
-        yield put({
-          type: Actions.LIST_ITEMS_SUCCESS,
-          payload: "No items in the database",
-        });
-      } else {
         yield put({
           type: Actions.LIST_ITEMS_SUCCESS,
           payload: data,
         });
-      }
     } else throw new Error("Unable to fetch modifiers");
   } catch (err) {
     console.log(err);

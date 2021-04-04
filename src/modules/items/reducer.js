@@ -1,5 +1,5 @@
 import {List, fromJS, Map} from 'immutable'
-import { isEmpty, startCase } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import * as Actions from './constants'
 
 const initState = fromJS({

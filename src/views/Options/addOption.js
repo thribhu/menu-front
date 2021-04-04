@@ -22,6 +22,7 @@ import {
   listSelector,
   loadingSelector as modLoad,
   errorSelector as modErr,
+  messageSelector as modifierMessageSelector
 } from "modules/modifiers/selectors";
 import { listModfiers } from "modules/modifiers/actions";
 import { useSelector, useDispatch } from "react-redux";
@@ -62,12 +63,10 @@ const columns = [
 export default function AddOption(props) {
   const dispatch = useDispatch();
   const modifiers = useSelector(listSelector);
+  const modifierMessage = useSelector(modifierMessageSelector)
   const mod_loading = useSelector(modLoad);
   const mod_error = useSelector(modErr);
   const nowOption = useSelector(selectedOptionsSelector);
-  if (isEmpty(modifiers)) {
-    dispatch(listModfiers());
-  }
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState(nowOption.modifiers || []);
   const [formValues, setForm] = React.useState();
@@ -93,6 +92,9 @@ export default function AddOption(props) {
     setNowArray([]);
   };
   React.useEffect(() => {
+    if(isEmpty(modifierMessage) && isEmpty(modifiers)) {
+      dispatch(listModfiers())
+    }
     return () => dispatch(removeSelected());
   }, [nowOption, dispatch]);
   return (

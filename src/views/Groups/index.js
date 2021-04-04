@@ -11,7 +11,7 @@ import { normalizeText } from "utils/normalize";
 import {listGroup, removeGroup, selectGroup} from 'modules/groups/actions'
 import { loadingSelector, errorSelector, listSelector, messageSelector } from 'modules/groups/selector'
 import {listOptions} from 'modules/options/actions'
-import {loadingSelector as optionLoading, optionsSelector, errorSelector as optionError} from 'modules/options/selector'
+import {loadingSelector as optionLoading, optionsSelector, errorSelector as optionError, messageSelector as optionsInfo} from 'modules/options/selector'
 import {useDispatch, useSelector} from 'react-redux'
 const groupColumns = [
   {
@@ -75,16 +75,21 @@ export default function GroupsTable() {
   const error = useSelector(errorSelector)
   const options_loading = useSelector(optionLoading)
   const option_error = useSelector(optionError)
+  const options_message = useSelector(optionsInfo)
   const [selected, setSelected] = React.useState([]);
   const [form, setForm] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [step1, setSetp1] = React.useState(false);
-  if(isEmpty(groups) && !message){
-    dispatch(listGroup())
-  }
-  if(isEmpty(options)){
-    dispatch(listOptions())
-  }
+  React.useEffect(() => {
+    if(isEmpty(message) && isEmpty(groups)) {
+      dispatch(listGroup())
+    }
+  }, [dispatch, groups])
+  React.useEffect(() => {
+    if(isEmpty(optionsInfo) && isEmpty(options)) {
+      dispatch(listOptions())
+    }
+  }, [dispatch, groups])
   const customStyles = {
     content: {
       margin: "auto",
