@@ -1,6 +1,6 @@
 import {fromJS, List, Map} from 'immutable';
 import * as Actions from './constants';
-
+import {isEmpty} from 'lodash'
 const initState = fromJS({
     loading: false,
     error: '',

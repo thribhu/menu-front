@@ -120,7 +120,7 @@ export default function Options(props) {
           updateSelectItems={setSelected}
         />
 	 {
-		 isEmpty(message) && 
+		 !isEmpty(message) && 
 		 <div className="UcenterWithMargin IamInfo">
 		 	* Add Options to view in this table
 		 </div>
