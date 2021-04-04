@@ -1,11 +1,12 @@
 import {List, fromJS, Map} from 'immutable'
 import * as Actions from './constants'
-
+import {isEmpty} from 'lodash'
 const initState = fromJS({
     loading:  false,
     error: '',
     modifiers: List(),
     selected: Map(),
+    message: ''
 })
 
 export default function modifierReducer(state=initState, action){
@@ -23,7 +24,12 @@ export default function modifierReducer(state=initState, action){
         case Actions.LIST_MODIFIERS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.LIST_MODIFIERS_SUCCESS:
-            return state.set('loading', false).set('error', '').set('modifiers', fromJS(payload))
+            {
+		    if (isEmpty(payload)){
+			    return state.set('loading', false).set('error', '').set('message', 'Add Modifiers to view in table')
+		    }
+		    else return state.set('loading', false).set('error', '').set('modifiers', fromJS(payload)).set('message', '')
+	    }
         
         case Actions.ADD_MODIFIERS:
             return state.set('loading', true)

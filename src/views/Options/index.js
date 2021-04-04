@@ -10,15 +10,19 @@ import AddOption from './addOption'
 import Modal from "react-modal";
 import {useDispatch, useSelector} from 'react-redux'
 import { listOptions,removeOption, setSelected as selectOption} from 'modules/options/actions'
-import {loadingSelector, errorSelector, optionsSelector } from 'modules/options/selector'
+import {loadingSelector, errorSelector, optionsSelector, messageSelector } from 'modules/options/selector'
 export default function Options(props) {
   const dispatch = useDispatch()
   const options = useSelector(optionsSelector)
   const loading = useSelector(loadingSelector)
   const option_error = useSelector(errorSelector)
-  if(isEmpty(options)){
-    dispatch(listOptions())
-  }
+  const message  = useSelector(messageSelector)
+  React.useEffect(() => {
+	  if(isEmpty(message) && isEmpty(options)) {
+	  dispatch(listOptions())
+    }
+    },[dispatch, options] )
+
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState([])
@@ -115,6 +119,12 @@ export default function Options(props) {
           data={options}
           updateSelectItems={setSelected}
         />
+	 {
+		 isEmpty(message) && 
+		 <div className="UcenterWithMargin IamInfo">
+		 	* Add Options to view in this table
+		 </div>
+	 }
       </div>
       <div
         style={{ display: "flex", justifyContent: "center", margin: "20px" }}

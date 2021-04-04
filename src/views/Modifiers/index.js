@@ -4,7 +4,7 @@ import styles from "./Modifiers.module.sass";
 import { useHistory } from "react-router-dom";
 import Table from "components/table";
 import { normalizeText as normalize } from "utils/normalize";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
 import Modal from "react-modal";
 import AddModifier from "./addModifier";
@@ -13,15 +13,21 @@ import { listModfiers, removeModifier, setSelected as selectModifier } from "mod
 import {
   loadingSelector,
   listSelector,
+  messageSelector
 } from "modules/modifiers/selectors";
 import { ClockLoader } from "react-spinners";
 export default function Modifiers() {
   const dispatch = useDispatch();
   const loading = useSelector(loadingSelector);
   const modifiers = useSelector(listSelector);
-  if (_.isEmpty(modifiers)) {
-    dispatch(listModfiers());
-  }
+  const message = useSelector(messageSelector)
+  React.useEffect(
+    () => {
+      if(isEmpty(message) && isEmpty(modifiers)) {
+        dispatch(listModfiers())
+      }
+    }
+  , [dispatch, modifiers])
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState();
   const [step1, setStep1] = React.useState(false);
@@ -151,6 +157,12 @@ export default function Modifiers() {
               data={modifiers}
               updateSelectItems={setSelected}
             />
+        {
+          !isEmpty(message) && 
+          <div className="UcenterWithMargin IamInfo">
+           * Add Modifiers to view in this table 
+          </div>
+        }
           </div>
           <div
             style={{

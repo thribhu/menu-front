@@ -42,9 +42,16 @@ export default function Items() {
     const [open, setOpen] = React.useState(false)
     const [newItem, setItem] = React.useState()
     const history = useHistory()
+    React.useEffect(() => {
+	    if(isEmpty(itemInfo) && isEmpty(items)) {
+		    dispatch(listItems())
+	    }
+    }, [dispatch, items])
+	/*
     if(isEmpty(items)) {
         dispatch(listItems())
     }
+    */
     const handleEdit = item => {
         delete item.actions
         dispatch(selectItem(item))
@@ -129,6 +136,12 @@ export default function Items() {
             </Modal>
             <div>
                 <Table columns={columns} data={items} updateSelectItems={setSelected} />
+        {
+          isEmpty(itemInfo) && 
+          <div className="UcenterWithMargin IamInfo">
+           * Add Items to view in this table 
+          </div>
+        }
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', margin: '20px' }}>
                 <button onClick={() => setOpen(true)} className={classname(styles.ctaButton)}>

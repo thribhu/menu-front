@@ -40,3 +40,8 @@ export const selectedSelector = createSelector(
         return []
     }
 )
+
+export const messageSelector = createSelector(
+    modifiers,
+    data => data.get('message')
+)

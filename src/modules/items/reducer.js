@@ -1,5 +1,5 @@
 import {List, fromJS, Map} from 'immutable'
-import { startCase } from 'lodash-es'
+import { isEmpty, startCase } from 'lodash-es'
 import * as Actions from './constants'
 
 const initState = fromJS({
@@ -19,8 +19,8 @@ export default function GroupReducer(state=initState, action){
         case Actions.LIST_ITEMS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.LIST_ITEMS_SUCCESS:
-            if (typeof payload === "string") {
-                return state.set('loading', false).set('error', '').set('items', initState.get('items')).set('message'), payload
+            if (isEmpty(payload)) {
+                return state.set('loading', false).set('error', '').set('items', initState.get('items')).set('message', 'Add Items to view in table')
             }
             return state.set('loading', false).set('error', '').set('items', fromJS(payload)).set('message', '')
         

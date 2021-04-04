@@ -63,3 +63,8 @@ export const errorSelector = createSelector(
          else return []
      }
  )
+
+export const messageSelector = createSelector(
+	options,
+	data => data.get('message')
+)

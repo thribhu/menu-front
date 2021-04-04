@@ -8,7 +8,8 @@ const initState = fromJS({
     selected: List(),
     optionToEdit: '',
     sortedOptions: List(),
-    nowOption: Map()
+    nowOption: Map(),
+    message: ''
 })
 
 export default function optionReducer(state=initState, action) {
@@ -41,7 +42,12 @@ export default function optionReducer(state=initState, action) {
         case Actions.LIST_OPTIONS:
             return state.set('loading', true).set('error', initState.get('error'));
         case Actions.LIST_OPTIONS_SUCCESS:
-            return state.set('loading', false).set('options', fromJS(payload))
+             {
+		     if(isEmpty(payload)) {
+			     return state.set('loading', false).set('error', '').set('message', 'Add options to view')
+		     }
+		     else return state.set('loading', false).set('options', fromJS(payload)).set('message', '')
+	     }
         case Actions.LIST_OPTIONS_ERROR:
             return state.set('loading', false).set('error', fromJS(error))
         // set and remove option
