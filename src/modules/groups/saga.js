@@ -16,7 +16,7 @@ function* listGroupSaga(){
     if(status === 200) {
         yield put({
             type: Actions.LIST_GROUPS_SUCCESS,
-            payload: isEmpty(data) ? "Please add option groups" : data
+            payload:data 
         })
     }
     else throw new Error("Unable to fetch modifiers")

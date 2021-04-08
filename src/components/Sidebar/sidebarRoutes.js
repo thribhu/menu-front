@@ -9,7 +9,7 @@ export default function SidebarRoutes(props) {
     const {activeRoute, setActive} = props
     const history = useHistory();
     const location = useLocation()
-    const sortedRoutes = sortBy(routes(), ["name"]);
+    const sortedRoutes = sortBy(routes(), ["num"]);
     const handleClick = (route) => {
         if (!route) return null;
         setActive(route.path)

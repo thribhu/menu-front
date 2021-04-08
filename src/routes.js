@@ -15,6 +15,7 @@ export default function () {
             icon: (<div><FaSitemap/></div>),
             component: OptionsList,
             layout: "/pizza",
+	    num: 2
         },
         {
             path: "/addOption",
@@ -29,6 +30,7 @@ export default function () {
             icon: (<div><FaDiceD6/></div>),
             component: Modifiers,
             layout: "/pizza",
+	    num: 1
         },
         {
             path: "/addModifier",
@@ -43,6 +45,7 @@ export default function () {
             icon: (<div><FaPizzaSlice/></div>),
             component: ListItems,
             layout: "/pizza",
+	    num: 4
         },
         {
             path: "/addItem",
@@ -57,8 +60,7 @@ export default function () {
             icon: (<div><FaObjectGroup/></div>),
             component: Groups,
             layout: "/pizza",
-            children: [
-            ]
+	    num: 3
         },
         {
             path: "/addgroup",

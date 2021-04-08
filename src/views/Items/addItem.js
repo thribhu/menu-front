@@ -367,7 +367,7 @@ export default function AddItem(props) {
             </div>
             <div className={classname(styles.between)}>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ paddingTop: "5px" }}>
+                <div>
                   <button
                     onClick={() => setStep1(false)}
                     className={classname(styles.ctaButton)}

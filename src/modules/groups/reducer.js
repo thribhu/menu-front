@@ -1,5 +1,6 @@
 import {List, fromJS, Map} from 'immutable'
 import * as Actions from './constants'
+import {isEmpty} from 'lodash'
 
 const initState = fromJS({
     loading:  false,
@@ -19,8 +20,8 @@ export default function GroupReducer(state=initState, action){
             return state.set('loading', false).set('error', fromJS(error))
         case Actions.LIST_GROUPS_SUCCESS:
             // add this logic to every module
-            if (typeof payload === "string") {
-                return state.set('lodaing', false).set('error', '').set('message', payload).set('groups', [])
+            if (isEmpty(payload)) {
+                return state.set('loading', false).set('error', '').set('message', 'Add Groups to view in the table')
             }
             return state.set('loading', false).set('error', '').set('groups', fromJS(payload)).set('message', '')
         
