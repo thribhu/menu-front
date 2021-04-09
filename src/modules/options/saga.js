@@ -35,10 +35,11 @@ function* addOptionSaga({payload}){
             type: Actions.LIST_OPTIONS
         }) 
         }
-        throw new Error("Unable to add option")
+        else throw new Error("Unable to add option")
     }
     catch (err){
         console.log(err)
+        alert(err.message)
         yield put({
             type: Actions.ADD_OPTION_ERROR,
             error: err.message

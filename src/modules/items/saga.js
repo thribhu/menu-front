@@ -43,6 +43,7 @@ function* addItemsSaga({ payload }) {
     else throw new Error("Unable to add items");
   } catch (err) {
     console.log(err);
+    alert(err.message)
     yield put({
       type: Actions.ADD_ITEM_ERROR,
       error: err.message,

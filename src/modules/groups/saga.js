@@ -46,6 +46,7 @@ function* addGroupSaga({payload}){
     }
     catch (err){
         console.log(err)
+        alert(err.message)
         yield put({
             type: Actions.ADD_GROUP_ERROR,
             error: err.message

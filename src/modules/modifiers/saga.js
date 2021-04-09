@@ -46,6 +46,7 @@ function* addModifierSaga({payload}){
     }
     catch (err){
         console.log(err)
+        alert(err.message)
         yield put({
             type: Actions.LIST_MODIFIERS
         }) 
