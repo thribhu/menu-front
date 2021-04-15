@@ -84,6 +84,7 @@ function GlobalFilter({
           width: '100%',
           fontSize: "1rem",
           border: "solid 1px",
+          borderRadius: '5px',
           padding: "10px",
         }}
       />
@@ -173,7 +174,6 @@ function Table({
     prepareRow,
     state,
     visibleColumns,
-    pageOptions,
     state: {selectedRowIds },
     selectedFlatRows,
     preGlobalFilteredRows,
@@ -239,28 +239,30 @@ function Table({
               {headerGroup.headers.map((column, key) => (
                 <TableCell
                   {...column.getHeaderProps(column.getSortByToggleProps())}
-                  className={classnames("rt-th rt-resizable-header", {
-                    "-cursor-pointer": headerGroup.headers.length - 1 !== key,
-                    "_sort-asc": column.isSorted && !column.isSortedDesc,
-                    "_sort-desc": column.isSorted && column.isSortedDesc,
-                  })}
                 >
                   <div
-                    className="rt-resizable-header-content"
+                    className="rt-resizable-header-content table-header"
                     style={{ textAlign: "center" }}
                   >
                     {column.render("Header")}
+                    <span>
+                      {
+                        column.isSorted ? column.isSortedDesc ? ' 🔽':' 🔼': ''
+                      }
+                    </span>
                   </div>
                 </TableCell>
               ))}
             </TableRow>
           ))}
+          {/*
           <TableRow>
             <TableCell
               colSpan={visibleColumns.length}
               style={{ textAlign: "left" }}
             ></TableCell>
           </TableRow>
+          */}
         </TableHead>
         <TableBody
           // style={{ textAlign: "center" }}

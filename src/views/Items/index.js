@@ -120,7 +120,7 @@ export default function Items() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
             <button
-              className={classname(styles.transparent)}
+              className="transparentButton"
               onClick={() => handleEdit(item)}
             >
               <FaEdit />
@@ -128,7 +128,7 @@ export default function Items() {
           </div>
           <div>
             <button
-              className={classname(styles.transparent)}
+              className="transparentButton"
               onClick={() => handleDelete(item)}
             >
               <FaTrash />
@@ -146,7 +146,7 @@ export default function Items() {
             <button
               onClick={() => setOpen(false)}
               style={{ cursor: "pointer" }}
-              className={classname(styles.transparent)}
+              className="transparentButton"
             >
               <FaWindowClose />
             </button>

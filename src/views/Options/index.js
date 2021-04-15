@@ -75,12 +75,12 @@ export default function Options(props) {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(option)}>
+            <button onClick={() => handleEdit(option)} className="transparentButton">
               <FaEdit />
             </button>
           </div>
           <div>
-            <button onClick={() => handleRemove(option)}>
+            <button onClick={() => handleRemove(option)} className="transparentButton">
               <FaTrash />
             </button>
           </div>
@@ -110,7 +110,7 @@ export default function Options(props) {
             <button
               onClick={() => setOpen(false)}
               style={{ cursor: "pointer" }}
-              className={classname(styles.transparent)}
+              className="transparentButton"
             >
               <FaWindowClose />
             </button>

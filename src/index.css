@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@700&display=swap');
 body {
   margin: 0;
   font-family: 'Poppins';
@@ -44,4 +45,17 @@ input[type=textare] {
   height: 100vh;
   width: 100%;
   color: #6692b9;
+}
+
+.table-header {
+  color: #4c4c9d;
+  font-size: 1.2rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+.transparentButton {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
 }

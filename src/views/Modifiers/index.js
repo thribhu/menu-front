@@ -91,7 +91,7 @@ export default function Modifiers() {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }} key={i}>
           <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(modifier)}>
+            <button onClick={() => handleEdit(modifier)} className="transparentButton">
               <FaEdit />
             </button>
           </div>
@@ -100,7 +100,7 @@ export default function Modifiers() {
               <FaTrash onClick={() =>{
                  handleDelete(modifier)
               }
-                } 
+                } className="transparentButton" 
                  />
             </button>
           </div>

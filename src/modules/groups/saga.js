@@ -42,7 +42,7 @@ function* addGroupSaga({payload}){
             type: Actions.LIST_GROUPS
         }) 
         }
-        throw new Error("Unable to add modifiers")
+        else throw new Error("Unable to add modifiers")
     }
     catch (err){
         console.log(err)
@@ -67,7 +67,7 @@ function* updateGroupSaga({payload}){
             type: Actions.LIST_GROUPS
         })
         }
-        throw new Error("Unable to update modifier")
+        else throw new Error("Unable to update modifier")
     }
     catch(err){
         console.log(err)
@@ -96,7 +96,7 @@ function* detailGroupSaga({payload}){
                 payload: data
             })
         }
-        throw new Error("Unable to fetch group")
+        else throw new Error("Unable to fetch group")
     }
     catch(err){
         console.log(err)
