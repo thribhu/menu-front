@@ -42,10 +42,7 @@ const customStyles = {
 export default function Items() {
   const dispatch = useDispatch();
   const items = useSelector(listSelector);
-  const groups = useSelector(groupsSelector);
-  const options = useSelector(optionsSelector);
   const loading = useSelector(loadingSelector);
-  const error = useSelector(errorSelector);
   const itemInfo = useSelector(itemInfoSelector);
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
@@ -56,11 +53,6 @@ export default function Items() {
       dispatch(listItems());
     }
   }, [dispatch, items]);
-  /*
-    if(isEmpty(items)) {
-        dispatch(listItems())
-    }
-    */
   const handleEdit = (item) => {
     delete item.actions;
     dispatch(selectItem(item));

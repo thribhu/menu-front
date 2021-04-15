@@ -59,3 +59,12 @@ input[type=textare] {
   font-size: 1.2rem;
   cursor: pointer;
 }
+.flex-around{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.addButton {
+  background-color: #3e904c !important;
+}

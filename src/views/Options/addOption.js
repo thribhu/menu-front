@@ -15,14 +15,13 @@ import {
 } from "modules/options/actions";
 import {
   loadingSelector,
-  errorSelector,
   selectedOptionsSelector,
 } from "modules/options/selector";
 import {
   listSelector,
   loadingSelector as modLoad,
   errorSelector as modErr,
-  messageSelector as modifierMessageSelector
+  messageSelector as modifierMessageSelector,
 } from "modules/modifiers/selectors";
 import { listModfiers } from "modules/modifiers/actions";
 import { useSelector, useDispatch } from "react-redux";
@@ -63,9 +62,8 @@ const columns = [
 export default function AddOption(props) {
   const dispatch = useDispatch();
   const modifiers = useSelector(listSelector);
-  const modifierMessage = useSelector(modifierMessageSelector)
+  const modifierMessage = useSelector(modifierMessageSelector);
   const mod_loading = useSelector(modLoad);
-  const mod_error = useSelector(modErr);
   const nowOption = useSelector(selectedOptionsSelector);
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState(nowOption.modifiers || []);
@@ -82,7 +80,7 @@ export default function AddOption(props) {
       modifiers: nowArray.map((_) => _.original.id),
     });
     if (!isEmpty(nowOption)) {
-      delete nowOption.modifiers
+      delete nowOption.modifiers;
       dispatch(updateOption(option));
     } else {
       dispatch(addOption(option));
@@ -92,8 +90,8 @@ export default function AddOption(props) {
     setNowArray([]);
   };
   React.useEffect(() => {
-    if(isEmpty(modifierMessage) && isEmpty(modifiers)) {
-      dispatch(listModfiers())
+    if (isEmpty(modifierMessage) && isEmpty(modifiers)) {
+      dispatch(listModfiers());
     }
     return () => dispatch(removeSelected());
   }, [nowOption, dispatch]);
@@ -108,7 +106,11 @@ export default function AddOption(props) {
           </div>
           <Formik
             initialValues={
-              !isEmpty(nowOption) ? !isEmpty(formValues) ? formValues : nowOption : merge(initialValues, formValues)
+              !isEmpty(nowOption)
+                ? !isEmpty(formValues)
+                  ? formValues
+                  : nowOption
+                : merge(initialValues, formValues)
             }
             validationSchema={validationSchema}
             onSubmit={(values) => {
@@ -242,16 +244,23 @@ export default function AddOption(props) {
                       className="field-error"
                     />
                   </div>
-                  <div className={classname(styles.saveButtonContainer)}>
-                    <button
-                      type="submit"
-                      disabled={!isValid}
-                      className={classname(styles.ctaButton)}
-                    >
-                      {!isEmpty(nowOption)
-                        ? "Edit Modifiers"
-                        : "Choose Modifers"}
-                    </button>
+                  <div className="flex-around">
+                    <div className={classname(styles.saveButtonContainer)}>
+                      <button
+                        type="button"
+                        disabled={!isValid}
+                        className={classname(styles.ctaButton)}
+                      >
+                        {!isEmpty(selected)
+                          ? "Edit Modifiers"
+                          : "Select Modifers"}
+                      </button>
+                    </div>
+                    <div className={classname(styles.saveButtonContainer)}>
+                      <button className={classname(styles.ctaButton, "addButton")} type="submit">
+                        {!isEmpty(nowOption) ? "Save Option" : "Add Option"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </Form>
