@@ -4,7 +4,7 @@ import styles from './Modifiers.module.sass';
 import { Formik, ErrorMessage, Field, Form, FieldArray} from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import { isEmpty } from 'lodash';
+import { isEmpty, reverse, merge } from 'lodash';
 import {useSelector, useDispatch} from 'react-redux'
 import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
 import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
@@ -37,13 +37,19 @@ export default function AddModifier(props) {
         }
     }, [nowModifier, dispatch])
     const handleSubmit = (values) => {
-        let modifier = values
+        let {name, options} = values
+        const modifier = {name, options: reverse(options)}
         if(!isEmpty(nowModifier)){
-            dispatch(updateModifier(modifier))
+            dispatch(updateModifier(merge(nowModifier, modifier)))
         }
         else {
             dispatch(addModifier(modifier))
         }
+    }
+    const reverseOptionsAndReturn = data => {
+        const {name, options} = data
+        const modifier = {name, options: reverse(options)}
+        return modifier
     }
     return (
         <div className={classname(styles.container)}>
@@ -51,7 +57,7 @@ export default function AddModifier(props) {
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={!isEmpty(nowModifier) ? nowModifier : initialValues}
+                initialValues={!isEmpty(nowModifier) ? reverseOptionsAndReturn(nowModifier): initialValues}
                 validationSchema = {validationSchema}
                 onSubmit={(values) => {
                     setForm(values)
