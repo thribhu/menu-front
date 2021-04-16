@@ -1,5 +1,7 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import * as Actions from './constants'
+import {createBrowserHistory} from 'history'
+
 import {
     listmodifiers,
     addModifiers,
@@ -8,6 +10,7 @@ import {
     updateModifier
 } from './service'
 
+const history = createBrowserHistory()
 function* listModifierSaga(){
     try {
     const response = yield call(listmodifiers)
@@ -70,6 +73,7 @@ function* updateModifierSaga({payload}){
         yield put({
             type: Actions.LIST_MODIFIERS
         })
+        history.go(-1)
         }
         else{
             throw new Error("Unable to update modifier")

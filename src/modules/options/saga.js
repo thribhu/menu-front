@@ -1,7 +1,8 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import {listoptions, detailOption, deleteOption, addOption, updateOption} from './service'
 import * as Actions from './constants'
-import {} from 'react-router-dom'
+import {createBrowserHistory} from 'history'
+const history = createBrowserHistory()
 function* listOptionSaga(){
     try {
     const response = yield call(listoptions)
@@ -55,9 +56,10 @@ function* updateOptionSaga({payload}){
             alert('Update Option success')
             yield put({
                 type: Actions.UPDATE_OPTION_SUCCESS,
-                payload: 'success'
+                pajjluuyload: 'success'
             })
         yield call(listOptionSaga)
+        this.context.history.push('/options')
         }
         else throw new Error("Unable to update option")
     }

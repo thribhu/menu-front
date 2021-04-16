@@ -8,7 +8,8 @@ import {
   detailItems,
   listOptionGroupSerive,
 } from "./service";
-import { isEmpty } from "lodash";
+import {createBrowserHistory} from 'history'
+const history = createBrowserHistory()
 function* listItemsSaga() {
   try {
     const response = yield call(listitems);
@@ -64,6 +65,7 @@ function* updateItemsSaga({ payload }) {
       yield put({
         type: Actions.LIST_ITEMS,
       });
+      history.go(-1)
     }
     else throw new Error("Unable to update items");
   } catch (err) {

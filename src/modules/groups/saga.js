@@ -8,7 +8,8 @@ import {
     updateGroup,
     detailGroup
 } from './service'
-
+import {createBrowserHistory} from 'history'
+const history = createBrowserHistory()
 function* listGroupSaga(){
     try {
     const response = yield call(listGroups)
@@ -66,6 +67,7 @@ function* updateGroupSaga({payload}){
         yield put({
             type: Actions.LIST_GROUPS
         })
+        history.go(-1)
         }
         else throw new Error("Unable to update modifier")
     }
