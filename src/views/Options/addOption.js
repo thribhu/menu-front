@@ -313,7 +313,7 @@ export default function AddOption(props) {
             <div>
               <button
                 onClick={() => history.push("/addModifier")}
-                className={classname(styles.ctaButton)}
+                className="cta-button add-button"
               >
                 Add Modifier
               </button>
@@ -321,7 +321,7 @@ export default function AddOption(props) {
             <div>
               <button
                 disabled={!selected.length}
-                className={classname(styles.ctaButton)}
+                className={"cta-button"}
                 onClick={() => setStep1(false)}
               >
                 Back

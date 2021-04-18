@@ -370,7 +370,7 @@ export default function AddItem(props) {
                     <div className={classname(styles.saveButtonContainer)}>
                       <button
                         type="submit"
-                        className="cta-button"
+                        className="cta-button add-button"
                         onClick={() => setFieldValue('draft', true, false)}
                       >
                         {!isEmpty(nowItem)? "Edit Options" : "Select Options"}
@@ -379,7 +379,7 @@ export default function AddItem(props) {
                     <div className={classname(styles.saveButtonContainer)}>
                       <button
                         type="submit"
-                        className="cta-button add-button"
+                        className="cta-button"
                         onClick={() => setFieldValue('draft', false, false)}
                       >
                         {!isEmpty(nowItem) ? "Save Item" : "Add Item"}

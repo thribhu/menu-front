@@ -350,7 +350,7 @@ export default function AddGroup(props) {
                 <div>
                   <button
                     onClick={() => history.push("/addOption")}
-                    className={"cta-button"}
+                    className={"cta-button add-button"}
                   >
                     Add Option
                   </button>
