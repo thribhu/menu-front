@@ -41,6 +41,7 @@ const columns = [
   },
 ];
 const initialValues = {
+  draft: false,
   name: "",
   description: "",
   price: 2,
@@ -85,10 +86,11 @@ export default function AddGroup(props) {
   if (isEmpty(options)) {
     dispatch(listOptions());
   }
-  const handleSaveItem = () => {
-    const group = _.assign({}, formValues, {
+  const handleSaveItem = (values) => {
+    const group = _.assign({}, values, {
       options: nowArray.map((i) => i.original.id),
     });
+    delete group.draft
     if (!isEmpty(nowGroup)) {
       dispatch(updateGroup(group));
     } else {
@@ -102,7 +104,10 @@ export default function AddGroup(props) {
     }
   };
   React.useEffect(() => {
-    return () => dispatch(removeSelected());
+    return () => {
+      dispatch(removeSelected());
+      setSelected([])
+    }
   }, [nowGroup]);
   return (
     <div>
@@ -131,12 +136,16 @@ export default function AddGroup(props) {
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                   setForm(values);
-                  setStep1(true);
-                  setShowOrder(true);
+                  if(values.draft) {
+                    setStep1(true);
+                  }
+                  else {
+                    handleSaveItem(values)
+                  }
                 }}
                 enableReinitialize
               >
-                {({ values }) => (
+                {({ values, isValid, setFieldValue }) => (
                   <Form>
                     <div>
                       <div className={classname(styles.formControl)}>
@@ -284,13 +293,39 @@ export default function AddGroup(props) {
                           className="field-error"
                         />
                       </div>
-                      <div className={classname(styles.saveButtonContainer)}>
-                        <button
-                          type="submit"
-                          className={classname(styles.ctaButton)}
-                        >
-                          Choose Options
-                        </button>
+                      {selected.length && !step1 ? (
+                        <div style={{ flex: 1 }}>
+                          <div>
+                            <OrderTable
+                              columns={columns}
+                              data={selected}
+                              updateCurrentRows={setNowArray}
+                            />
+                          </div>
+                        </div>
+                      ) : null}
+                      <div className="flex-around">
+                        <div className={classname(styles.saveButtonContainer)}>
+                          <button
+                            type="submit"
+                            disabled={!isValid}
+                            className="cta-button"
+                            onClick={() => setFieldValue('draft', true, false)}
+                          >
+                            {!isEmpty(selected)
+                              ? "Edit Options"
+                              : "Select Options"}
+                          </button>
+                        </div>
+                        <div className={classname(styles.saveButtonContainer)}>
+                          <button
+                            className={classname("cta-button add-button")}
+                            type="submit"
+                            onClick={() => setFieldValue('draft', false, false)}
+                          >
+                            {!isEmpty(nowGroup) ? "Save Group" : "Add Group"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </Form>
@@ -311,32 +346,22 @@ export default function AddGroup(props) {
                   preSelected={selected}
                 />
               </div>
-              <div>
-                <div>
-                  <button
-                    className={classname(styles.button200)}
-                    onClick={() => history.push("/addOption")}
-                  >
-                    Add Option
-                  </button>
-                </div>
-              </div>
               <div className={classname(styles.between)}>
                 <div>
                   <button
-                    onClick={() => setStep1(false)}
-                    className={classname(styles.ctaButton)}
+                    onClick={() => history.push("/addOption")}
+                    className={"cta-button add-button"}
                   >
-                    Back
+                    Add Option
                   </button>
                 </div>
                 <div>
                   <button
                     disabled={!selected.length}
-                    className={classname(styles.ctaButton)}
+                    className={"cta-button"}
                     onClick={() => (selected.length ? setStep1(false) : null)}
                   >
-                    Save
+                    Back
                   </button>
                   <div style={{ fontSize: "10px" }}>
                     {!selected.length && (
@@ -352,33 +377,6 @@ export default function AddGroup(props) {
           )}
         </div>
       )}
-      {selected.length && !step1 && showOrder ? (
-        <div style={{ flex: 1 }}>
-          <div>
-            <OrderTable
-              columns={columns}
-              data={selected}
-              updateCurrentRows={setNowArray}
-            />
-          </div>
-          <div
-            style={{
-              margin: "10px auto",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              className={styles.ctaButton}
-              onClick={() => {
-                handleSaveItem();
-              }}
-            >
-              Save Group
-            </button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

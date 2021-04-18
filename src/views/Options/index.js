@@ -17,7 +17,6 @@ export default function Options(props) {
   const loading = useSelector(loadingSelector)
   const option_error = useSelector(errorSelector)
   const message  = useSelector(messageSelector)
-  const nowOption = useSelector(nowOptionSelector)
   React.useEffect(() => {
 	  if(isEmpty(message) && isEmpty(options)) {
 	  dispatch(listOptions())
@@ -27,15 +26,10 @@ export default function Options(props) {
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState([])
   const history = useHistory()
-  React.useEffect(() => {
-    if(!isEmpty(nowOption)){
-      setOpen(true)
-    }
-  }, [nowOption])
   const handleEdit = option => {
     delete option.actions
     dispatch(selectOption(option))
-    //history.push("/addOption")
+    history.push("/addOption")
   }
   const handleRemove = option => {
     const confirm = window.confirm(`You are about to remove Option. This is permanant`)
@@ -75,12 +69,12 @@ export default function Options(props) {
       actions: (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(option)}>
+            <button onClick={() => handleEdit(option)} className="transparentButton">
               <FaEdit />
             </button>
           </div>
           <div>
-            <button onClick={() => handleRemove(option)}>
+            <button onClick={() => handleRemove(option)} className="transparentButton">
               <FaTrash />
             </button>
           </div>
@@ -110,7 +104,7 @@ export default function Options(props) {
             <button
               onClick={() => setOpen(false)}
               style={{ cursor: "pointer" }}
-              className={classname(styles.transparent)}
+              className="transparentButton"
             >
               <FaWindowClose />
             </button>
@@ -136,7 +130,7 @@ export default function Options(props) {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Option
         </button>

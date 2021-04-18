@@ -120,12 +120,12 @@ export default function GroupsTable() {
       actions: (
         <div style={{ display: "flex" }} key={i}>
           <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(option)}>
+            <button onClick={() => handleEdit(option)} className="transparentButton">
               <FaEdit />
             </button>
           </div>
           <div>
-            <button onClick={() => handleRemove(option)}>
+            <button onClick={() => handleRemove(option)} className="transparentButton">
               <FaTrash />
             </button>
           </div>
@@ -209,7 +209,7 @@ export default function GroupsTable() {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Group
         </button>

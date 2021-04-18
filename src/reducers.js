@@ -7,7 +7,7 @@ const rootReducer = combineReducers({
     options: optionReducer,
     modifiers: modifierReducer,
     items: itemReducer,
-    groups: groupReducer
+    groups: groupReducer,
 })
 
 export default rootReducer

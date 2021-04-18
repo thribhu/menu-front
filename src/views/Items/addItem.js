@@ -11,8 +11,13 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { listGroup } from "modules/groups/actions";
 import { listOptions } from "modules/options/actions";
-import { addItem, updateItem, removeSelected, getListOptionGroups } from "modules/items/actions";
-import {splitOptionsAndGroups} from './utils'
+import {
+  addItem,
+  updateItem,
+  removeSelected,
+  getListOptionGroups,
+} from "modules/items/actions";
+import { splitOptionsAndGroups } from "./utils";
 import {
   loadingSelector as group_loading,
   listSelector as groupsSelector,
@@ -22,10 +27,15 @@ import {
   loadingSelector as options_loading,
   optionsSelector,
 } from "modules/options/selector";
-import { selectedSelector, loadingSelector, optionGroupsSelector } from "modules/items/selector";
+import {
+  selectedSelector,
+  loadingSelector,
+  optionGroupsSelector,
+} from "modules/items/selector";
 import { FaRegObjectGroup } from "react-icons/fa";
 import OrderTable from "components/orderTable";
 const initialValues = {
+  draft: false,
   name: "",
   description: "",
   image_url: "",
@@ -58,7 +68,7 @@ const columns = [
   },
   {
     Header: "Price",
-    accessor:  "price",
+    accessor: "price",
   },
   {
     Header: "Min",
@@ -78,56 +88,59 @@ const columns = [
   },
 ];
 const stichOptionsAndGroups = (list) => {
-  let o = list.options 
-  let g = list.option_groups 
-  let res = o.concat(g)
-  return res
-}
+  let o = list.options;
+  let g = list.option_groups;
+  let res = o.concat(g);
+  return res;
+};
 export default function AddItem(props) {
   const dispatch = useDispatch();
-  const history = useHistory();
-  const groups = useSelector(groupsSelector);
-  const options = useSelector(optionsSelector);
   const nowItem = useSelector(selectedSelector);
-  let option_groups = useSelector(optionGroupsSelector) 
+  let option_groups = useSelector(optionGroupsSelector);
   const loading = useSelector(loadingSelector);
-  const groupLoading = useSelector(group_loading);
-  const optionLoading = useSelector(options_loading);
-  const groupInfo = useSelector(messageSelector);
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
-  const [groupsSelected, selectGroups] = React.useState(!isEmpty(nowItem) ? stichOptionsAndGroups(nowItem) : []);
+  const [groupsSelected, selectGroups] = React.useState(
+    !isEmpty(nowItem) ? stichOptionsAndGroups(nowItem) : []
+  );
   const [formValues, setForm] = React.useState();
   const [groupArray, setGroupArray] = React.useState();
-  const [optionArray, setOptionArray] = React.useState()
   const [showOrder, setShow] = React.useState(false);
 
   //let tableData = groups.concat(options)
   React.useEffect(() => {
-    if(isEmpty(option_groups)) {
-      dispatch(getListOptionGroups())
+    if (isEmpty(option_groups)) {
+      dispatch(getListOptionGroups());
     }
-    return () => dispatch(removeSelected())
+    return () => {
+      dispatch(removeSelected());
+      selectGroups([])
+    }
   }, [dispatch, option_groups]);
-  const handleSaveItem = () => {
+  const handleSaveItem = (values) => {
+   delete values.draft
     // we get all the row props, insted we only want original
-    const {option_groups, options} = splitOptionsAndGroups(map(groupArray, g => g.original))
-    let _active
+    const { option_groups, options } = splitOptionsAndGroups(
+      map(groupArray, (g) => g.original)
+    );
+    let _active;
     if (active) {
-      _active = 1
-    }
-    else _active = 0
-    const values = formValues;
-    const finalItem = _.assign({}, values, { active: _active, options, option_groups});
+      _active = 1;
+    } else _active = 0;
+    const finalItem = _.assign({}, values, {
+      active: _active,
+      options,
+      option_groups,
+    });
     if (!isEmpty(nowItem)) {
       dispatch(updateItem(finalItem));
     } else {
       dispatch(addItem(finalItem));
     }
     setForm(null);
-    setShow(false)
-    if(props.setOpen) {
-      props.setOpen(false)
+    setShow(false);
+    if (props.setOpen) {
+      props.setOpen(false);
     }
   };
   return (
@@ -150,13 +163,16 @@ export default function AddItem(props) {
               }
               validationSchema={validationSchema}
               onSubmit={async (values) => {
-                setForm(values);
-                setStep1(true);
-                setShow(true)
+                if (values.draft) {
+                  setForm(values);
+                  setStep1(true);
+                } else {
+                  handleSaveItem(values);
+                }
               }}
               enableReinitialize
             >
-              {({ values }) => (
+              {({ values, setFieldValue }) => (
                 <Form>
                   <div>
                     <div className={classname(styles.formControl)}>
@@ -338,13 +354,37 @@ export default function AddItem(props) {
                         className="field-error"
                       />
                     </div>
+                    {groupsSelected.length && !step1 ? (
+                      <div style={{ flex: 1 }}>
+                        <div>Option Groups</div>
+                        <div>
+                          <OrderTable
+                            columns={columns}
+                            data={groupsSelected}
+                            updateCurrentRows={setGroupArray}
+                          />
+                        </div>
+                      </div>
+                    ) : null}
+                    <div className="flex flex-around">
                     <div className={classname(styles.saveButtonContainer)}>
                       <button
                         type="submit"
-                        className={classname(styles.ctaButton)}
+                        className="cta-button add-button"
+                        onClick={() => setFieldValue('draft', true, false)}
                       >
-                        Choose Options
+                        {!isEmpty(nowItem)? "Edit Options" : "Select Options"}
                       </button>
+                    </div>
+                    <div className={classname(styles.saveButtonContainer)}>
+                      <button
+                        type="submit"
+                        className="cta-button"
+                        onClick={() => setFieldValue('draft', false, false)}
+                      >
+                        {!isEmpty(nowItem) ? "Save Item" : "Add Item"}
+                      </button>
+                    </div>
                     </div>
                   </div>
                 </Form>
@@ -352,7 +392,7 @@ export default function AddItem(props) {
             </Formik>
           </div>
         )}
-        {step1 &&  (
+        {step1 && (
           <div className={classname(styles.tableContainer)}>
             <div className={classname(styles.tableFlex)}>
               <Table
@@ -365,26 +405,16 @@ export default function AddItem(props) {
                 preSelected={groupsSelected}
               />
             </div>
-            <div className={classname(styles.between)}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div>
-                  <button
-                    onClick={() => setStep1(false)}
-                    className={classname(styles.ctaButton)}
-                  >
-                    Back
-                  </button>
-                </div>
-              </div>
+            <div className="flex" style={{justifyContent:'flex-end'}}>
               <div>
                 <button
                   disabled={!groupsSelected.length}
-                  className={classname(styles.ctaButton)}
+                  className="cta-button"
                   onClick={() =>
                     groupsSelected.length ? setStep1(false) : null
                   }
                 >
-                  Add to Item
+                  Back
                 </button>
                 <div style={{ fontSize: "10px" }}>
                   {!groupsSelected.length && (
@@ -398,34 +428,6 @@ export default function AddItem(props) {
           </div>
         )}
       </div>
-      {groupsSelected.length && !step1 && showOrder ? (
-        <div style={{ flex: 1 }}>
-          <div>Option Groups</div>
-          <div>
-            <OrderTable
-              columns={columns}
-              data={groupsSelected}
-              updateCurrentRows={setGroupArray}
-            />
-          </div>
-          <div
-            style={{
-              margin: "10px auto",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              className={styles.ctaButton}
-              onClick={() => {
-                handleSaveItem();
-              }}
-            >
-              Save Item
-            </button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }

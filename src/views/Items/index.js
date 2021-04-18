@@ -42,10 +42,7 @@ const customStyles = {
 export default function Items() {
   const dispatch = useDispatch();
   const items = useSelector(listSelector);
-  const groups = useSelector(groupsSelector);
-  const options = useSelector(optionsSelector);
   const loading = useSelector(loadingSelector);
-  const error = useSelector(errorSelector);
   const itemInfo = useSelector(itemInfoSelector);
   const [selected, setSelected] = React.useState();
   const [open, setOpen] = React.useState(false);
@@ -56,11 +53,6 @@ export default function Items() {
       dispatch(listItems());
     }
   }, [dispatch, items]);
-  /*
-    if(isEmpty(items)) {
-        dispatch(listItems())
-    }
-    */
   const handleEdit = (item) => {
     delete item.actions;
     dispatch(selectItem(item));
@@ -120,7 +112,7 @@ export default function Items() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div style={{ padding: "0 5px" }}>
             <button
-              className={classname(styles.transparent)}
+              className="transparentButton"
               onClick={() => handleEdit(item)}
             >
               <FaEdit />
@@ -128,7 +120,7 @@ export default function Items() {
           </div>
           <div>
             <button
-              className={classname(styles.transparent)}
+              className="transparentButton"
               onClick={() => handleDelete(item)}
             >
               <FaTrash />
@@ -146,7 +138,7 @@ export default function Items() {
             <button
               onClick={() => setOpen(false)}
               style={{ cursor: "pointer" }}
-              className={classname(styles.transparent)}
+              className="transparentButton"
             >
               <FaWindowClose />
             </button>
@@ -167,7 +159,7 @@ export default function Items() {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Item
         </button>

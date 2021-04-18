@@ -4,7 +4,7 @@ import styles from './Modifiers.module.sass';
 import { Formik, ErrorMessage, Field, Form, FieldArray} from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import { isEmpty } from 'lodash';
+import { isEmpty, reverse, merge } from 'lodash';
 import {useSelector, useDispatch} from 'react-redux'
 import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
 import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
@@ -37,21 +37,27 @@ export default function AddModifier(props) {
         }
     }, [nowModifier, dispatch])
     const handleSubmit = (values) => {
-        let modifier = values
+        let {name, options} = values
+        const modifier = {name, options: reverse(options)}
         if(!isEmpty(nowModifier)){
-            dispatch(updateModifier(modifier))
+            dispatch(updateModifier(merge(nowModifier, modifier)))
         }
         else {
             dispatch(addModifier(modifier))
         }
     }
+    const reverseOptionsAndReturn = data => {
+        const {name, options} = data
+        const modifier = {name, options: reverse(options)}
+        return modifier
+    }
     return (
-        <div className={classname(styles.container)}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="container">
+            <div className="flex center">
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
-                initialValues={!isEmpty(nowModifier) ? nowModifier : initialValues}
+                initialValues={!isEmpty(nowModifier) ? reverseOptionsAndReturn(nowModifier): initialValues}
                 validationSchema = {validationSchema}
                 onSubmit={(values) => {
                     setForm(values)
@@ -62,7 +68,7 @@ export default function AddModifier(props) {
                 {({ values }) => (
                     <Form>
                         <div>
-                            <div className={classname(styles.formControl)}>
+                            <div className={classname(styles.formControl, "h-padding-10")}>
                                 <div>
                                     <label htmlFor="name" className={classname(styles.formLable)}>Modifier</label>
                                 </div>
@@ -87,12 +93,12 @@ export default function AddModifier(props) {
                                     </h4>
                                 </div>
                                 <FieldArray name="options">
-                                    {({ insert, remove, push, form }) => (
+                                    {({ insert, remove}) => (
                                         <div>
                                             {values.options.length > 0 &&
                                                 values.options.map((option, index) => (
                                                     <div className={classname(styles.horizontalContent)} key={index}>
-                                                        <div className={classname(styles.formControl)}>
+                                                        <div className={classname(styles.formControl, "h-padding-10")}>
                                                             <div>
                                                                 <label className={classname(styles.formLable)} htmlFor={`options.${index}.name`}>Name</label>
                                                             </div>
@@ -109,7 +115,7 @@ export default function AddModifier(props) {
                                                                 className="field-error"
                                                             />
                                                         </div>
-                                                        <div className={classname(styles.formControl)}>
+                                                        <div className={classname(styles.formControl, "h-padding-10")}>
                                                             <div>
                                                                 <label className={classname(styles.formLable)} htmlFor={`options.${index}.price`}>Price</label>
                                                             </div>
@@ -165,7 +171,7 @@ export default function AddModifier(props) {
                                 loading ?
                                     <ClockLoader className="IamLoader"/>
                                     :
-                                    <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                                    <button type="submit" className="cta-button add-button">{!isEmpty(nowModifier) ? "Save" : "Add"}</button>
                             }
                         </div>
                     </Form>
