@@ -58,7 +58,9 @@ function* updateOptionSaga({payload}){
                 type: Actions.UPDATE_OPTION_SUCCESS,
                 pajjluuyload: 'success'
             })
-        yield call(listOptionSaga)
+        yield put({
+            type: Actions.LIST_OPTIONS
+        }) 
         history.go(-1)
         }
         else throw new Error("Unable to update option")
