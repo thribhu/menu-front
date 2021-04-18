@@ -136,7 +136,7 @@ export default function AddGroup(props) {
                 }}
                 enableReinitialize
               >
-                {({ values }) => (
+                {({ values, isValid }) => (
                   <Form>
                     <div>
                       <div className={classname(styles.formControl)}>
@@ -284,13 +284,27 @@ export default function AddGroup(props) {
                           className="field-error"
                         />
                       </div>
-                      <div className={classname(styles.saveButtonContainer)}>
-                        <button
-                          type="submit"
-                          className={classname(styles.ctaButton)}
-                        >
-                          Choose Options
-                        </button>
+                      <div className="flex-around">
+                        <div className={classname(styles.saveButtonContainer)}>
+                          <button
+                            type="button"
+                            disabled={!isValid}
+                            className="cta-button"
+                            onClick={() => setStep1(true)}
+                          >
+                            {!isEmpty(selected)
+                              ? "Edit Options"
+                              : "Select Options"}
+                          </button>
+                        </div>
+                        <div className={classname(styles.saveButtonContainer)}>
+                          <button
+                            className={classname("cta-button add-button")}
+                            type="submit"
+                          >
+                            {!isEmpty(nowGroup) ? "Save" : "Add"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </Form>
@@ -311,32 +325,22 @@ export default function AddGroup(props) {
                   preSelected={selected}
                 />
               </div>
-              <div>
-                <div>
-                  <button
-                    className={classname(styles.button200)}
-                    onClick={() => history.push("/addOption")}
-                  >
-                    Add Option
-                  </button>
-                </div>
-              </div>
               <div className={classname(styles.between)}>
                 <div>
                   <button
-                    onClick={() => setStep1(false)}
-                    className={classname(styles.ctaButton)}
+                    onClick={() => history.push("/addOption")}
+                    className={"cta-button"}
                   >
-                    Back
+                    Add Option
                   </button>
                 </div>
                 <div>
                   <button
                     disabled={!selected.length}
-                    className={classname(styles.ctaButton)}
+                    className={"cta-button"}
                     onClick={() => (selected.length ? setStep1(false) : null)}
                   >
-                    Save
+                    Back
                   </button>
                   <div style={{ fontSize: "10px" }}>
                     {!selected.length && (

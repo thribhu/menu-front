@@ -159,7 +159,7 @@ export default function Items() {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Item
         </button>

@@ -28,7 +28,7 @@ function App(props) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
-          <Router history={history}>
+          <Router >
             <Switch>
               <Route path="/" component={Layout}/>
             </Switch>

@@ -52,8 +52,8 @@ export default function AddModifier(props) {
         return modifier
     }
     return (
-        <div className={classname(styles.container)}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="container">
+            <div className="flex center">
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
             <Formik
@@ -68,7 +68,7 @@ export default function AddModifier(props) {
                 {({ values }) => (
                     <Form>
                         <div>
-                            <div className={classname(styles.formControl)}>
+                            <div className={classname(styles.formControl, "h-padding-10")}>
                                 <div>
                                     <label htmlFor="name" className={classname(styles.formLable)}>Modifier</label>
                                 </div>
@@ -93,12 +93,12 @@ export default function AddModifier(props) {
                                     </h4>
                                 </div>
                                 <FieldArray name="options">
-                                    {({ insert, remove, push, form }) => (
+                                    {({ insert, remove}) => (
                                         <div>
                                             {values.options.length > 0 &&
                                                 values.options.map((option, index) => (
                                                     <div className={classname(styles.horizontalContent)} key={index}>
-                                                        <div className={classname(styles.formControl)}>
+                                                        <div className={classname(styles.formControl, "h-padding-10")}>
                                                             <div>
                                                                 <label className={classname(styles.formLable)} htmlFor={`options.${index}.name`}>Name</label>
                                                             </div>
@@ -115,7 +115,7 @@ export default function AddModifier(props) {
                                                                 className="field-error"
                                                             />
                                                         </div>
-                                                        <div className={classname(styles.formControl)}>
+                                                        <div className={classname(styles.formControl, "h-padding-10")}>
                                                             <div>
                                                                 <label className={classname(styles.formLable)} htmlFor={`options.${index}.price`}>Price</label>
                                                             </div>
@@ -171,7 +171,7 @@ export default function AddModifier(props) {
                                 loading ?
                                     <ClockLoader className="IamLoader"/>
                                     :
-                                    <button type="submit" className={classname(styles.ctaButton)}>{!isEmpty(nowModifier) ? "Save Modifier" : "Add Modifier"}</button>
+                                    <button type="submit" className="cta-button add-button">{!isEmpty(nowModifier) ? "Save" : "Add"}</button>
                             }
                         </div>
                     </Form>

@@ -59,7 +59,7 @@ function* updateOptionSaga({payload}){
                 pajjluuyload: 'success'
             })
         yield call(listOptionSaga)
-        this.context.history.push('/options')
+        history.go(-1)
         }
         else throw new Error("Unable to update option")
     }

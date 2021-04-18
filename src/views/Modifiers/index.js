@@ -89,19 +89,15 @@ export default function Modifiers() {
   _.map(modifiers, (modifier, i) =>
     _.assign(modifier, {
       actions: (
-        <div style={{ display: "flex", justifyContent: "center" }} key={i}>
-          <div style={{ padding: "0 5px" }}>
-            <button onClick={() => handleEdit(modifier)} className="transparentButton">
+        <div className="flex center" key={i}>
+          <div className="h-padding-5">
+            <button onClick={() => handleEdit(modifier)} className="icon-button">
               <FaEdit />
             </button>
           </div>
-          <div>
-            <button>
-              <FaTrash onClick={() =>{
-                 handleDelete(modifier)
-              }
-                } className="transparentButton" 
-                 />
+          <div >
+            <button onClick={() => handleDelete(modifier)} className="icon-button">
+              <FaTrash />
             </button>
           </div>
         </div>
@@ -173,7 +169,7 @@ export default function Modifiers() {
           >
             <button
               onClick={() => setOpen(true)}
-              className={classname(styles.ctaButton)}
+              className="fix-me-right cta-button transparent-button"
             >
               Add Modifier
             </button>

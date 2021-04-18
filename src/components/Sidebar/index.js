@@ -13,9 +13,9 @@ export default function Sidebar(props) {
     return (
         <div className={classname(styles.main)}>
             <div className={classname(styles.sidebar_header)}>
-                <div class={classname(styles.titleBox)}>
+                <div className={classname(styles.titleBox)}>
                     <div className={classname(styles.avatar)}>
-                        <img src={img ? img : default_img} className={classname(styles.avatarImg)} />
+                        <img src={img ? img : default_img} className={classname(styles.avatarImg)} alt="logo"/>
                     </div>
                     <div className={classname(styles.title)}>
                         <h1>{title ? normalizeText(title) : normalizeText('echola pizza')}</h1>

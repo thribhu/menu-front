@@ -130,7 +130,7 @@ export default function Options(props) {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Option
         </button>

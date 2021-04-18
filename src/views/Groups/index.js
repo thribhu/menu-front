@@ -209,7 +209,7 @@ export default function GroupsTable() {
       >
         <button
           onClick={() => setOpen(true)}
-          className={classname(styles.ctaButton)}
+          className="fix-me-right cta-button transparent-button"
         >
           Add Group
         </button>

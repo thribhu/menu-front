@@ -20,18 +20,18 @@ import {
 import {
   listSelector,
   loadingSelector as modLoad,
-  errorSelector as modErr,
   messageSelector as modifierMessageSelector,
 } from "modules/modifiers/selectors";
 import { listModfiers } from "modules/modifiers/actions";
 import { useSelector, useDispatch } from "react-redux";
+import { Persist } from "formik-persist";
 const initialValues = {
   name: "",
   description: "",
   image_url: "",
   price: "",
   type: "",
-  modifiers: [],
+  draft: false,
 };
 const validationSchema = yup.object({
   name: yup.string().required("A valid option must have name"),
@@ -71,14 +71,15 @@ export default function AddOption(props) {
   const [nowArray, setNowArray] = React.useState([]);
   const [showSelected, setShow] = React.useState(false);
   const history = useHistory();
-  const handleSaveItem = () => {
+  const handleSaveItem = (values) => {
     if (props.setOpen) {
       props.setOpen(false);
     }
     setStep1(false);
-    const option = assign({}, formValues, {
+    const option = assign({}, values, {
       modifiers: nowArray.map((_) => _.original.id),
     });
+    delete option.draft
     if (!isEmpty(nowOption)) {
       delete nowOption.modifiers;
       dispatch(updateOption(option));
@@ -115,12 +116,15 @@ export default function AddOption(props) {
             validationSchema={validationSchema}
             onSubmit={(values) => {
               setForm(values);
-              setStep1(true);
-              setShow(true);
+                if (values.draft) {
+                  setStep1(true);
+                }
+                else if(!values.draft) {
+                  handleSaveItem(values)
+                }
             }}
-            enableReinitialize
           >
-            {({ values, isValid }) => (
+            {({ values, isValid, setFieldValue }) => (
               <Form>
                 <div>
                   <div className={classname(styles.formControl)}>
@@ -244,12 +248,32 @@ export default function AddOption(props) {
                       className="field-error"
                     />
                   </div>
+                  {selected.length && !step1 ? (
+                    <div style={{ flex: 1 }}>
+                      <div>
+                        <OrderTable
+                          columns={columns}
+                          data={selected}
+                          updateCurrentRows={setNowArray}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          margin: "10px auto",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                      </div>
+                    </div>
+                  ) : null}
                   <div className="flex-around">
                     <div className={classname(styles.saveButtonContainer)}>
                       <button
-                        type="button"
+                        type="submit"
                         disabled={!isValid}
-                        className={classname(styles.ctaButton)}
+                        className="cta-button"
+                        onClick={() => setFieldValue("draft", true, false)}
                       >
                         {!isEmpty(selected)
                           ? "Edit Modifiers"
@@ -257,8 +281,12 @@ export default function AddOption(props) {
                       </button>
                     </div>
                     <div className={classname(styles.saveButtonContainer)}>
-                      <button className={classname(styles.ctaButton, "addButton")} type="submit">
-                        {!isEmpty(nowOption) ? "Save Option" : "Add Option"}
+                      <button
+                        className="cta-button add-button"
+                        type="submit"
+                        onClick={() => setFieldValue("draft", false, false)}
+                      >
+                        {!isEmpty(nowOption) ? "Save" : "Add"}
                       </button>
                     </div>
                   </div>
@@ -281,32 +309,22 @@ export default function AddOption(props) {
               preSelected={selected}
             />
           </div>
-          <div>
-            <div className={classname(styles.margin5)}>
-              <button
-                className={classname(styles.button200)}
-                onClick={() => history.push("/addModifier")}
-              >
-                Add Modifier
-              </button>
-            </div>
-          </div>
           <div className={classname(styles.between)}>
             <div>
               <button
-                onClick={() => setStep1(false)}
+                onClick={() => history.push("/addModifier")}
                 className={classname(styles.ctaButton)}
               >
-                Back
+                Add Modifier
               </button>
             </div>
             <div>
               <button
                 disabled={!selected.length}
                 className={classname(styles.ctaButton)}
-                onClick={() => (selected.length ? setStep1(false) : null)}
+                onClick={() => setStep1(false)}
               >
-                Save
+                Back
               </button>
               <div style={{ fontSize: "10px" }}>
                 {!selected.length && (
@@ -320,33 +338,6 @@ export default function AddOption(props) {
           </div>
         </div>
       )}
-      {selected.length && !step1 && showSelected ? (
-        <div style={{ flex: 1 }}>
-          <div>
-            <OrderTable
-              columns={columns}
-              data={selected}
-              updateCurrentRows={setNowArray}
-            />
-          </div>
-          <div
-            style={{
-              margin: "10px auto",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <button
-              className={styles.ctaButton}
-              onClick={() => {
-                handleSaveItem();
-              }}
-            >
-              {!isEmpty(nowOption) ? "Update Option" : "Add Option"}
-            </button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }
