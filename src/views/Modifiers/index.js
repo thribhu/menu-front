@@ -171,7 +171,7 @@ export default function Modifiers() {
               onClick={() => setOpen(true)}
               className="fix-me-right cta-button transparent-button"
             >
-              Add Modifier
+              Add New Modifier
             </button>
           </div>
         </div>

@@ -211,7 +211,7 @@ export default function GroupsTable() {
           onClick={() => setOpen(true)}
           className="fix-me-right cta-button transparent-button"
         >
-          Add Group
+          Add New Group
         </button>
       </div>
     </div>

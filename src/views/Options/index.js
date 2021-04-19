@@ -132,7 +132,7 @@ export default function Options(props) {
           onClick={() => setOpen(true)}
           className="fix-me-right cta-button transparent-button"
         >
-          Add Option
+          Add New Option
         </button>
       </div>
     </div>

@@ -161,7 +161,7 @@ export default function Items() {
           onClick={() => setOpen(true)}
           className="fix-me-right cta-button transparent-button"
         >
-          Add Item
+          Add New Item
         </button>
       </div>
     </div>

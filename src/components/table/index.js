@@ -130,7 +130,7 @@ function Table({
       return columns;
     } else return columns;
   }, [noAction]);
-  const memo_data = React.useMemo(() => data);
+  const memo_data = React.useMemo(() => data, [data]);
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -173,7 +173,6 @@ function Table({
     rows,
     prepareRow,
     state,
-    visibleColumns,
     state: {selectedRowIds },
     selectedFlatRows,
     preGlobalFilteredRows,
@@ -185,6 +184,7 @@ function Table({
       defaultColumn, // Be sure to pass the defaultColumn option
       filterTypes,
       initialState: { selectedRowIds: selected },
+      autoResetSelectedRows: false,
     },
     useFilters, // useFilters!
     useGlobalFilter,
@@ -196,10 +196,10 @@ function Table({
         hooks.visibleColumns.push((columns) => [
           {
             id: "selection",
-            Header: ({ getToggleAllPageRowsSelectedProps }) => (
+            Header: ({ getToggleAllRowsSelectedProps }) => (
               <div>
                 <IndeterminateCheckbox
-                  {...getToggleAllPageRowsSelectedProps()}
+                  {...getToggleAllRowsSelectedProps()}
                 />
               </div>
             ),
@@ -221,7 +221,7 @@ function Table({
         return d.original;
       })
     );
-  }, [updateSelectItems, selectedRowIds]);
+  }, [updateSelectItems, selectedRowIds, selectedFlatRows]);
   return (
     <div className={classnames(styles.ReactTable)}>
       {title && <div className={classnames(styles.tableTile)}>{title}</div>}

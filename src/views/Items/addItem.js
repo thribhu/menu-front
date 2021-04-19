@@ -114,9 +114,8 @@ export default function AddItem(props) {
     }
     return () => {
       dispatch(removeSelected());
-      selectGroups([])
     }
-  }, [dispatch, option_groups]);
+  }, [dispatch]);
   const handleSaveItem = (values) => {
    delete values.draft
     // we get all the row props, insted we only want original
