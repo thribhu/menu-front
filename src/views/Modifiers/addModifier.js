@@ -1,10 +1,12 @@
 import React from 'react';
 import classname from 'classnames'
+import {useHistory} from 'react-router-dom'
 import styles from './Modifiers.module.sass';
+import {BiArrowBack} from 'react-icons/bi'
 import { Formik, ErrorMessage, Field, Form, FieldArray} from 'formik';
 import * as yup from 'yup';
 import {FaPlusSquare, FaMinusSquare} from 'react-icons/fa'
-import { isEmpty, reverse, merge } from 'lodash';
+import { isEmpty, reverse, merge, isUndefined } from 'lodash';
 import {useSelector, useDispatch} from 'react-redux'
 import {addModifier, updateModifier, removeSelected} from 'modules/modifiers/actions'
 import {selectedSelector,loadingSelector, errorSelector } from 'modules/modifiers/selectors'
@@ -30,6 +32,7 @@ export default function AddModifier(props) {
     const nowModifier = useSelector(selectedSelector)
     const loading = useSelector(loadingSelector)
     const error = useSelector(errorSelector)
+    const history = useHistory()
     const [form, setForm] = React.useState()
     React.useEffect(() => {
         return () => {
@@ -53,6 +56,20 @@ export default function AddModifier(props) {
     }
     return (
         <div className="container">
+              {isUndefined(props.hideBack) && (
+                <div
+                  className="flex h-padding-10"
+                  style={{ width: "100%", marginTop: "15px" }}
+                >
+                  <button
+                    className="icon-button"
+                    onClick={() => history.push("/modifiers")}
+                  >
+                    <BiArrowBack />
+                    Back
+                  </button>
+                </div>
+              )}
             <div className="flex center">
               <p style={{ fontSize: "1.5rem", color: "red" }}>{!isEmpty(nowModifier) ? "Update Modifier" : "Add Modifier"}</p>
             </div>
@@ -171,7 +188,7 @@ export default function AddModifier(props) {
                                 loading ?
                                     <ClockLoader className="IamLoader"/>
                                     :
-                                    <button type="submit" className="cta-button add-button">{!isEmpty(nowModifier) ? "Save" : "Add"}</button>
+                                    <button type="submit" className="cta-button add-button">Save</button>
                             }
                         </div>
                     </Form>

@@ -69,10 +69,8 @@ function GlobalFilter({
     setGlobalFilter(value || undefined);
   }, 200);
   return (
-    <div style={{display: 'flex' }}>
-      <div style={{display: 'flex', alignItems:'center'}}>
-        Search
-      </div>
+    <div className="flex" style={{width:'100%'}}>
+      <div style={{ display: "flex", alignItems: "center" }}>Search</div>
       <input
         value={value || ""}
         onChange={(e) => {
@@ -80,11 +78,11 @@ function GlobalFilter({
           onChange(e.target.value);
         }}
         style={{
-          margin: '10px',
-          width: '100%',
+          margin: "10px",
+          width: "100%",
           fontSize: "1rem",
           border: "solid 1px",
-          borderRadius: '5px',
+          borderRadius: "5px",
           padding: "10px",
         }}
       />
@@ -123,6 +121,8 @@ function Table({
   noAction,
   preSelected,
   title,
+  callback,
+  cb_name,
 }) {
   const memo_columns = React.useMemo(() => {
     if (noAction) {
@@ -173,7 +173,7 @@ function Table({
     rows,
     prepareRow,
     state,
-    state: {selectedRowIds },
+    state: { selectedRowIds },
     selectedFlatRows,
     preGlobalFilteredRows,
     setGlobalFilter,
@@ -198,9 +198,7 @@ function Table({
             id: "selection",
             Header: ({ getToggleAllRowsSelectedProps }) => (
               <div>
-                <IndeterminateCheckbox
-                  {...getToggleAllRowsSelectedProps()}
-                />
+                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
               </div>
             ),
             Cell: ({ row }) => (
@@ -225,13 +223,26 @@ function Table({
   return (
     <div className={classnames(styles.ReactTable)}>
       {title && <div className={classnames(styles.tableTile)}>{title}</div>}
-      <div>
-        <GlobalFilter
-          preGlobalFilteredRows={preGlobalFilteredRows}
-          globalFilter={state.globalFilter}
-          setGlobalFilter={setGlobalFilter}
-        />
+      <div className="flex">
+        <div id="search-bar">
+          <GlobalFilter
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={state.globalFilter}
+            setGlobalFilter={setGlobalFilter}
+          />
+        </div>
+        {!_.isUndefined(callback) && 
+        <div>
+          <button
+            className="cta-button transparent-button"
+            onClick={() => callback()}
+          >
+            {cb_name}
+          </button>
+        </div>
+        }
       </div>
+      {}
       <MaUTable {...getTableProps()}>
         <TableHead>
           {headerGroups.map((headerGroup) => (
@@ -246,42 +257,23 @@ function Table({
                   >
                     {column.render("Header")}
                     <span>
-                      {
-                        column.isSorted ? column.isSortedDesc ? ' 🔽':' 🔼': ''
-                      }
+                      {column.isSorted
+                        ? column.isSortedDesc
+                          ? " 🔽"
+                          : " 🔼"
+                        : ""}
                     </span>
                   </div>
                 </TableCell>
               ))}
             </TableRow>
           ))}
-          {/*
-          <TableRow>
-            <TableCell
-              colSpan={visibleColumns.length}
-              style={{ textAlign: "left" }}
-            ></TableCell>
-          </TableRow>
-          */}
         </TableHead>
-        <TableBody
-          // style={{ textAlign: "center" }}
-          {...getTableBodyProps()}
-          className="rt-tbody"
-        >
+        <TableBody {...getTableBodyProps()} className="rt-tbody">
           {rows.map((row, i) => {
             prepareRow(row);
-
             return (
-              <TableRow
-                {...row.getRowProps()}
-                className={classnames(
-                  "rt-tr",
-                  { " -odd": i % 2 === 0 },
-                  { " -even": i % 2 === 1 }
-                )}
-                //   onClick={() => handleClickOpen(row.original)}
-              >
+              <TableRow {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
                     <TableCell

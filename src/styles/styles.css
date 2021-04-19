@@ -1,6 +1,7 @@
 .cta-button {
   width: 200px;
-  height: 50px;
+  height: 40px;
+  margin-top: 10px;
   border-radius: 10px;
   background-color: #542d94f6;
   display: -webkit-box;
@@ -26,6 +27,7 @@
   border: none !important;
   background-color: transparent;
   font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .add-button {
@@ -99,5 +101,34 @@ body {
       -ms-flex-pack: center;
           justify-content: center;
   font-size: 1rem;
+}
+
+#search-bar-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+      -ms-flex-align: baseline;
+          align-items: baseline;
+}
+
+#search-bar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+  width: 100%;
+}
+
+.search-input {
+  margin: "10px" !important;
+  width: "100%" !important;
+  fontSize: "1r em" !important;
+  border: "solid 3px" !important;
+  border-color: #542d94f6 !important;
+  borderRadius: "5px" !important;
+  padding: "10px" !important;
 }
 /*# sourceMappingURL=styles.css.map */

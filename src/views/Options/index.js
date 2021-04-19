@@ -109,7 +109,7 @@ export default function Options(props) {
               <FaWindowClose />
             </button>
           </div>
-          <AddOption setOpen={setOpen}  />
+          <AddOption setOpen={setOpen} hideBack={true}/>
         </div>
       </Modal>
       <div>
@@ -117,6 +117,8 @@ export default function Options(props) {
           columns={columns}
           data={options}
           updateSelectItems={setSelected}
+          cb_name="Add New Option"
+          callback={() => {setOpen(true)}}
         />
 	 {
 		 !isEmpty(message) && 
@@ -124,16 +126,6 @@ export default function Options(props) {
 		 	* Add Options to view in this table
 		 </div>
 	 }
-      </div>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "20px" }}
-      >
-        <button
-          onClick={() => setOpen(true)}
-          className="fix-me-right cta-button transparent-button"
-        >
-          Add New Option
-        </button>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import {takeEvery, put, call} from 'redux-saga/effects'
 import {listoptions, detailOption, deleteOption, addOption, updateOption} from './service'
 import * as Actions from './constants'
 import {createBrowserHistory} from 'history'
+import {LIST_OPTIONS_GROUPS} from 'modules/items/constants'
 const history = createBrowserHistory()
 function* listOptionSaga(){
     try {
@@ -35,6 +36,9 @@ function* addOptionSaga({payload}){
         yield put({
             type: Actions.LIST_OPTIONS
         }) 
+        yield put({
+            type: LIST_OPTIONS_GROUPS
+        })
         }
         else throw new Error("Unable to add option")
     }

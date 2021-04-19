@@ -143,26 +143,16 @@ export default function Items() {
               <FaWindowClose />
             </button>
           </div>
-          <AddItem setOpen={setOpen} setItem={setItem} />
+          <AddItem setOpen={setOpen} setItem={setItem} hideBack={true} />
         </div>
       </Modal>
       <div>
-        <Table columns={columns} data={items} updateSelectItems={setSelected} />
+        <Table columns={columns} data={items} updateSelectItems={setSelected} cb_name="Add New Item" callback={() => setOpen(true)}/>
         {!isEmpty(itemInfo) && (
           <div className="UcenterWithMargin IamInfo">
             * Add Items to view in this table
           </div>
         )}
-      </div>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "20px" }}
-      >
-        <button
-          onClick={() => setOpen(true)}
-          className="fix-me-right cta-button transparent-button"
-        >
-          Add New Item
-        </button>
       </div>
     </div>
   );

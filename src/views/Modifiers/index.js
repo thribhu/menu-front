@@ -141,6 +141,7 @@ export default function Modifiers() {
                   formMethod={setForm}
                   currentForm={formValues}
                   setOpen={setOpen}
+                  hideBack={true}
                 />
               ) : (
                 <div />
@@ -152,6 +153,8 @@ export default function Modifiers() {
               columns={columns}
               data={modifiers}
               updateSelectItems={setSelected}
+              cb_name="Add New Modifier"
+              callback={() => setOpen(true)}
             />
         {
           !isEmpty(message) && 
@@ -159,20 +162,6 @@ export default function Modifiers() {
            * Add Modifiers to view in this table 
           </div>
         }
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "20px",
-            }}
-          >
-            <button
-              onClick={() => setOpen(true)}
-              className="fix-me-right cta-button transparent-button"
-            >
-              Add New Modifier
-            </button>
           </div>
         </div>
       )}

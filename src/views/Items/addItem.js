@@ -1,16 +1,15 @@
 import React from "react";
 import classname from "classnames";
+import { BiArrowBack } from "react-icons/bi";
 import styles from "./Items.module.sass";
-import _, { isEmpty, map } from "lodash";
-import { Formik, Form, Field, ErrorMessage, isEmptyArray } from "formik";
+import _, { isEmpty, map, isUndefined } from "lodash";
+import { Formik, Form, Field, ErrorMessage} from "formik";
 import * as yup from "yup";
 import { normalizeText as normalize } from "utils/normalize";
 import Switch from "react-switch";
 import Table from "components/table";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { listGroup } from "modules/groups/actions";
-import { listOptions } from "modules/options/actions";
 import {
   addItem,
   updateItem,
@@ -18,15 +17,6 @@ import {
   getListOptionGroups,
 } from "modules/items/actions";
 import { splitOptionsAndGroups } from "./utils";
-import {
-  loadingSelector as group_loading,
-  listSelector as groupsSelector,
-  messageSelector,
-} from "modules/groups/selector";
-import {
-  loadingSelector as options_loading,
-  optionsSelector,
-} from "modules/options/selector";
 import {
   selectedSelector,
   loadingSelector,
@@ -54,7 +44,7 @@ const columns = [
   {
     Header: "Name",
     accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
+      if (!isUndefined(d.min_required)) {
         return (
           <div>
             {normalize(d.name)}
@@ -73,7 +63,7 @@ const columns = [
   {
     Header: "Min",
     accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
+      if (!isUndefined(d.min_required)) {
         return d.min_required;
       } else return "-";
     },
@@ -81,7 +71,7 @@ const columns = [
   {
     Header: "Max",
     accessor: (d) => {
-      if (!_.isUndefined(d.min_required)) {
+      if (!isUndefined(d.min_required)) {
         return d.max_allowed;
       } else return "-";
     },
@@ -98,6 +88,7 @@ export default function AddItem(props) {
   const nowItem = useSelector(selectedSelector);
   let option_groups = useSelector(optionGroupsSelector);
   const loading = useSelector(loadingSelector);
+  const history = useHistory()
   const [active, setActive] = React.useState(true);
   const [step1, setStep1] = React.useState(false);
   const [groupsSelected, selectGroups] = React.useState(
@@ -105,7 +96,6 @@ export default function AddItem(props) {
   );
   const [formValues, setForm] = React.useState();
   const [groupArray, setGroupArray] = React.useState();
-  const [showOrder, setShow] = React.useState(false);
 
   //let tableData = groups.concat(options)
   React.useEffect(() => {
@@ -114,10 +104,10 @@ export default function AddItem(props) {
     }
     return () => {
       dispatch(removeSelected());
-    }
+    };
   }, [dispatch]);
   const handleSaveItem = (values) => {
-   delete values.draft
+    delete values.draft;
     // we get all the row props, insted we only want original
     const { option_groups, options } = splitOptionsAndGroups(
       map(groupArray, (g) => g.original)
@@ -137,13 +127,26 @@ export default function AddItem(props) {
       dispatch(addItem(finalItem));
     }
     setForm(null);
-    setShow(false);
     if (props.setOpen) {
       props.setOpen(false);
     }
   };
   return (
     <div>
+            {isUndefined(props.hideBack) && (
+              <div
+                className="flex h-padding-10"
+                style={{ width: "100%", marginTop: "15px" }}
+              >
+                <button
+                  className="icon-button"
+                  onClick={() => history.push("/items")}
+                >
+                  <BiArrowBack />
+                  Back
+                </button>
+              </div>
+            )}
       <div className={classname(styles.container)} style={{ flex: 1 }}>
         {!step1 && (
           <div>
@@ -366,24 +369,26 @@ export default function AddItem(props) {
                       </div>
                     ) : null}
                     <div className="flex flex-around">
-                    <div className={classname(styles.saveButtonContainer)}>
-                      <button
-                        type="submit"
-                        className="cta-button add-button"
-                        onClick={() => setFieldValue('draft', true, false)}
-                      >
-                        {!isEmpty(nowItem)? "Edit Options" : "Select Options"}
-                      </button>
-                    </div>
-                    <div className={classname(styles.saveButtonContainer)}>
-                      <button
-                        type="submit"
-                        className="cta-button"
-                        onClick={() => setFieldValue('draft', false, false)}
-                      >
-                        {!isEmpty(nowItem) ? "Save Item" : "Add Item"}
-                      </button>
-                    </div>
+                      <div className={classname(styles.saveButtonContainer)}>
+                        <button
+                          type="submit"
+                          className="cta-button"
+                          onClick={() => setFieldValue("draft", false, false)}
+                        >
+                          Save
+                        </button>
+                      </div>
+                      <div className={classname(styles.saveButtonContainer)}>
+                        <button
+                          type="submit"
+                          className="cta-button add-button"
+                          onClick={() => setFieldValue("draft", true, false)}
+                        >
+                          {!isEmpty(nowItem)
+                            ? "Edit Options"
+                            : "Select Options"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </Form>
@@ -404,7 +409,7 @@ export default function AddItem(props) {
                 preSelected={groupsSelected}
               />
             </div>
-            <div className="flex" style={{justifyContent:'flex-end'}}>
+            <div className="flex" style={{ justifyContent: "flex-end" }}>
               <div>
                 <button
                   disabled={!groupsSelected.length}

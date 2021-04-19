@@ -161,6 +161,7 @@ export default function GroupsTable() {
             formMethod={setForm}
             currentForm={form}
             setOpen={setOpen}
+            hideBack={true}
           />
         ) : (
           <div>
@@ -196,6 +197,8 @@ export default function GroupsTable() {
           updateSelectItems={setSelected}
           columns={groupColumns}
           data={groups}
+          cb_name="Add New Group"
+          callback={() => setOpen(true)}
         />
         {
           !isEmpty(message) && 
@@ -203,16 +206,6 @@ export default function GroupsTable() {
            * Add Groups to view in this table 
           </div>
         }
-      </div>
-      <div
-        style={{ display: "flex", justifyContent: "center", margin: "20px" }}
-      >
-        <button
-          onClick={() => setOpen(true)}
-          className="fix-me-right cta-button transparent-button"
-        >
-          Add New Group
-        </button>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import * as Actions from './constants'
-import {isEmpty} from 'lodash'
 import {
     listGroups,
     addGroup,
@@ -9,6 +8,7 @@ import {
     detailGroup
 } from './service'
 import {createBrowserHistory} from 'history'
+import {LIST_OPTIONS_GROUPS} from 'modules/items/constants'
 const history = createBrowserHistory()
 function* listGroupSaga(){
     try {
@@ -42,6 +42,9 @@ function* addGroupSaga({payload}){
         yield put({
             type: Actions.LIST_GROUPS
         }) 
+        yield put({
+            type: LIST_OPTIONS_GROUPS
+        })
         }
         else throw new Error("Unable to add modifiers")
     }

@@ -24,7 +24,7 @@ import {
 } from "modules/modifiers/selectors";
 import { listModfiers } from "modules/modifiers/actions";
 import { useSelector, useDispatch } from "react-redux";
-import { Persist } from "formik-persist";
+import {BiArrowBack} from 'react-icons/bi'
 const initialValues = {
   name: "",
   description: "",
@@ -98,6 +98,14 @@ export default function AddOption(props) {
   }, [nowOption, dispatch]);
   return (
     <div className={classname(styles.container)}>
+      {!props.hideBack &&
+      <div className="flex h-padding-10" style={{width:'100%', marginTop: '15px'}}>
+      <button className="icon-button" onClick={() => history.push('/options')}>
+        <BiArrowBack/>
+        Back
+      </button>
+      </div>
+      }
       {!step1 && (
         <>
           <div style={{ dispay: "flex", justifyContent: "center" }}>
@@ -270,6 +278,15 @@ export default function AddOption(props) {
                   <div className="flex-around">
                     <div className={classname(styles.saveButtonContainer)}>
                       <button
+                        className="cta-button add-button"
+                        type="submit"
+                        onClick={() => setFieldValue("draft", false, false)}
+                      >
+                        Save
+                      </button>
+                    </div>
+                    <div className={classname(styles.saveButtonContainer)}>
+                      <button
                         type="submit"
                         disabled={!isValid}
                         className="cta-button"
@@ -278,15 +295,6 @@ export default function AddOption(props) {
                         {!isEmpty(selected)
                           ? "Edit Modifiers"
                           : "Select Modifers"}
-                      </button>
-                    </div>
-                    <div className={classname(styles.saveButtonContainer)}>
-                      <button
-                        className="cta-button add-button"
-                        type="submit"
-                        onClick={() => setFieldValue("draft", false, false)}
-                      >
-                        {!isEmpty(nowOption) ? "Save" : "Add"}
                       </button>
                     </div>
                   </div>

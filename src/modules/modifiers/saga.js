@@ -1,7 +1,6 @@
 import {takeEvery, put, call} from 'redux-saga/effects'
 import * as Actions from './constants'
 import {createBrowserHistory} from 'history'
-
 import {
     listmodifiers,
     addModifiers,
