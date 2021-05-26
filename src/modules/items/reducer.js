@@ -59,10 +59,16 @@ export default function GroupReducer(state=initState, action){
 
         case Actions.LIST_OPTIONS_GROUPS:
             return state.set('loading', true)
-        case Actions.LIST_OPTIONS_GROUPS_SUCCESS:
-            return state.set('loading', false).set('options_groups', fromJS(payload))
+        case Actions.LIST_OPTIONS_GROUPS_SUCCESS: {
+            if (isEmpty(payload)) {
+                return state.set('loading', false).set('message', "Options and group are empty")
+            }
+            else {
+                return state.set('loading', false).set('options_groups', fromJS(payload)).set('message', '')
+            }
+        }
         case Actions.LIST_OPTIONS_GROUPS_ERROR:
-            return state.set('lodaing', false).set('error', fromJS(error) )
+            return state.set('loading', false).set('error', fromJS(error) )
         default:
             return state
     }

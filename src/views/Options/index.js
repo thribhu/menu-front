@@ -11,6 +11,7 @@ import Modal from "react-modal";
 import {useDispatch, useSelector} from 'react-redux'
 import { listOptions,removeOption, setSelected as selectOption} from 'modules/options/actions'
 import {loadingSelector, errorSelector, optionsSelector, messageSelector, nowOptionSelector} from 'modules/options/selector'
+import Image from 'react-bootstrap/Image'
 export default function Options(props) {
   const dispatch = useDispatch()
   const options = useSelector(optionsSelector)
@@ -41,6 +42,14 @@ export default function Options(props) {
     {
       Header: "Name",
       accessor: d => normalizeText(d.name),
+    },
+    {
+      Header: "Image",
+      accessor: d => (
+        <div >
+          <Image thumbnail src={d.image_url} style={{maxHeight: '100px', maxWidth:'100px'}}/>
+        </div>
+      )
     },
     {
       Header: "Price",

@@ -2,7 +2,6 @@ import React from "react";
 import classname from "classnames";
 import styles from "./Items.module.sass";
 import { useHistory } from "react-router-dom";
-import items from "./items.json";
 import Table from "components/table";
 import { normalizeText } from "utils/normalize";
 import { FaEdit, FaTrash, FaWindowClose } from "react-icons/fa";
@@ -18,13 +17,10 @@ import {
 import {
   listSelector,
   loadingSelector,
-  errorSelector,
   itemInfoSelector,
 } from "modules/items/selector";
-import { listGroup } from "modules/groups/actions";
-import { listSelector as groupsSelector } from "modules/groups/selector";
-import { listOptions } from "modules/options/actions";
-import { optionsSelector } from "modules/options/selector";
+import Image from 'react-bootstrap/Image'
+import Col from 'react-bootstrap/Col'
 const customStyles = {
   content: {
     margin: "auto",
@@ -70,6 +66,14 @@ export default function Items() {
     {
       Header: "Name",
       accessor: (d) => normalizeText(d.name),
+    },
+    {
+      Header: "Image",
+      accessor: d => (
+        <div >
+          <Image thumbnail src={d.image_url} style={{maxHeight: '100px', maxWidth:'100px'}}/>
+        </div>
+      )
     },
     {
       Header: "Type",

@@ -21,9 +21,11 @@ import {
   selectedSelector,
   loadingSelector,
   optionGroupsSelector,
+  itemInfoSelector
 } from "modules/items/selector";
 import { FaRegObjectGroup } from "react-icons/fa";
 import OrderTable from "components/orderTable";
+import axios from 'axios'
 const initialValues = {
   draft: false,
   name: "",
@@ -87,6 +89,7 @@ export default function AddItem(props) {
   const dispatch = useDispatch();
   const nowItem = useSelector(selectedSelector);
   let option_groups = useSelector(optionGroupsSelector);
+  const itemInfo = useSelector(itemInfoSelector)
   const loading = useSelector(loadingSelector);
   const history = useHistory()
   const [active, setActive] = React.useState(true);
@@ -96,10 +99,12 @@ export default function AddItem(props) {
   );
   const [formValues, setForm] = React.useState();
   const [groupArray, setGroupArray] = React.useState();
-
+  const [fileUploadLoading, setFileUploadLoading] = React.useState(false)
+  const [image, setImage] = React.useState()
   //let tableData = groups.concat(options)
+  console.log(itemInfo)
   React.useEffect(() => {
-    if (isEmpty(option_groups)) {
+    if (isEmpty(option_groups) && itemInfo !== "Options and group are empty") {
       dispatch(getListOptionGroups());
     }
     return () => {
@@ -108,7 +113,6 @@ export default function AddItem(props) {
   }, [dispatch]);
   const handleSaveItem = (values) => {
     delete values.draft;
-    // we get all the row props, insted we only want original
     const { option_groups, options } = splitOptionsAndGroups(
       map(groupArray, (g) => g.original)
     );
@@ -120,6 +124,7 @@ export default function AddItem(props) {
       active: _active,
       options,
       option_groups,
+      image_url: image
     });
     if (!isEmpty(nowItem)) {
       dispatch(updateItem(finalItem));
@@ -131,6 +136,32 @@ export default function AddItem(props) {
       props.setOpen(false);
     }
   };
+  const fileUpload = async (file) => {
+    if(!file) return null
+    const baseUrl = "http://127.0.0.1:8000/api/"
+    try {
+    setFileUploadLoading(true)
+    var formData = new FormData();
+    var imagefile = file;
+    formData.append("file", imagefile); 
+     const res = await axios.post(baseUrl+"file-uploads/", formData,{
+           headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+     })
+     let {status, data}=res;
+     if (201 === status) {
+       return setImage(data.url)
+     }
+    }
+    catch (err) {
+      console.log(err)
+      return false
+    }
+    finally {
+      setFileUploadLoading(false)
+    }
+  }
   return (
     <div>
             {isUndefined(props.hideBack) && (
@@ -194,7 +225,6 @@ export default function AddItem(props) {
                           name="name"
                           type="text"
                           className={classname(styles.formInput)}
-                          autoFocus={true}
                         />
                         <ErrorMessage
                           name={"name"}
@@ -335,6 +365,7 @@ export default function AddItem(props) {
                           name="modifier_image"
                           max={1}
                           className={classname(styles.formInput)}
+                          onChange={e => fileUpload(e.target.files[0])}
                         />
                       </div>
                     </div>

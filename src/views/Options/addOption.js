@@ -8,6 +8,7 @@ import * as yup from "yup";
 import Table from "components/table";
 import OrderTable from "components/orderTable";
 import { normalizeText as normalize } from "utils/normalize";
+import axios from 'axios'
 import {
   addOption,
   updateOption,
@@ -63,21 +64,22 @@ export default function AddOption(props) {
   const dispatch = useDispatch();
   const modifiers = useSelector(listSelector);
   const modifierMessage = useSelector(modifierMessageSelector);
-  const mod_loading = useSelector(modLoad);
   const nowOption = useSelector(selectedOptionsSelector);
   const [step1, setStep1] = React.useState(false);
   const [selected, setSelected] = React.useState(nowOption.modifiers || []);
   const [formValues, setForm] = React.useState();
   const [nowArray, setNowArray] = React.useState([]);
-  const [showSelected, setShow] = React.useState(false);
+  const [fileUploading, setFileUploadLoading] = React.useState(false)
+  const [image, setImage] = React.useState()
   const history = useHistory();
+
   const handleSaveItem = (values) => {
     if (props.setOpen) {
       props.setOpen(false);
     }
     setStep1(false);
     const option = assign({}, values, {
-      modifiers: nowArray.map((_) => _.original.id),
+      modifiers: nowArray.map((_) => _.original.id), image_url: image
     });
     delete option.draft
     if (!isEmpty(nowOption)) {
@@ -96,6 +98,32 @@ export default function AddOption(props) {
     }
     return () => dispatch(removeSelected());
   }, [nowOption, dispatch]);
+  const fileUpload = async (file) => {
+    if(!file) return null
+    const baseUrl = "http://127.0.0.1:8000/api/"
+    try {
+    setFileUploadLoading(true)
+    var formData = new FormData();
+    var imagefile = file;
+    formData.append("file", imagefile); 
+     const res = await axios.post(baseUrl+"file-uploads/", formData,{
+           headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+     })
+     let {status, data}=res;
+     if (201 === status) {
+       return setImage(data.url)
+     }
+    }
+    catch (err) {
+      console.log(err)
+      return false
+    }
+    finally {
+      setFileUploadLoading(false)
+    }
+  }
   return (
     <div className={classname(styles.container)}>
       {!props.hideBack &&
@@ -235,6 +263,7 @@ export default function AddOption(props) {
                         name="image_url"
                         max={1}
                         className={classname(styles.formInput)}
+                        onChange={e => fileUpload(e.target.files[0])}
                       />
                     </div>
                   </div>
