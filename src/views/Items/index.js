@@ -20,7 +20,6 @@ import {
   itemInfoSelector,
 } from "modules/items/selector";
 import Image from 'react-bootstrap/Image'
-import Col from 'react-bootstrap/Col'
 const customStyles = {
   content: {
     margin: "auto",
